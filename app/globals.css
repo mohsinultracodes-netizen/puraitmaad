@@ -164,6 +164,7 @@ a.navigation-link:hover { text-decoration: underline; text-underline-offset: 0.3
 .contact-grid > * { min-width: 0; }
 #consultation { scroll-margin-top: 2rem; }
 .consultation-form { margin-top: 2rem; }
+.consultation-honeypot { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
 .form-availability, .field-hint, .form-acknowledgement, .privacy-reminder { font-size: 0.8125rem; color: var(--muted); line-height: 1.7; }
 .form-availability { border-left: 2px solid var(--accent); padding-left: 1rem; margin-bottom: 1.5rem; }
 .form-feedback:not(:empty) { padding: 1rem; margin-bottom: 1.5rem; border: 1px solid var(--border); background: var(--surface); overflow-wrap: anywhere; }
@@ -177,6 +178,7 @@ a.navigation-link:hover { text-decoration: underline; text-underline-offset: 0.3
 .field-optional { font-size: 0.75rem; font-weight: 400; color: var(--muted); }
 .consultation-field input, .consultation-field select, .consultation-field textarea { width: 100%; min-height: 3rem; padding: 0.75rem; border: 1px solid var(--border); border-radius: var(--radius-control); background: var(--background); color: var(--foreground); font: inherit; font-size: 1rem; }
 .consultation-field textarea { resize: vertical; }
+.consultation-field input, .consultation-field select, .consultation-field textarea { border-color: var(--muted); }
 .consultation-field [aria-invalid="true"] { border-color: #794332; }
 .consultation-field input::placeholder { color: var(--muted); }
 .field-hint, .field-error { margin-top: 0.5rem; }

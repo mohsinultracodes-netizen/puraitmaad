@@ -4,7 +4,7 @@ import { Container } from "@/components/ui/container";
 import { privacyPolicy } from "@/content/privacy-policy";
 import { pageMetadata } from "@/lib/seo";
 
-export const metadata = pageMetadata("Privacy Policy", "How Pur Aitmaad handles website and consultation information, including current delivery limitations, privacy principles and intended enquiry uses.", "/privacy-policy");
+export const metadata = pageMetadata("Privacy Policy", "How Pur Aitmaad handles website and consultation information, including email delivery, privacy principles and enquiry uses.", "/privacy-policy");
 
 export default function PrivacyPolicyPage() {
   return <>

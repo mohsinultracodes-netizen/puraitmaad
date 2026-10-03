@@ -13,6 +13,8 @@ export function ConsultationForm() {
   const [clientState, setClientState] = useState<ConsultationState | null>(null);
   const [values, setValues] = useState<ConsultationValues>({ ...emptyValues, help: [] });
   const summary = useRef<HTMLDivElement>(null);
+  const submissionLock = useRef(false);
+  useEffect(() => { if (!pending) submissionLock.current = false; }, [pending, serverState]);
   const [nameEdited, setNameEdited] = useState(false);
   const baseState = clientState ?? serverState;
   const state = { ...baseState, errors: { ...baseState.errors } };
@@ -41,15 +43,19 @@ export function ConsultationForm() {
   }
 
   return (
-    <form action={action} noValidate aria-busy={pending} onSubmit={(event) => {
+    <form action={action} noValidate aria-busy={pending} onReset={(event) => event.preventDefault()} onSubmit={(event) => {
+      if (pending || submissionLock.current) { event.preventDefault(); return; }
       const { errors } = validateConsultation(new FormData(event.currentTarget));
       if (Object.keys(errors).length) {
         event.preventDefault();
         setClientState({ status: "invalid", errors, message: "Please review the fields below." });
         requestAnimationFrame(() => summary.current?.focus());
-      } else setClientState(null);
+      } else { submissionLock.current = true; setClientState(null); }
     }}>
-      <p className="form-availability">Online enquiry delivery is being prepared. This form does not yet send enquiries.</p>
+      <div className="consultation-honeypot" aria-hidden="true">
+        <label htmlFor="website">Leave this field empty</label>
+        <input id="website" name="website" type="text" tabIndex={-1} autoComplete="off" maxLength={160} />
+      </div>
       <div ref={summary} tabIndex={-1} className={`form-feedback feedback-${state.status}`} aria-live="polite" aria-atomic="true">
         {pending ? <p>Submitting your request…</p> : state.message && <p>{state.message}</p>}
         {!pending && state.status === "invalid" && <ul>{(Object.keys(state.errors) as FieldName[]).map((name) => <li key={name}><a href={`#${name}`}>{fieldLabels[name]}: {state.errors[name]}</a></li>)}</ul>}

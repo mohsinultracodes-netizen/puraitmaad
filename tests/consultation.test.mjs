@@ -5,6 +5,14 @@ import path from "node:path";
 import { createRequire } from "node:module";
 import { fileURLToPath } from "node:url";
 import ts from "typescript";
+import Module from "node:module";
+
+// Next enforces this marker at bundle time; allow server modules in the Node test runner.
+const originalLoad = Module._load;
+Module._load = function (name, ...args) {
+  if (name === "server-only") return {};
+  return originalLoad.call(this, name, ...args);
+};
 
 const loadModule = createRequire(import.meta.url);
 const testDirectory = path.dirname(fileURLToPath(import.meta.url));
@@ -17,6 +25,8 @@ loadModule.extensions[".ts"] = (module, filename) => {
 };
 const { validateConsultation, validateFullName } = loadModule("../lib/consultation/validation.ts");
 const { requestConsultation } = loadModule("../app/contact/actions.ts");
+const { deliverConsultation } = loadModule("../lib/consultation/delivery.ts");
+const { consultationEmail } = loadModule("../lib/consultation/email.ts");
 
 function validForm() {
   const form = new FormData();
@@ -82,10 +92,77 @@ test("Server Action rejects invalid submissions independently of the browser", a
   const response = await requestConsultation({ status: "success", errors: {}, message: "untrusted" }, new FormData());
   assert.equal(response.status, "invalid"); assert.ok(response.errors.email);
 });
-test("valid submissions never claim delivery success while delivery is unavailable", async () => {
+test("missing credentials never claim delivery success", async () => {
+  const previousKey = process.env.RESEND_API_KEY;
+  delete process.env.RESEND_API_KEY;
+  try {
   const response = await requestConsultation({ status: "idle", errors: {}, message: "" }, validForm());
-  assert.equal(response.status, "unavailable");
-  assert.equal(response.message, "Online enquiry delivery is being prepared. Please check back soon.");
+  assert.equal(response.status, "error");
+  assert.equal(response.message, "Your enquiry could not be submitted. Please try again later.");
   assert.deepEqual(response.errors, {});
   assert.equal("values" in response, false);
+  } finally {
+    if (previousKey === undefined) delete process.env.RESEND_API_KEY;
+    else process.env.RESEND_API_KEY = previousKey;
+  }
+});
+
+test("honeypot submissions are rejected before any email call", async () => {
+  for (const value of ["spam", new Blob(["spam"])]) {
+    const form = validForm(); form.set("website", value);
+    assert.equal((await requestConsultation({}, form)).status, "error");
+  }
+  const form = validForm(); form.append("website", ""); form.append("website", "");
+  assert.equal((await requestConsultation({}, form)).status, "error");
+});
+
+test("notification escapes visitor HTML and includes every field and submission time", () => {
+  const values = validateConsultation(validForm()).values;
+  values.message = '<script>alert("test")</script>\nSecond line';
+  const email = consultationEmail(values, new Date("2026-10-04T10:00:00Z"));
+  assert.ok(!email.html.includes("<script>"));
+  assert.ok(email.html.includes("&lt;script&gt;"));
+  assert.ok(email.html.includes("<br>Second line"));
+  assert.ok(email.text.includes("2026-10-04T10:00:00.000Z"));
+  for (const label of ["Full Name", "Email", "Phone / WhatsApp", "Property Location", "Property Type", "outside Pakistan", "occupied", "help with", "Tell us a little more"]) assert.ok(email.text.includes(label));
+});
+
+test("Resend acceptance is required; API errors, exceptions, timeout and absent IDs fail safely", async () => {
+  const previousKey = process.env.RESEND_API_KEY;
+  const previousFetch = globalThis.fetch;
+  process.env.RESEND_API_KEY = "re_test_mock_only";
+  const values = validateConsultation(validForm()).values;
+  let calls = 0;
+  try {
+    globalThis.fetch = async (_url, options) => {
+      calls++;
+      const body = JSON.parse(options.body);
+      assert.equal(body.from, "Pur Aitmaad <onboarding@resend.dev>");
+      assert.equal(body.to, "mohsin.ultracodes@gmail.com");
+      assert.equal(body.reply_to, "owner@example.com");
+      assert.ok(options.signal instanceof AbortSignal);
+      return Response.json({ id: "accepted-test-id" });
+    };
+    assert.equal((await requestConsultation({}, validForm())).status, "success");
+    assert.equal(calls, 1);
+    const blocked = validForm(); blocked.set("website", "bot");
+    await requestConsultation({}, blocked);
+    const invalid = validForm(); invalid.set("email", "invalid");
+    await requestConsultation({}, invalid);
+    assert.equal(calls, 1);
+    for (const response of [Response.json({ message: "private provider error", name: "validation_error" }, { status: 403 }), Response.json({})]) {
+      globalThis.fetch = async () => response;
+      const result = await deliverConsultation(values);
+      assert.equal(result.status, "error");
+      assert.ok(!result.message.includes("private provider"));
+    }
+    for (const exception of [new Error("network exception"), new DOMException("Timed out", "TimeoutError")]) {
+      globalThis.fetch = async () => { throw exception; };
+      assert.equal((await deliverConsultation(values)).status, "error");
+    }
+  } finally {
+    globalThis.fetch = previousFetch;
+    if (previousKey === undefined) delete process.env.RESEND_API_KEY;
+    else process.env.RESEND_API_KEY = previousKey;
+  }
 });
