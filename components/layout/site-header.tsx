@@ -14,6 +14,9 @@ export function SiteHeader() {
           <Link href="/" className="wordmark" aria-label={`${site.name} — Home`}>
             <BrandLogo placement="header" />
           </Link>
+          <nav className="desktop-navigation" aria-label="Main navigation">
+            <ul><NavigationItems /></ul>
+          </nav>
           <div className="desktop-consultation">
             <ButtonLink href="/contact#consultation" prefetch={false}>Request Consultation</ButtonLink>
           </div>
@@ -22,9 +25,6 @@ export function SiteHeader() {
             <ButtonLink href="/contact#consultation" prefetch={false}>Request Consultation</ButtonLink>
           </MobileNavigation>
         </div>
-        <nav className="desktop-navigation" aria-label="Main navigation">
-          <ul><NavigationItems /></ul>
-        </nav>
       </Container>
     </header>
   );

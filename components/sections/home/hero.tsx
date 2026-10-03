@@ -6,6 +6,7 @@ import { home } from "@/content/home";
 export function Hero() {
   return (
     <section className="home-hero" aria-labelledby="hero-heading">
+      <PropertyPhotography slot="homeHero" />
       <Container className="hero-grid">
         <div className="hero-copy">
           <p className="eyebrow">{home.hero.eyebrow}</p>
@@ -17,7 +18,6 @@ export function Hero() {
           </div>
           <p className="coverage-note">{home.hero.coverage}</p>
         </div>
-        <PropertyPhotography slot="homeHero" />
       </Container>
     </section>
   );

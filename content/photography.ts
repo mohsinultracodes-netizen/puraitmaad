@@ -44,11 +44,11 @@ export const photography: Record<
 > = {
   homeHero: {
     purpose: "Existing homepage hero: a calm architectural introduction to property stewardship.",
-    recommendedDimensions: [1600, 2000],
-    aspectRatio: "4 / 5",
+    recommendedDimensions: [2400, 1200],
+    aspectRatio: "2 / 1",
     altDirection: "Describe the visible architecture, setting and maintained details; do not imply it is a client property.",
     publicPath: "/images/property/home-hero.png",
-    sizes: "(min-width: 1440px) 490px, (min-width: 768px) 40vw, 92vw",
+    sizes: "max(100vw, 184svh)",
     objectPosition: "50% 50%",
     asset: { src: homeHeroImage, alt: "Landscaped entrance to a contemporary stone residence at dusk." },
   },
