@@ -12,7 +12,7 @@ export const metadata = pageMetadata("Arrival Ready", description, "/arrival-rea
 export default function ArrivalReadyPage() {
   return (
     <>
-      <PageHero eyebrow="Arrival Ready" title={<>Come home.<br />We&apos;ll handle the preparation.</>} description="Before you return, Pur Aitmaad can coordinate the agreed preparation of your property so you arrive with fewer things to manage.">
+      <PageHero photographySlot="arrivalReady" eyebrow="Arrival Ready" title={<>Come home.<br />We&apos;ll handle the preparation.</>} description="Before you return, Pur Aitmaad can coordinate the agreed preparation of your property so you arrive with fewer things to manage.">
         <ButtonLink className="section-link" href="/contact#consultation" prefetch={false}>Plan Your Arrival</ButtonLink>
       </PageHero>
       <section className="home-section" aria-labelledby="before-arrival-heading">

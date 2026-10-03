@@ -1,6 +1,6 @@
 import { Container } from "@/components/ui/container";
 import { ButtonLink } from "@/components/ui/button-link";
-import { PhotographyPlaceholder } from "@/components/ui/photography-placeholder";
+import { PropertyPhotography } from "@/components/ui/property-photography";
 import { home } from "@/content/home";
 
 export function Hero() {
@@ -17,7 +17,7 @@ export function Hero() {
           </div>
           <p className="coverage-note">{home.hero.coverage}</p>
         </div>
-        <PhotographyPlaceholder />
+        <PropertyPhotography slot="homeHero" />
       </Container>
     </section>
   );

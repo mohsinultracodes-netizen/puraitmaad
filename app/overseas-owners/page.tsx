@@ -12,7 +12,7 @@ export const metadata = pageMetadata("For Overseas Owners", description, "/overs
 export default function OverseasOwnersPage() {
   return (
     <>
-      <PageHero eyebrow="For Overseas Owners" title={<>Your property in Lahore.<br />Looked after while you&apos;re away.</>} description="Distance shouldn't mean losing visibility into the condition and care of your property.">
+      <PageHero photographySlot="overseasOwners" eyebrow="For Overseas Owners" title={<>Your property in Lahore.<br />Looked after while you&apos;re away.</>} description="Distance shouldn't mean losing visibility into the condition and care of your property.">
         <ButtonLink className="section-link" href="/contact#consultation" prefetch={false}>Discuss Your Property</ButtonLink>
       </PageHero>
       <section className="home-section" aria-labelledby="distance-heading">

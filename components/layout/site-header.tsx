@@ -4,6 +4,7 @@ import { Container } from "@/components/ui/container";
 import { ButtonLink } from "@/components/ui/button-link";
 import { NavigationItems } from "@/components/navigation/navigation-items";
 import { MobileNavigation } from "@/components/navigation/mobile-navigation";
+import { BrandLogo } from "@/components/ui/brand-logo";
 
 export function SiteHeader() {
   return (
@@ -11,8 +12,7 @@ export function SiteHeader() {
       <Container>
         <div className="header-top">
           <Link href="/" className="wordmark" aria-label={`${site.name} — Home`}>
-            <span className="brand-name">{site.name}</span>
-            <span className="brand-descriptor">{site.descriptor}</span>
+            <BrandLogo placement="header" />
           </Link>
           <div className="desktop-consultation">
             <ButtonLink href="/contact#consultation" prefetch={false}>Request Consultation</ButtonLink>

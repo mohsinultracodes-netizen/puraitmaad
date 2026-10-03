@@ -11,7 +11,7 @@ export const metadata = pageMetadata("About", description, "/about");
 export default function AboutPage() {
   return (
     <>
-      <PageHero eyebrow="About Pur Aitmaad" title="Property care built around trust and accountability." description="Pur Aitmaad was created around a simple idea: property owners should be able to know that someone responsible is paying attention when they cannot be there themselves." />
+      <PageHero photographySlot="about" eyebrow="About Pur Aitmaad" title="Property care built around trust and accountability." description="Pur Aitmaad was created around a simple idea: property owners should be able to know that someone responsible is paying attention when they cannot be there themselves." />
       <section className="home-section" aria-labelledby="purpose-heading">
         <Container className="editorial-grid">
           <SectionHeading eyebrow="Why Pur Aitmaad exists" id="purpose-heading">Ownership needs ongoing attention.</SectionHeading>

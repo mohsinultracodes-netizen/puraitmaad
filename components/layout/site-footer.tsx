@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Container } from "@/components/ui/container";
 import { NavigationItems } from "@/components/navigation/navigation-items";
 import { site } from "@/content/site";
+import { BrandLogo } from "@/components/ui/brand-logo";
 
 export function SiteFooter() {
   return (
@@ -9,7 +10,8 @@ export function SiteFooter() {
       <Container>
         <div className="footer-grid">
           <div>
-            <Link href="/" className="brand-name">{site.name}</Link>
+            <Link href="/" className="footer-logo-link" aria-label={`${site.name} — Home`}><BrandLogo placement="footer" /></Link>
+            <p className="footer-business-name">{site.name}</p>
             <p className="footer-descriptor">{site.descriptor}</p>
             <p className="footer-tagline">{site.tagline}</p>
           </div>
