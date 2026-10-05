@@ -10,6 +10,7 @@ export const site = {
 export const navigation = [
   { label: "Home", href: "/", available: true },
   { label: "Services", href: "/services", available: true },
+  { label: "Stewardship Plans", href: "/stewardship-plans", available: true },
   { label: "How It Works", href: "/how-it-works", available: true },
   { label: "For Overseas Owners", href: "/overseas-owners", available: true },
   { label: "Arrival Ready", href: "/arrival-ready", available: true },

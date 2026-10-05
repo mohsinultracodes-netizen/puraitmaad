@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { site } from "@/content/site";
 
-export const publicRoutes = ["/", "/services", "/how-it-works", "/overseas-owners", "/arrival-ready", "/about", "/privacy-and-discretion", "/contact", "/privacy-policy"] as const;
+export const publicRoutes = ["/", "/services", "/stewardship-plans", "/how-it-works", "/overseas-owners", "/arrival-ready", "/about", "/privacy-and-discretion", "/contact", "/privacy-policy"] as const;
 
 export function getSiteUrl(): URL {
   const configured = process.env.SITE_URL?.trim() || site.url;

@@ -21,7 +21,8 @@ test("SEO defaults to the official domain and supports a validated origin overri
   try {
     delete process.env.SITE_URL;
     assert.equal(getSiteUrl().origin, "https://puraitmaad.com");
-    assert.equal(sitemap().length, 9);
+    assert.equal(sitemap().length, 10);
+    assert.ok(sitemap().some((entry) => entry.url === "https://puraitmaad.com/stewardship-plans"));
     assert.equal(robots().sitemap, "https://puraitmaad.com/sitemap.xml");
     for (const route of publicRoutes) {
       const expected = new URL(route, "https://puraitmaad.com").href;
@@ -32,7 +33,7 @@ test("SEO defaults to the official domain and supports a validated origin overri
     }
     // Reserved test domain, never written to configuration or generated production files.
     process.env.SITE_URL = "https://configured.example";
-    assert.equal(sitemap().length, 9);
+    assert.equal(sitemap().length, 10);
     assert.deepEqual(sitemap().map((entry) => new URL(entry.url).pathname), [...publicRoutes]);
     assert.equal(robots().sitemap, "https://configured.example/sitemap.xml");
     assert.equal(pageMetadata("Services", "Description", "/services").alternates.canonical, "https://configured.example/services");
