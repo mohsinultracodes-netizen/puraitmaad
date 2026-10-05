@@ -68,19 +68,23 @@ body:has(.home-hero) .site-header { position: absolute; top: 0; left: 0; right: 
 .menu-toggle { display: inline-flex; align-items: center; justify-content: center; width: 2.75rem; height: 2.75rem; padding: 0.5rem; border: 0; border-radius: var(--radius-control); background: transparent; color: var(--foreground); cursor: pointer; transition: background-color 160ms; }
 .menu-toggle:hover { background: var(--surface); }
 .mobile-navigation { flex-shrink: 0; }
-.mobile-navigation nav { position: absolute; top: 100%; left: 0; right: 0; z-index: 20; background: var(--background); padding: 1rem 0 1.5rem; border-bottom: 1px solid var(--border); }
-.mobile-navigation ul { display: grid; gap: 0.125rem; margin-bottom: 1rem; }
+.mobile-navigation nav { position: absolute; top: calc(100% + 14px); left: calc(1.25rem - var(--page-gutter)); right: calc(1.25rem - var(--page-gutter)); z-index: 20; background: var(--foreground); padding: 1.5rem; border-radius: 1.75rem; }
+.mobile-navigation ul { display: grid; gap: 0.5rem; margin-bottom: 1.5rem; }
 .site-header .navigation-link { position: relative; color: var(--foreground); font-weight: 500; transition: color 160ms; }
 .site-header .navigation-link::after { content: ""; position: absolute; left: 0; right: 0; bottom: 5px; height: 2px; background: var(--accent); opacity: 0; transition: opacity 160ms; }
 .site-header a.navigation-link:hover { text-decoration: none; }
 .site-header a.navigation-link:not([aria-current="page"]):hover { color: var(--focus); }
 .site-header .navigation-link[aria-current="page"]::after { opacity: 1; }
 .site-header .navigation-link:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
-.site-header .mobile-navigation ul { gap: 0.5rem; }
-.site-header .mobile-navigation .navigation-link { min-height: 2.75rem; padding-block: 0.625rem; }
-.site-header .mobile-navigation nav { max-height: calc(100svh - 88px); overflow-y: auto; }
+.site-header .mobile-navigation .navigation-link { width: 100%; min-height: 2.75rem; padding-block: 0.625rem; color: var(--background); font-size: 0.9375rem; line-height: 1.5; }
+.site-header .mobile-navigation .navigation-link[aria-current="page"], .site-header .mobile-navigation a.navigation-link:hover { color: #d4c6a6; }
+.site-header .mobile-navigation .navigation-link::after { right: auto; width: 2rem; bottom: 2px; }
+.site-header .mobile-navigation nav :focus-visible { outline-color: #d4c6a6; }
+.site-header .mobile-navigation nav { max-height: calc(100svh - 123px); overflow-y: auto; overscroll-behavior: contain; }
 .site-header .button { border-radius: 0.75rem; padding-inline: 1.75rem; }
 .site-header .button-primary:hover { background: var(--surface); border-color: var(--accent); color: var(--foreground); }
+.site-header .mobile-navigation .button { width: 100%; min-height: 3.25rem; border-radius: 0.875rem; background: var(--background); color: var(--foreground); }
+.site-header .mobile-navigation .button:hover { background: var(--surface); border-color: var(--accent); }
 .navigation-link { display: inline-flex; align-items: center; min-height: 2.75rem; font-size: 0.8125rem; }
 a.navigation-link:hover { text-decoration: underline; text-underline-offset: 0.3em; }
 .unavailable { color: var(--muted); cursor: default; }
