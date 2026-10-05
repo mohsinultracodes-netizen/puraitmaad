@@ -21,6 +21,8 @@ export default function ServicesPage() {
           <section key={service.id} className={`service-detail editorial-grid${service.id === "vendors" || service.id === "vehicles" ? " service-detail-alternate" : ""}`} aria-labelledby={service.id}>
             <div><SectionHeading id={service.id}>{service.title}</SectionHeading>
               {service.id === "inspections" && <div className="service-photography"><PropertyPhotography slot="propertyInspection" /></div>}
+              {service.id === "maintenance" && <div className="service-photography"><PropertyPhotography slot="preventiveMaintenance" /></div>}
+              {service.id === "arrival-ready" && <div className="service-photography"><PropertyPhotography slot="arrivalReady" /></div>}
               {service.id === "vendors" && <div className="service-photography"><PropertyPhotography slot="vendorCoordination" /></div>}
               {service.id === "vehicles" && <div className="service-photography"><PropertyPhotography slot="vehicleReadiness" /></div>}
               {service.id === "property-health" && <div className="service-photography"><PropertyPhotography slot="propertyHealth" /></div>}

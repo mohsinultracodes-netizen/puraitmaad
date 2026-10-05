@@ -123,14 +123,14 @@ export const photography: Record<
     asset: { src: careClearScopeImage, alt: "Illustrative consultation: three people review a property checklist together beside a pool." },
   },
   preventiveMaintenance: {
-    purpose: "Reserved for a technician inspecting or maintaining property equipment; approved asset not supplied.",
+    purpose: "Illustrative coordination of routine property maintenance using the approved vendor photograph.",
     recommendedDimensions: [1800, 1200],
     aspectRatio: "3 / 2",
     altDirection: "Describe the visible activity as illustrative; do not identify anyone as an actual client, employee or vendor.",
-    publicPath: "/images/property/preventive-maintenance.png",
+    publicPath: "/images/property/vendor-coordination.png",
     sizes: editorialSizes,
     objectPosition: "50% 50%",
-    asset: null,
+    asset: { src: vendorCoordinationImage, alt: "Illustrative coordination scene: two people review a tablet with tools and a service van nearby." },
   },
   vendorCoordination: {
     purpose: "Illustrative coordination of specialist work at a property.",
