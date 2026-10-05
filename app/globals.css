@@ -41,7 +41,7 @@ a { text-decoration: none; }
 .eyebrow { color: var(--muted); font-size: 0.6875rem; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; }
 .skip-link { position: fixed; top: 1rem; left: 1rem; z-index: 50; padding: 0.75rem 1rem; background: var(--foreground); color: var(--background); transform: translateY(-200%); }
 .skip-link:focus { transform: translateY(0); }
-.site-header { border-bottom: 1px solid var(--border); }
+.site-header { background: var(--background); border-bottom: 1px solid var(--border); }
 .header-top { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding-block: 1rem; }
 .wordmark { display: inline-flex; flex-direction: column; gap: 0.25rem; min-width: 0; }
 .brand-logo { display: block; height: auto; max-width: 100%; }
@@ -65,11 +65,22 @@ body:has(.home-hero) .site-header { position: absolute; top: 0; left: 0; right: 
 .button-secondary:hover:not(:disabled) { background: var(--surface); }
 .button:disabled { cursor: not-allowed; background: var(--surface); color: var(--muted); border-color: var(--border); }
 .desktop-navigation, .desktop-consultation { display: none; }
-.menu-toggle { display: flex; align-items: center; gap: 0.75rem; min-height: 2.75rem; padding: 0.5rem; font-size: 0.8125rem; cursor: pointer; }
+.menu-toggle { display: inline-flex; align-items: center; justify-content: center; width: 2.75rem; height: 2.75rem; padding: 0.5rem; border: 1px solid var(--foreground); border-radius: 0.625rem; background: var(--foreground); color: var(--background); cursor: pointer; transition: background-color 160ms, border-color 160ms; }
+.menu-toggle:hover { background: #44473f; border-color: #44473f; }
 .mobile-navigation { flex-shrink: 0; }
-.menu-toggle span { font-size: 1.25rem; }
 .mobile-navigation nav { position: absolute; top: 100%; left: 0; right: 0; z-index: 20; background: var(--background); padding: 1rem 0 1.5rem; border-bottom: 1px solid var(--border); }
 .mobile-navigation ul { display: grid; gap: 0.125rem; margin-bottom: 1rem; }
+.site-header .navigation-link { position: relative; color: var(--foreground); font-weight: 500; transition: color 160ms; }
+.site-header .navigation-link::after { content: ""; position: absolute; left: 0; right: 0; bottom: 5px; height: 2px; background: var(--accent); opacity: 0; transition: opacity 160ms; }
+.site-header a.navigation-link:hover { text-decoration: none; }
+.site-header a.navigation-link:not([aria-current="page"]):hover { color: var(--focus); }
+.site-header .navigation-link[aria-current="page"]::after { opacity: 1; }
+.site-header .navigation-link:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
+.site-header .mobile-navigation ul { gap: 0.5rem; }
+.site-header .mobile-navigation .navigation-link { min-height: 2.75rem; padding-block: 0.625rem; }
+.site-header .mobile-navigation nav { max-height: calc(100svh - 88px); overflow-y: auto; }
+.site-header .button { border-radius: 0.75rem; padding-inline: 1.75rem; }
+.site-header .button-primary:hover { background: var(--surface); border-color: var(--accent); color: var(--foreground); }
 .navigation-link { display: inline-flex; align-items: center; min-height: 2.75rem; font-size: 0.8125rem; }
 a.navigation-link:hover { text-decoration: underline; text-underline-offset: 0.3em; }
 .unavailable { color: var(--muted); cursor: default; }
@@ -80,12 +91,13 @@ a.navigation-link:hover { text-decoration: underline; text-underline-offset: 0.3
 .footer-navigation { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 1.5rem; margin-top: 0.75rem; }
 .footer-bottom { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem 1.5rem; border-top: 1px solid var(--border); padding-block: 1.25rem; color: var(--muted); font-size: 0.6875rem; }
 @media (min-width: 48rem) { .footer-grid { grid-template-columns: 1fr 1fr; gap: 3rem; } }
-@media (min-width: 75rem) {
+@media (min-width: 72rem) {
   .mobile-navigation { display: none; }
   .desktop-consultation { display: block; }
-  .desktop-navigation { display: flex; align-items: center; margin-inline: auto; }
-  .desktop-navigation ul { display: flex; flex-wrap: nowrap; gap: clamp(0.625rem, 1vw, 1rem); }
-  .desktop-navigation .navigation-link { font-size: 0.75rem; white-space: nowrap; }
+  .site-header .header-top { gap: 1.5rem; }
+  .desktop-navigation { display: flex; align-items: center; justify-content: center; flex: 1; }
+  .desktop-navigation ul { display: flex; flex-wrap: nowrap; gap: clamp(0.75rem, 1.25vw, 1.25rem); }
+  .desktop-navigation .navigation-link { font-size: 0.8125rem; white-space: nowrap; }
   .site-header .wordmark, .desktop-consultation { flex-shrink: 0; }
 }
 
