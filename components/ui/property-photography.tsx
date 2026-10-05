@@ -2,7 +2,7 @@ import Image from "next/image";
 import { photography, type PhotographySlotName } from "@/content/photography";
 import { PhotographyPlaceholder } from "@/components/ui/photography-placeholder";
 
-export function PropertyPhotography({ slot }: { slot: PhotographySlotName }) {
+export function PropertyPhotography({ slot, loading = "lazy" }: { slot: PhotographySlotName; loading?: "lazy" | "eager" }) {
   const photo = photography[slot];
   if (!photo.asset || !photo.asset.alt.trim()) return <PhotographyPlaceholder />;
 
@@ -16,7 +16,7 @@ export function PropertyPhotography({ slot }: { slot: PhotographySlotName }) {
           fill
           sizes={photo.sizes}
           preload={isHomeHero}
-          loading={isHomeHero ? undefined : "lazy"}
+          loading={isHomeHero ? undefined : loading}
           className="property-photography-image"
           style={{ objectPosition: photo.objectPosition }}
         />
