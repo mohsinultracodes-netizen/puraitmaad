@@ -6,9 +6,9 @@ export function BrandLogo({ placement }: { placement: "header" | "footer" }) {
     width={1200}
     height={1200}
     unoptimized
-    alt="AITMAAD — Pur Aitmaad Property Stewardship & Management"
+    alt="Puraitmaad"
     className={`brand-logo brand-logo-${placement}`}
-    sizes={placement === "header" ? "(min-width: 1200px) 88px, (min-width: 768px) 104px, 96px" : "180px"}
+    sizes={placement === "header" ? "(min-width: 1024px) 120px, 108px" : "132px"}
     preload={placement === "header"}
   />;
 }

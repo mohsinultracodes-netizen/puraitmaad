@@ -9,6 +9,7 @@ import careClearScopeImage from "@/public/images/property/care-clear-scope.png";
 import vendorCoordinationImage from "@/public/images/property/vendor-coordination.png";
 import vehicleReadinessImage from "@/public/images/property/vehicle-readiness.png";
 import aboutImage from "@/public/images/property/about.png";
+import interiorImage from "@/public/images/property/arrival-ready-interior.png";
 
 type ApprovedPhotography = {
   src: StaticImageData;
@@ -155,3 +156,47 @@ export const photography: Record<
 };
 
 export type PhotographySlotName = keyof typeof photography;
+
+// Homepage-only crops: changing these never changes supporting-page photography.
+// The office slot is deliberately empty until an approved photograph is supplied.
+type HomepagePhoto = {
+  asset: ApprovedPhotography | null;
+  sizes: string;
+  objectPosition: string;
+  replacement: string;
+};
+
+export const homepagePhotography = {
+  hero: {
+    asset: { src: interiorImage, alt: "Warm seating and a coffee table beside an open terrace with trees and evening light." },
+    sizes: "(min-width: 1280px) 640px, (min-width: 1024px) 50vw, 100vw",
+    objectPosition: "50% 78%",
+    replacement: "A bright, daylit premium living-room/home interior with greenery and warm natural materials; a wide photograph with no people required.",
+  },
+  difference: {
+    asset: photography.about.asset,
+    sizes: "(min-width: 1280px) 340px, (min-width: 768px) 32vw, 100vw",
+    objectPosition: "50% 75%",
+    replacement: "A quiet interior or plant detail, landscape crop.",
+  },
+  emotional: {
+    asset: photography.overseasOwners.asset,
+    sizes: "(min-width: 1280px) 600px, (min-width: 768px) 46vw, 100vw",
+    objectPosition: "60% 50%",
+    replacement: "Optional: a natural, daylit lounge for the time-and-comfort section.",
+  },
+  property: {
+    asset: photography.propertyHealth.asset,
+    sizes: "(min-width: 1280px) 600px, (min-width: 768px) 46vw, 100vw",
+    objectPosition: "30% 65%",
+    replacement: "Optional: an understated maintained Lahore residence and garden in daylight.",
+  },
+  business: {
+    asset: null,
+    sizes: "(min-width: 1280px) 600px, (min-width: 768px) 46vw, 100vw",
+    objectPosition: "50% 50%",
+    replacement: "Required for a photographic treatment: an approved calm office interior, natural light, no posed staff.",
+  },
+} satisfies Record<string, HomepagePhoto>;
+
+export type HomepagePhotoKey = keyof typeof homepagePhotography;

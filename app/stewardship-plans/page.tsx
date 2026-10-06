@@ -16,17 +16,15 @@ export default function StewardshipPlansPage() {
           <SectionHeading eyebrow="Presence. Accountability. Peace of mind." id="plans-heading">A trusted presence, even when you’re away.</SectionHeading>
           <div className="stewardship-plan-grid">
             {stewardshipPlans.map((plan) => (
-              <article key={plan.id} className={`stewardship-plan${plan.recommended ? " stewardship-plan-recommended" : ""}`} aria-labelledby={`${plan.id}-heading`}>
+              <article key={plan.id} className="stewardship-plan" aria-labelledby={`${plan.id}-heading`}>
                 <div className="plan-heading">
-                  <p className="eyebrow plan-kicker">{plan.recommended ? "Most popular" : "Ongoing stewardship"}</p>
+                  <p className="eyebrow plan-kicker">Ongoing support</p>
                   <h3 id={`${plan.id}-heading`}>{plan.name}</h3>
-                  <p className="plan-price">From PKR {plan.monthly} <span>/ month</span></p>
+                  <p className="plan-description">{plan.pricingLabel}</p>
                   <p className="plan-description">{plan.description}</p>
                 </div>
                 <ul className="plan-features">{plan.coreFeatures.map((feature) => <li key={feature}>{feature}</li>)}</ul>
-                {plan.benefits && <section className="plan-benefits" aria-labelledby={`${plan.id}-benefits-heading`}><h4 id={`${plan.id}-benefits-heading`} className="eyebrow">{plan.benefits.heading}</h4><ul>{plan.benefits.items.map((benefit) => <li key={benefit}>{benefit}</li>)}</ul></section>}
-                {plan.additional.length > 0 && <div className="plan-additional"><p className="eyebrow">Available separately</p><ul>{plan.additional.map((feature) => <li key={feature}>{feature}</li>)}</ul></div>}
-                <ButtonLink className="plan-consultation" href="/contact#consultation" variant={plan.recommended ? "primary" : "secondary"} prefetch={false}>{plan.cta}</ButtonLink>
+                <ButtonLink className="plan-consultation" href="/contact#consultation" variant="secondary" prefetch={false}>{plan.cta}</ButtonLink>
               </article>
             ))}
           </div>
@@ -34,7 +32,7 @@ export default function StewardshipPlansPage() {
             <SectionHeading id="pricing-note-heading">Every property is different.</SectionHeading>
             <div className="editorial-copy">
               <p>Final stewardship pricing is confirmed after we understand your property’s size, location, systems, visit requirements and level of oversight required.</p>
-              <p>Complimentary benefits cover Pur Aitmaad&apos;s inspection, coordination and oversight time within the stated plan allowances. Third-party labour, materials, repairs, cleaning and other external vendor costs are separate and undertaken with owner approval.</p>
+              <p>Support and scheduling are agreed before work begins. Third-party labour, materials, repairs, cleaning and other external vendor costs are quoted separately and undertaken with customer approval.</p>
             </div>
           </div>
           <dl className="plan-benefit-scope">{benefitScope.map((item) => <div key={item.title}><dt>{item.title}</dt><dd>{item.description}</dd></div>)}</dl>
@@ -44,7 +42,7 @@ export default function StewardshipPlansPage() {
         <Container className="editorial-grid">
           <div><SectionHeading eyebrow="Care during your absence" id="short-term-heading">Only away for a short while?</SectionHeading><p className="section-description">Pur Aitmaad can also look after your property during holidays, business travel or other extended absences without requiring an ongoing stewardship plan.</p></div>
           <div className="property-check-offer">
-            <h3>Property Check</h3><p className="plan-price">From PKR {propertyCheck.price}</p>
+            <h3>Property Check</h3><p className="plan-description">{propertyCheck.pricingLabel}</p>
             <ul className="detail-list">{propertyCheck.features.map((feature) => <li key={feature}>{feature}</li>)}</ul>
             <ButtonLink href="/contact#consultation" variant="secondary" prefetch={false}>Arrange a Property Check</ButtonLink>
           </div>
@@ -53,7 +51,7 @@ export default function StewardshipPlansPage() {
       <section className="home-section" aria-labelledby="annual-heading">
         <Container>
           <div className="editorial-grid"><SectionHeading eyebrow="Year-round continuity" id="annual-heading">Prefer continuous stewardship?</SectionHeading><p className="editorial-copy">Annual arrangements are available for owners who want year-round continuity and a consistent understanding of their property.</p></div>
-          <dl className="annual-plan-list">{stewardshipPlans.map((plan) => <div key={plan.id}><dt>{plan.name}</dt><dd>From PKR {plan.annual} <span>/ year</span></dd></div>)}</dl>
+          <dl className="annual-plan-list">{stewardshipPlans.map((plan) => <div key={plan.id}><dt>{plan.name}</dt><dd>{plan.pricingLabel}</dd></div>)}</dl>
         </Container>
       </section>
       <section className="home-section plans-fee-section" aria-labelledby="fee-heading">

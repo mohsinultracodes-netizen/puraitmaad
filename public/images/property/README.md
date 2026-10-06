@@ -1,5 +1,24 @@
 # Approved property photography
 
+## Phase 3 homepage slots
+
+The new homepage reads `homepagePhotography` in `content/photography.ts`;
+supporting-page slots below are unchanged. Only the homepage hero is preloaded.
+
+| Slot | Current approved asset | Replacement direction |
+| --- | --- | --- |
+| hero | arrival-ready-interior.png, lower interior/terrace crop | Prefer a bright, daylit premium living-room/home interior with greenery and warm natural materials, photographed wide. |
+| difference | about.png, doorway/planting detail | Optional quieter interior/plant detail. |
+| emotional | overseas-owners.png, prepared bedroom | Optional natural daylit lounge. |
+| property | property-health.png, residence/garden | Optional understated maintained Lahore residence in daylight. |
+| business | null; intentional graphic treatment | Approved office photograph needed; no stock downloads or fabricated client setting. |
+
+Set the business slot's asset to an approved static import and descriptive alt text
+to replace its graphic. Central `sizes` and `objectPosition` settings control each
+crop. No source images or artwork were edited or extracted from the reference.
+
+## Existing supporting-page slots
+
 Ten approved photography slots are active; preventiveMaintenance is reserved but
 inactive because no equipment-maintenance photograph was supplied. Its service
 remains text-only, without adding a visible placeholder. The homepage hero uses homeHero;

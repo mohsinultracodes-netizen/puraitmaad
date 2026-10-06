@@ -1,1306 +1,172 @@
-# Pur Aitmaad — Master Project Specification
+# Puraitmaad — Product and implementation guide
 
-## 1. Project Overview
+## Product source of truth
 
-### Brand Name
-Pur Aitmaad
+Puraitmaad is a premium managed-services and assistance company, initially serving Lahore, Pakistan.
 
-### Business Category
-Property Stewardship & Management
+Primary positioning: **Your problem → our responsibility.**
+Secondary line: **Done For You.**
 
-### Primary Brand Promise
-Your property. In trusted hands.
+The operating model is:
+Customer → Puraitmaad → appropriate professional/vendor/resource → Puraitmaad coordinates/manages → verifies where appropriate → closes the request.
 
-### Core Business Idea
+Customers explain the problem; Puraitmaad helps identify the appropriate solution, agrees the scope, coordinates the work and follows through. Specialist work may be performed by third-party providers. Requests remain subject to acceptance, availability and agreed scope.
 
-Pur Aitmaad is a professional property stewardship and management service.
+Puraitmaad is not a technician directory, worker marketplace, classifieds platform or cheap handyman service. The experience should communicate calm, capable responsibility and relief from complexity.
 
-We take care of properties for owners who cannot, or do not want to, personally manage every maintenance issue, inspection, vendor visit, repair, or property-related task.
+The complete approved 68-point specification and subsequent clarification decisions govern the product. The supplied homepage reference governs visual composition. This guide records those decisions; old page copy is migration material, not a competing product specification.
 
-The business initially focuses on premium properties in Lahore, Pakistan.
+## Service pillars
 
-Initial property types include:
+- **Home Care:** AC and appliance work, electrical, plumbing, carpentry, painting, cleaning, gardening and pest control.
+- **Property Care:** inspections, vacant-property checks, pre-arrival preparation, post-travel checks, repairs, restocking and renovation coordination.
+- **Personal Assistance:** shopping, pickups, deliveries, returns, gifts, documents, event preparation, errands and legitimate special requests.
+- **Business Support:** office maintenance, repairs, cleaning, supplies, furniture, AC, electrical, plumbing, site visits and vendor coordination.
 
-- Private residences
-- Luxury homes
-- Farmhouses
-- Villas
-- Private estates
+The customer has one primary relationship with Puraitmaad. Do not expose vendor phone numbers, private addresses, internal pricing, notes or ratings.
 
-The platform and brand must NOT be designed only around residential homes.
+Use: “If you don't see what you need, ask us. We'll let you know if we can coordinate it.”
 
-The business should be able to expand naturally into:
+## Brand and content
 
-- Resorts
-- Vacation properties
-- Corporate offices
-- Commercial buildings
-- Multi-story buildings
-- Business premises
-- Property portfolios
-- Other professionally managed properties
+Use the exact editable brand spelling **Puraitmaad**. Preserve the existing approved logo artwork and favicon implementation. Logo redesign is a separate project; make the eventual header adaptable to replacement artwork.
 
-The website architecture, terminology, components, data models, and content structure should therefore use broad concepts such as:
+Speak clearly and calmly. Do not fabricate customer counts, history, testimonials, vendor checks, certifications, awards, guarantees or operational capacity. Do not promise that every request will be accepted.
 
-- Property
-- Property Owner
-- Property Stewardship
-- Property Care
-- Property Management
-- Property Inspection
-- Maintenance
-- Service
-- Vendor
-- Issue
-- Property Health
+Navigation: Home, Services, How It Works, About, Contact.
+Primary CTA: **Request a Service**.
 
-Avoid building the architecture around the assumption that every property is a "home."
+Membership: **Essential / Premium / Private**.
+Pricing: **Speak to us for a tailored plan.**
+Inclusions are editable and agreed with the customer. Do not publish retired prices, fixed visit allowances, complimentary benefits or emergency-response commitments from the old product.
 
+Both the coming-home timeline and DHA home-preparation example are illustrative. Always retain the disclosure:
+**Illustrative example — actual case studies will be added as available.**
 
----
+Testimonials remain empty and the eventual UI hides that section until genuine, publication-approved entries exist.
 
-# 2. What Pur Aitmaad Actually Sells
+## Owner-editable configuration
 
-Pur Aitmaad does not simply sell maintenance services.
+- `content/site.ts`: brand, tagline, domain, navigation, CTA and all PUBLIC contact values.
+- `content/services.ts`: four categories, full service catalog, selected featured services.
+- `content/membership.ts`: three plans, editable inclusions and tailored-plan wording.
+- `content/scenarios.ts`: hypothetical scenarios with mandatory disclosures.
+- `content/testimonials.ts`: genuine approved testimonials only; currently empty.
+- `content/photography.ts`: approved sources, image descriptions, crop and responsive settings.
 
-The main product is:
+Keep unknown PHONE, WHATSAPP, EMAIL, INSTAGRAM, FACEBOOK, LINKEDIN, ADDRESS, BUSINESS_HOURS and SERVICE_AREAS values as identifiable bracketed placeholders. CITY is Lahore, Pakistan; DOMAIN is https://puraitmaad.com. Do not imply complete coverage of particular neighborhoods.
 
-## Peace of mind through trusted property oversight.
+Use `lib/contact-links.ts` for contact links. It returns null for unsupported or placeholder values. Phone/WhatsApp values require an international country code. Only configured HTTPS Instagram, Facebook and LinkedIn profile URLs are accepted. These checks establish syntactic/configuration safety, not ownership verification.
 
-A client should feel:
+When a link is null, future UI must render a calm unavailable state and offer the request form. Never render fake tel, mailto, WhatsApp or social destinations. Do not show technical configuration errors to customers.
 
-"I don't need to constantly worry about my property. Someone responsible is looking after it."
+Never place Resend credentials, delivery recipients or other server secrets in public content modules.
 
-The service combines:
+## Design system
 
-- Inspection
-- Prevention
-- Coordination
-- Documentation
-- Verification
-- Accountability
+Primary canvas #F8F6F0; cream surface #F1EEE6; elevated surface #FCFAF6.
+Forest green #193C32; text #203A32; secondary text #59655E.
+Muted natural green #718477; warm border #DDD9CF; existing logo gold #C9A66B.
+Focus #315F4D on light surfaces; cream on dark surfaces.
 
-Pur Aitmaad acts as the owner's trusted representative for agreed property-related activities.
+Controls use 8px radii; cards use 10px. Content width approximately 1280px.
+Mobile gutters 20–24px; desktop section spacing 64–96px.
+Spacing scale: 4, 8, 12, 16, 24, 32, 48, 64, 96px.
 
+Major headings use DM Serif Display (normal 400). Body, navigation, labels and controls use Geist. Fonts use next/font with robust fallbacks. Body copy is generally 16–18px; mobile form controls are at least 16px.
 
----
+Use warm, realistic lifestyle imagery, thin borders, minimal shadows and restrained motion. Do not copy the screenshot's photographs unless independently supplied/licensed. Do not use technician portraits in the hero. Keep images centrally replaceable.
 
-# 3. Core Operating Principle
+Use existing Button, ButtonLink, Container and SectionHeading foundations plus Card, Badge and ServiceIcon. SectionHeading is the existing SectionHeader equivalent; do not duplicate it. Buttons support primary, secondary and text variants plus dark-surface usage.
 
-The service should follow this workflow:
+## Approved page composition (later phases)
 
-Check
-↓
-Document
-↓
-Assess
-↓
-Escalate
-↓
-Get Owner Approval when required
-↓
-Coordinate
-↓
-Verify
-↓
-Close
-↓
-Report
+Homepage: header; ivory/lifestyle hero and trust indicators; six service cards; differentiator and five-step process; emotional-value section; property/business editorial pair; coming-home scenario; problem-led invitation; membership; Private Service; vendor-care principles; sample scenario; request/contact panel; final dark CTA; footer.
 
-The important difference is that Pur Aitmaad does not simply arrange vendors.
+Process: You Ask → We Source → We Coordinate → We Verify → Done.
+The reference is a compressed overview. Preserve readable copy and generous spacing at real browser dimensions. Mobile layouts must be intentional, with readable vertical process/timeline sequences and a clear service-request path.
 
-Work should be checked and documented before being considered complete.
+Future final routes:
+- /, /services, /services/property-care, /how-it-works, /about, /contact
+- /membership
+- /privacy-policy, /terms-and-conditions, /cancellation-policy, /service-disclaimer
 
+Migration planned for later phases:
+- /stewardship-plans → /membership
+- /overseas-owners → /services/property-care
+- /arrival-ready → /services/property-care#coming-home
+- /privacy-and-discretion → /privacy-policy#privacy-and-discretion
 
----
+Do not activate redirects or delete old pages before equivalent destinations exist and are verified.
 
-# 4. Target Customers
+## Technical infrastructure and phase boundary
 
-## Primary Launch Customer
+Next.js App Router, React, TypeScript, Tailwind CSS and Webpack remain the stack.
+Read relevant installed Next.js guides in node_modules/next/dist/docs before changes.
+Do not install dependencies without a concrete need.
 
-Initially target:
+Phase 1 establishes documentation, content models, contact-link safety, tokens, fonts and shared primitives. It does not compose the new homepage, redesign the shell, migrate the form or activate new routes.
 
-- Affluent property owners in Lahore
-- Overseas Pakistanis with property in Lahore
-- Frequent travelers
-- Business owners
-- Owners of multiple properties
-- Farmhouse owners
-- Families maintaining secondary residences
-- People who value privacy and convenience
+Current pages may retain old layouts and property-oriented copy until their planned migration. The old Services page temporarily uses content/legacy-property-services.ts. The existing plans page uses a compatibility adapter backed by the new membership data, with retired prices and allowances removed. No routes/components are deleted.
 
-A particularly important customer segment is:
+Preserve:
+- Existing working Resend architecture and server action.
+- Client/server validation, HTML escaping, honeypot and submission protection.
+- Existing favicon assets and metadata.
+- Canonical origin handling, robots and sitemap foundations.
+- Next.js image architecture and accessibility foundations.
+- Production Webpack compatibility.
 
-## Overseas Pakistanis
+The later request form will support Name, Phone/WhatsApp, Email, Location/Area, What do you need, optional preferred date and optional preferred time. Its schema, validation, email template and tests must migrate together. Never fake successful delivery. The current submission lock is client-side protection, not server-side idempotency.
 
-These customers may own valuable property in Pakistan but cannot physically inspect or manage it regularly.
+## SEO, accessibility and honesty
 
-Pur Aitmaad becomes their trusted local property representative.
+Target homepage title: Puraitmaad | Premium Home, Property & Business Assistance.
+Description: Premium managed home, property and business assistance in Lahore. Tell Puraitmaad what you need and we'll coordinate the rest.
 
+Keep canonical URLs, sitemap and redirects consistent. Preserve Googlebot and Googlebot-Image access to icons. Later phases add OG/Twitter metadata and truthful Organization/Service schema; LocalBusiness awaits real required business details. No fake prices, ratings or reviews.
 
----
+Target WCAG 2.2 AA: semantic landmarks/headings, visible focus, accessible menu, labeled fields, useful error messages, sufficient contrast, comfortable touch targets and reduced motion. Do not rely on color alone. Fixed mobile controls must not obscure content.
 
-# 5. Future Customers
+Keep server-rendered content, responsive optimized images, limited client JavaScript and restrained font loading. Avoid layout shift and unnecessary libraries.
 
-The brand should later support:
+Legal pages must distinguish drafts from finalized terms. Do not invent fees, service guarantees or retention policies.
 
-- Resort owners
-- Commercial property owners
-- Office operators
-- Companies
-- Property investors
-- Developers
-- Building owners
-- Property portfolio owners
-- Hospitality businesses
-- Corporate facilities
+## Validation and workflow
 
+Run:
+- npm.cmd run lint
+- npx.cmd tsc --noEmit
+- node --test tests/*.test.mjs
+- npm.cmd run build (next build --webpack)
 
----
+Test contact placeholders and configured links, content integrity, membership pricing policy, actual form behavior and regressions. Later visual QA covers 375, 390, 430, 768, 1024, 1280, 1440 and 1920px, keyboard access, contrast, images and CTAs.
 
-# 6. Geographic Strategy
+Keep changes scoped to the authorized phase. Do not commit or push without explicit instruction.
 
-Initial operating area:
+## Phase 3 homepage implementation
 
-Lahore, Pakistan.
+The homepage composition lives in app/page.tsx, app/homepage.css and
+components/sections/home/. Copy comes from content/homepage.ts and the shared
+service, membership, scenario and testimonial collections. Empty testimonials
+render no section. Contact actions use the existing safe configuration helpers.
 
-Potential early focus areas may include premium neighborhoods and developments.
+Homepage photographs and crops are centralized separately in homepagePhotography
+in content/photography.ts. The business slot deliberately uses a graphic until
+an approved office photograph is supplied. Replacement directions are documented
+in public/images/property/README.md. No reference photographs were extracted.
 
-However:
+The homepage request section preserves the existing ConsultationForm fields,
+validation and Resend action temporarily. The dedicated form phase must migrate
+fields, validation, email templates and tests together. Homepage requests use
+#consultation; the approved shell's /contact#consultation destination remains valid.
+Supporting pages, old-route redirects, final legal pages and deployment remain
+outside Phase 3. The approved Phase 1 and Phase 2 work remains uncommitted.
 
-DO NOT hard-code the entire website around one Lahore neighborhood.
+## Deferred functionality
 
-The architecture should support future expansion to:
+Accounts, dashboards, payments, invoices, vendor administration, scheduling automation and service tracking are future work. The first version remains a lightweight service website with real request delivery.
 
-- Other areas of Lahore
-- Islamabad
-- Karachi
-- Other Pakistani cities
-- International markets
+## Customize these first
 
-
----
-
-# 7. Core Services
-
-## Property Inspections
-
-Scheduled physical inspections of the property.
-
-Possible checks include:
-
-- General property condition
-- Visible structural issues
-- Water leakage
-- Plumbing
-- Electrical systems
-- AC / HVAC
-- Generator
-- UPS
-- Solar system
-- Internet availability
-- Security-related physical observations
-- Doors and windows
-- Lighting
-- Appliances where applicable
-- Garden condition
-- Pool condition
-- Vehicle condition where included
-
-
-## Preventive Maintenance
-
-Instead of waiting for something to fail, Pur Aitmaad should help identify maintenance requirements earlier.
-
-Examples:
-
-- AC servicing
-- Generator servicing
-- Water tank cleaning
-- Filter replacement
-- Pest control
-- Plumbing inspection
-- Electrical inspection
-- Solar maintenance
-- Pool maintenance
-- Garden maintenance
-- Appliance servicing
-
-
-## Vendor Coordination
-
-Pur Aitmaad may coordinate approved third-party vendors and technicians.
-
-Workflow:
-
-Issue identified
-→
-Owner informed where required
-→
-Estimate obtained
-→
-Approval received
-→
-Vendor scheduled
-→
-Work supervised/coordinated
-→
-Completion verified
-→
-Evidence recorded
-→
-Issue closed
-
-
-## Property Health Reporting
-
-Clients should receive clear information about the condition of their property.
-
-Possible statuses:
-
-Healthy
-Attention Required
-Action Required
-In Progress
-Resolved
-
-
-## Arrival Ready
-
-A premium service for clients returning to their property.
-
-Before arrival, Pur Aitmaad can coordinate agreed preparation activities.
-
-Examples:
-
-- Property inspection
-- Cleaning coordination
-- AC check
-- Generator check
-- Internet check
-- Lighting check
-- Water systems
-- Garden condition
-- Pool condition
-- Vehicle readiness
-- Bedroom preparation
-- Linen preparation
-- Approved household supplies
-
-The website should position this as a premium convenience service.
-
-
-## Vehicle Readiness
-
-Where included in the client's service plan:
-
-- Visual condition
-- Battery condition
-- Tire condition
-- Starting check
-- Cleaning coordination
-- Service coordination
-- Registration/service reminder tracking
-
-Pur Aitmaad is not a vehicle repair company.
-
-It coordinates and verifies approved services.
-
-
----
-
-# 8. Services Explicitly Outside Scope
-
-Pur Aitmaad should NOT position itself as responsible for:
-
-- Banking
-- Investment management
-- Cash custody
-- Jewellery custody
-- Precious metals
-- Financial accounts
-- Safe combinations
-- Banking passwords
-- Financial credentials
-- Legal custody of valuables
-
-Avoid requesting or storing unnecessary sensitive information.
-
-
----
-
-# 9. Brand Personality
-
-Pur Aitmaad should feel:
-
-- Trustworthy
-- Calm
-- Premium
-- Discreet
-- Responsible
-- Professional
-- Human
-- Reliable
-- Organized
-- Modern
-
-It should NOT feel:
-
-- Flashy
-- Loud
-- Cheap
-- Mass-market
-- Like a cleaning company
-- Like a handyman marketplace
-- Like a real-estate listing website
-- Like a construction company
-- Like a generic maintenance contractor
-
-
----
-
-# 10. Brand Language
-
-Use clear, confident, simple English.
-
-Avoid excessive corporate jargon.
-
-Avoid repeatedly using words such as:
-
-- Luxury
-- Elite
-- VIP
-- Billionaire
-- Exclusive
-
-The premium positioning should come from:
-
-- Design
-- Photography
-- Service quality
-- Privacy
-- Attention to detail
-- Communication
-- Professional processes
-
-Trust should be the strongest emotional theme.
-
-
----
-
-# 11. Brand Presentation
-
-Primary brand presentation:
-
-Pur Aitmaad
-
-Descriptor:
-
-Property Stewardship & Management
-
-Primary tagline:
-
-Your property. In trusted hands.
-
-Possible supporting message:
-
-We take care of your property when you can't be there.
-
-Do not permanently hard-code marketing copy in deeply reusable components where it would make future editing difficult.
-
-
----
-
-# 12. Website Objective
-
-The V1 website is primarily a:
-
-## Trust + Lead Generation Website
-
-Its goals are:
-
-1. Explain what Pur Aitmaad does.
-2. Build trust.
-3. Explain why property stewardship is useful.
-4. Show how the service works.
-5. Present services clearly.
-6. Appeal to overseas property owners.
-7. Demonstrate professionalism.
-8. Encourage qualified prospects to request a consultation.
-
-
----
-
-# 13. V1 Website Scope
-
-V1 is PUBLIC-FACING.
-
-Do NOT build the following yet:
-
-- Customer dashboard
-- Login system
-- Mobile application
-- Vendor portal
-- Payment system
-- Subscription billing
-- Complex backend
-- Property management SaaS
-- Admin dashboard
-
-These may be added in future phases.
-
-Build the marketing foundation first.
-
-
----
-
-# 14. Main Website Navigation
-
-Initial navigation:
-
-Home
-Services
-How It Works
-For Overseas Owners
-Arrival Ready
-About
-Privacy & Discretion
-Contact
-
-Primary navigation CTA:
-
-Request Consultation
-
-
----
-
-# 15. Homepage Structure
-
-## Section 1 — Hero
-
-Brand:
-
-Pur Aitmaad
-
-Descriptor:
-
-Property Stewardship & Management
-
-Primary headline direction:
-
-Your property. In trusted hands.
-
-Supporting message:
-
-Professional property oversight, inspections, maintenance coordination and care for owners who can't always be there.
-
-Primary CTA:
-
-Request a Private Consultation
-
-Secondary CTA:
-
-Explore Our Services
-
-
-## Section 2 — The Problem
-
-Headline direction:
-
-Owning a valuable property shouldn't mean constantly managing it.
-
-Explain common problems:
-
-- Owner is traveling
-- Owner lives abroad
-- Maintenance gets delayed
-- Vendors need supervision
-- Small issues become expensive problems
-- Property remains unused for long periods
-- Owner has limited visibility
-- Multiple properties become difficult to manage
-
-
-## Section 3 — The Solution
-
-Explain Pur Aitmaad simply.
-
-Example direction:
-
-One trusted point of contact for the ongoing care of your property.
-
-Introduce:
-
-Inspection
-Maintenance
-Coordination
-Verification
-Reporting
-
-
-## Section 4 — Services
-
-Use premium cards or another elegant layout.
-
-Possible services:
-
-Property Inspections
-Preventive Maintenance
-Vendor Coordination
-Property Health
-Arrival Ready
-Vehicle Readiness
-
-
-## Section 5 — How It Works
-
-Use a simple process.
-
-Understand
-↓
-Inspect
-↓
-Report
-↓
-Coordinate
-↓
-Verify
-↓
-Close
-
-
-## Section 6 — Property Health
-
-Visually demonstrate how clients can understand property condition.
-
-Example:
-
-AC System — Healthy
-Generator — Service Due
-Pool Pump — Attention Required
-Water Leak — Resolved
-
-This should communicate organized oversight.
-
-Do NOT build an actual customer dashboard in V1.
-
-This is only a visual demonstration of reporting quality.
-
-
-## Section 7 — Overseas Owners
-
-Headline direction:
-
-Your property in Pakistan, looked after while you're away.
-
-Explain the value for overseas Pakistanis.
-
-Focus on:
-
-- Local oversight
-- Documentation
-- Regular updates
-- Vendor coordination
-- Arrival preparation
-- Reduced uncertainty
-
-
-## Section 8 — Arrival Ready
-
-Present Arrival Ready as a signature premium service.
-
-Headline direction:
-
-Come home. We'll handle the preparation.
-
-Explain how a property can be prepared before the client's arrival.
-
-
-## Section 9 — Privacy & Discretion
-
-Trust is critical.
-
-Explain principles such as:
-
-- Client confidentiality
-- Controlled property information
-- Limited access
-- Documented visits
-- Vendor access only when required
-- No unnecessary storage of sensitive information
-- No public disclosure of client properties
-- No use of client property photographs for marketing without permission
-
-
-## Section 10 — Founder-Led Service
-
-The business is currently founder-led.
-
-Do NOT pretend Pur Aitmaad has:
-
-- A huge team
-- Hundreds of employees
-- Offices across Pakistan
-- Thousands of clients
-- Years of operating history that do not exist
-
-Position the small beginning positively.
-
-Example direction:
-
-Founder-led care.
-
-Pur Aitmaad is intentionally starting with a limited number of properties so each client receives careful attention and direct accountability.
-
-
-## Section 11 — Final CTA
-
-Strong but calm CTA.
-
-Example:
-
-Your property deserves more than occasional attention.
-
-Request a Private Consultation.
-
-
----
-
-# 16. Consultation Form
-
-Initial fields:
-
-- Full Name
-- Email
-- Phone / WhatsApp
-- Property Location
-- Property Type
-- Do you currently live outside Pakistan?
-- How often is the property occupied?
-- What would you like help with?
-- Message
-
-Property types should remain extensible.
-
-Examples:
-
-Residence
-Apartment
-Farmhouse
-Estate
-Commercial Property
-Office
-Resort / Hospitality
-Other
-
-
----
-
-# 17. Pricing Strategy on Website
-
-Do NOT display detailed subscription prices in V1 unless explicitly requested later.
-
-Use language such as:
-
-Private Property Membership
-
-or:
-
-Property Stewardship Plans
-
-Explain that service plans depend on:
-
-- Property size
-- Property type
-- Inspection frequency
-- Number of systems
-- Number of vehicles
-- Maintenance requirements
-- Coordination requirements
-
-CTA:
-
-Request Consultation
-
-
----
-
-# 18. Visual Direction
-
-Overall design:
-
-## Quiet Luxury
-
-The website should visually feel closer to:
-
-- Private banking
-- Premium hospitality
-- High-end architecture
-- Private wealth services
-
-Rather than:
-
-- Local repair marketplace
-- Real estate classified website
-- Generic SaaS template
-
-
-## Color Direction
-
-Use a restrained premium palette.
-
-Suggested direction:
-
-- Warm ivory / off-white
-- Charcoal
-- Deep neutral tones
-- Very subtle champagne / muted gold accents
-
-Do NOT overuse gold.
-
-Avoid loud gradients and bright startup colors.
-
-
-## Typography
-
-Typography should feel:
-
-- Elegant
-- Highly readable
-- Modern
-- Mature
-
-Headings may use a tasteful premium serif or sophisticated display typeface.
-
-Body text should remain extremely readable.
-
-Avoid decorative fonts that reduce usability.
-
-
-## Photography
-
-Photography should focus on:
-
-- Architecture
-- Premium properties
-- Detail
-- Calm environments
-- Property systems
-- Carefully maintained spaces
-
-Avoid:
-
-- Fake handshake stock photos
-- Call-center imagery
-- Generic smiling business teams
-- Overly staged luxury imagery
-- Visible third-party watermarks
-
-
----
-
-# 19. UX Principles
-
-The website must be:
-
-- Simple
-- Fast
-- Responsive
-- Mobile-first
-- Accessible
-- Easy to scan
-- Easy to navigate
-- Calm
-- Consistent
-
-Do not overload pages with animation.
-
-Animation should be subtle and purposeful.
-
-The user should quickly understand:
-
-1. What Pur Aitmaad is.
-2. What it manages.
-3. Why they should trust it.
-4. How the service works.
-5. How to contact the company.
-
-
----
-
-# 20. Responsive Design
-
-Support:
-
-- Mobile
-- Tablet
-- Laptop
-- Desktop
-- Large desktop
-
-Do not design desktop first and simply shrink it.
-
-Navigation, typography, cards, forms and imagery must behave properly across screen sizes.
-
-
----
-
-# 21. Accessibility
-
-Follow good accessibility practices.
-
-Include:
-
-- Semantic HTML
-- Keyboard navigation
-- Proper form labels
-- Accessible buttons
-- Meaningful alt text
-- Sufficient contrast
-- Visible focus states
-- Logical heading hierarchy
-
-Do not sacrifice accessibility for visual styling.
-
-
----
-
-# 22. SEO Foundation
-
-Implement a clean SEO foundation.
-
-Include:
-
-- Page titles
-- Meta descriptions
-- Semantic headings
-- Open Graph metadata where appropriate
-- Sitemap support
-- robots configuration
-- Clean URLs
-- Proper image optimization
-- Structured content
-
-Initial relevant themes include:
-
-Property management Lahore
-Property care Lahore
-Property management Pakistan
-Home management Lahore
-Farmhouse management Lahore
-Overseas Pakistani property management
-Property maintenance management
-Private property management
-Property inspection Lahore
-
-Do NOT keyword-stuff pages.
-
-
----
-
-# 23. Performance
-
-Performance is important.
-
-Prefer:
-
-- Next.js image optimization
-- Efficient components
-- Minimal client-side JavaScript
-- Server Components where appropriate
-- Lazy loading where useful
-- Optimized assets
-- Reasonable font loading
-
-Avoid adding dependencies without a clear reason.
-
-
----
-
-# 24. Technical Stack
-
-Current stack:
-
-- Next.js 16+
-- React
-- TypeScript
-- Tailwind CSS
-- App Router
-- ESLint
-- Git
-- npm
-- Turbopack for local development
-
-Do not change the framework without explicit approval.
-
-Do not install packages simply because they are popular.
-
-Every new dependency should solve a clear problem.
-
-
----
-
-# 25. Architecture Principles
-
-Build reusable components.
-
-Possible component categories:
-
-components/
-  layout/
-  navigation/
-  sections/
-  ui/
-  forms/
-
-Keep business content separate from low-level UI where practical.
-
-Avoid huge page components.
-
-Avoid unnecessary abstraction.
-
-Do not create enterprise-level architecture for a small V1 website.
-
-Keep the code understandable and maintainable.
-
-
----
-
-# 26. Naming Rules in Code
-
-Use broad domain terminology.
-
-Prefer:
-
-Property
-PropertyType
-PropertyService
-Inspection
-MaintenanceItem
-Vendor
-ServiceRequest
-PropertyIssue
-
-Avoid models such as:
-
-Home
-HouseOwner
-HouseService
-
-unless something genuinely applies only to a residence.
-
-This is important because Pur Aitmaad will expand beyond homes.
-
-
----
-
-# 27. Quality Requirements
-
-Before considering a feature complete:
-
-- Check TypeScript
-- Check ESLint
-- Test responsive behavior
-- Test keyboard navigation where relevant
-- Check browser console
-- Check for broken links
-- Check loading behavior
-- Check form validation
-- Check layout at common breakpoints
-- Check text overflow
-- Check image behavior
-
-After meaningful milestones run:
-
-npm run lint
-
-and:
-
-npm run build
-
-Resolve relevant errors before moving forward.
-
-
----
-
-# 28. QA Philosophy
-
-Quality should be built into development, not added at the end.
-
-For each feature consider:
-
-- Happy path
-- Negative scenarios
-- Edge cases
-- Mobile behavior
-- Accessibility
-- Performance
-- Error handling
-- Business impact
-- Regression risk
-
-When fixing a defect, consider whether the same issue could exist elsewhere.
-
-
----
-
-# 29. Security & Privacy Principles
-
-Collect the minimum information necessary.
-
-Do not expose:
-
-- Client addresses unnecessarily
-- Access credentials
-- Alarm codes
-- Financial information
-- Sensitive property details
-
-Do not log sensitive information unnecessarily.
-
-Future authentication or client portals must be designed separately with proper security review.
-
-
----
-
-# 30. Content Honesty
-
-Never invent:
-
-- Customer numbers
-- Testimonials
-- Awards
-- Certifications
-- Office locations
-- Partnerships
-- Years in business
-- Team members
-- Vendor relationships
-- Service coverage
-
-Use placeholders clearly marked as placeholders when necessary.
-
-Pur Aitmaad is an early-stage founder-led business.
-
-The website should build credibility through clarity and professionalism, not fake social proof.
-
-
----
-
-# 31. Development Workflow
-
-Before implementing a major feature:
-
-1. Read PROJECT.md.
-2. Inspect existing implementation.
-3. Understand the requested change.
-4. Identify affected components.
-5. Implement the smallest clean solution.
-6. Test the change.
-7. Run lint/type checks where appropriate.
-8. Report what changed.
-
-Do not rewrite unrelated parts of the application without reason.
-
-
----
-
-# 32. Git Practices
-
-Keep changes focused.
-
-Use understandable commit messages.
-
-Examples:
-
-feat: build homepage hero
-feat: add services section
-feat: create consultation form
-fix: mobile navigation overflow
-fix: improve consultation form validation
-refactor: extract reusable section heading
-
-Do not commit secrets or environment credentials.
-
-
----
-
-# 33. Codex Instructions
-
-When working on this project:
-
-- Always read PROJECT.md before significant implementation.
-- Preserve the Pur Aitmaad brand direction.
-- Do not narrow the product architecture to homes only.
-- Do not invent business claims.
-- Do not install unnecessary dependencies.
-- Prefer maintainable solutions over clever solutions.
-- Preserve accessibility.
-- Preserve responsive behavior.
-- Keep visual design premium and restrained.
-- Do not introduce major architecture changes without explaining why.
-- Do not build future features unless requested.
-- Run appropriate checks after implementation.
-- Clearly report files changed and validation performed.
-
-
----
-
-# 34. V1 Development Phases
-
-## Phase 1 — Foundation
-
-- Global styles
-- Design tokens
-- Typography
-- Color system
-- Layout container
-- Navigation
-- Footer
-- Responsive foundation
-- Metadata foundation
-
-
-## Phase 2 — Homepage
-
-Build:
-
-- Hero
-- Problem
-- Solution
-- Services
-- How It Works
-- Property Health demonstration
-- Overseas Owners
-- Arrival Ready
-- Privacy
-- Founder-led section
-- Final CTA
-
-
-## Phase 3 — Supporting Pages
-
-Build:
-
-- Services
-- How It Works
-- Overseas Owners
-- Arrival Ready
-- About
-- Privacy & Discretion
-- Contact
-
-
-## Phase 4 — Lead Generation
-
-Build:
-
-- Consultation form
-- Validation
-- Success state
-- Error state
-- Contact options
-
-Backend/form delivery solution should be decided before implementation.
-
-
-## Phase 5 — Quality
-
-Perform:
-
-- Responsive testing
-- Accessibility review
-- SEO review
-- Performance review
-- Cross-browser testing
-- Content review
-- Production build validation
-
-
-## Phase 6 — Deployment
-
-Deployment provider will be selected later.
-
-Do not assume a provider until explicitly decided.
-
-
----
-
-# 35. Future Product Vision
-
-The architecture should leave room for a future client platform.
-
-Potential future capabilities may include:
-
-- Client login
-- Property dashboard
-- Multiple properties
-- Property Health score
-- Inspection history
-- Maintenance calendar
-- Issue tracking
-- Before/after evidence
-- Vendor records
-- Approval workflow
-- Service history
-- Documents
-- Arrival Ready requests
-- Notifications
-- Property reports
-- Portfolio overview
-
-These are NOT part of V1.
-
-Do not implement them now.
-
-However, avoid architectural decisions that unnecessarily prevent them later.
-
-
----
-
-# 36. Long-Term Brand Structure
-
-Pur Aitmaad should be capable of supporting service categories such as:
-
-Pur Aitmaad Residential
-Pur Aitmaad Estates
-Pur Aitmaad Commercial
-Pur Aitmaad Hospitality
-
-These are future possibilities, not current products.
-
-Do not display them as active divisions unless explicitly requested.
-
-
----
-
-# 37. Success Criteria for V1
-
-A visitor should be able to understand the business within approximately 10 seconds.
-
-They should understand:
-
-Pur Aitmaad looks after properties for owners.
-
-They should feel:
-
-"This company appears organized, professional and trustworthy."
-
-They should know:
-
-How to request a consultation.
-
-The website should make Pur Aitmaad appear premium without pretending the company is larger or older than it really is.
-
-
----
-
-# 38. Core Principle
-
-Every design, content and engineering decision should support one central idea:
-
-## TRUST.
-
-Pur Aitmaad exists because property owners are trusting someone with something valuable.
-
-The website must earn that trust before asking for the client's business.
+Replace public contact placeholders in content/site.ts; confirm service areas and hours; review service scope and membership inclusions; supply replacement approved photography; add only genuine testimonials; finalize legal text in its dedicated phase. Server delivery configuration stays separate.

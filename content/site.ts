@@ -1,20 +1,41 @@
+/** Owner-editable PUBLIC information. Keep unknown values in brackets.
+ * Use lib/contact-links.ts to build links. Never put email secrets here.
+ */
+export const siteConfig = {
+  BRAND_NAME: "Puraitmaad",
+  TAGLINE: "Your problem → our responsibility.",
+  SECONDARY_BRAND_LINE: "Done For You.",
+  PHONE: "[YOUR PHONE]",
+  WHATSAPP: "[YOUR WHATSAPP NUMBER]",
+  EMAIL: "[YOUR EMAIL]",
+  INSTAGRAM: "[YOUR INSTAGRAM URL]",
+  FACEBOOK: "[YOUR FACEBOOK URL]",
+  LINKEDIN: "[YOUR LINKEDIN URL]",
+  ADDRESS: "[YOUR BUSINESS ADDRESS]",
+  CITY: "Lahore, Pakistan",
+  DOMAIN: "https://puraitmaad.com",
+  BUSINESS_HOURS: "[BUSINESS HOURS]",
+  SERVICE_AREAS: "[SERVICE AREAS]",
+} as const;
+
+// Compatibility view for existing pages and canonical-domain handling.
 export const site = {
-  name: "Pur Aitmaad",
-  url: "https://puraitmaad.com",
-  descriptor: "Property Stewardship & Management",
-  tagline: "Your property. In trusted hands.",
-  description: "Professional property oversight, inspections, maintenance coordination and care for owners who can't always be there. Initially serving Lahore, Pakistan.",
+  name: siteConfig.BRAND_NAME,
+  url: siteConfig.DOMAIN,
+  descriptor: "Premium Home, Property & Business Assistance",
+  tagline: siteConfig.TAGLINE,
+  secondaryBrandLine: siteConfig.SECONDARY_BRAND_LINE,
+  description: "Premium managed home, property and business assistance in Lahore. Tell Puraitmaad what you need and we'll coordinate the rest.",
 };
 
 // Enable destinations as supporting pages are implemented.
 export const navigation = [
   { label: "Home", href: "/", available: true },
   { label: "Services", href: "/services", available: true },
-  { label: "Plans", href: "/stewardship-plans", available: true },
   { label: "How It Works", href: "/how-it-works", available: true },
-  { label: "Overseas Owners", href: "/overseas-owners", available: true },
-  { label: "Arrival Ready", href: "/arrival-ready", available: true },
   { label: "About", href: "/about", available: true },
-  { label: "Privacy", href: "/privacy-and-discretion", available: true },
   { label: "Contact", href: "/contact", available: true },
-];
+] as const;
+
+// Existing form destination until the dedicated request-form migration.
+export const primaryCta = { label: "Request a Service", href: "/contact#consultation" } as const;

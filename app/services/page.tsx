@@ -5,7 +5,7 @@ import { ButtonLink } from "@/components/ui/button-link";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { PageHero } from "@/components/sections/page-hero";
 import { ConsultationCta } from "@/components/sections/consultation-cta";
-import { services } from "@/content/services";
+import { services } from "@/content/legacy-property-services";
 
 const description = "Explore property inspections, preventive maintenance and service coordination for private residences, farmhouses and estates in Lahore.";
 export const metadata = pageMetadata("Services", description, "/services");

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist } from "next/font/google";
+import { DM_Serif_Display, Geist } from "next/font/google";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { site } from "@/content/site";
@@ -9,6 +9,17 @@ import "./globals.css";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
+  display: "swap",
+  fallback: ["Arial", "sans-serif"],
+});
+
+const editorialSerif = DM_Serif_Display({
+  variable: "--font-editorial",
+  subsets: ["latin"],
+  weight: "400",
+  style: "normal",
+  display: "swap",
+  fallback: ["Georgia", "Times New Roman", "serif"],
 });
 
 export const metadata: Metadata = {
@@ -37,7 +48,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${editorialSerif.variable} h-full antialiased`}
     >
       <body>
         <a className="skip-link" href="#main-content">Skip to content</a>

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { site } from "@/content/site";
+import { primaryCta, site } from "@/content/site";
 import { Container } from "@/components/ui/container";
 import { ButtonLink } from "@/components/ui/button-link";
 import { NavigationItems } from "@/components/navigation/navigation-items";
@@ -14,15 +14,15 @@ export function SiteHeader() {
           <Link href="/" className="wordmark" aria-label={`${site.name} — Home`}>
             <BrandLogo placement="header" />
           </Link>
-          <nav className="desktop-navigation" aria-label="Main navigation">
+          <nav className="desktop-navigation" aria-label="Primary navigation">
             <ul><NavigationItems /></ul>
           </nav>
-          <div className="desktop-consultation">
-            <ButtonLink href="/contact#consultation" prefetch={false}>Request Consultation</ButtonLink>
+          <div className="desktop-request">
+            <ButtonLink href={primaryCta.href} prefetch={false}>{primaryCta.label}<span className="shell-arrow" aria-hidden="true">→</span></ButtonLink>
           </div>
           <MobileNavigation>
             <ul><NavigationItems /></ul>
-            <ButtonLink href="/contact#consultation" prefetch={false}>Request Consultation</ButtonLink>
+            <div className="mobile-menu-action"><ButtonLink href={primaryCta.href} tone="dark" prefetch={false}>{primaryCta.label}<span className="shell-arrow" aria-hidden="true">→</span></ButtonLink></div>
           </MobileNavigation>
         </div>
       </Container>

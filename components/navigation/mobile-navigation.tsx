@@ -1,15 +1,40 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
 
 export function MobileNavigation({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false);
   const trigger = useRef<HTMLButtonElement>(null);
+  const root = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const desktop = window.matchMedia("(min-width: 64rem)");
+    const closeAtDesktop = () => {
+      if (desktop.matches) {
+        if (root.current?.contains(document.activeElement)) {
+          document.querySelector<HTMLAnchorElement>(".site-header .wordmark")?.focus();
+        }
+        setOpen(false);
+      }
+    };
+    const closeOutside = (event: PointerEvent) => {
+      if (!root.current?.contains(event.target as Node)) setOpen(false);
+    };
+    desktop.addEventListener("change", closeAtDesktop);
+    document.addEventListener("pointerdown", closeOutside);
+    return () => {
+      desktop.removeEventListener("change", closeAtDesktop);
+      document.removeEventListener("pointerdown", closeOutside);
+    };
+  }, []);
   return (
-    <div className="mobile-navigation" onKeyDown={(event) => {
+    <div ref={root} className="mobile-navigation" onBlur={(event) => {
+      // Non-modal disclosure: tabbing out closes the panel; the page stays usable.
+      if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setOpen(false);
+    }} onKeyDown={(event) => {
       if (event.key === "Escape" && open) {
         setOpen(false);
+        event.preventDefault();
         trigger.current?.focus();
       }
     }}>
@@ -18,7 +43,7 @@ export function MobileNavigation({ children }: { children: ReactNode }) {
           {open ? <path d="M6 6l12 12M18 6L6 18" /> : <path d="M4 6h16M4 12h16M4 18h16" />}
         </svg>
       </button>
-      <nav id="mobile-menu" aria-label="Mobile navigation" hidden={!open} onClick={(event) => {
+      <nav id="mobile-menu" aria-label="Primary navigation" hidden={!open} onClick={(event) => {
         if ((event.target as HTMLElement).closest("a")) {
           setOpen(false);
           trigger.current?.focus();
