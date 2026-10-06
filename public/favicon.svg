@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="255 95 720 720"><title>Pur Aitmaad</title><g id="mark" fill="none" stroke="#C9A66B" stroke-width="34" stroke-linejoin="miter" stroke-linecap="square">
+    <!-- Left outer building -->
+    <path d="M350 650 V430 L470 315 V600" />
+    <!-- Left inner tower -->
+    <path d="M470 600 V360 L545 285 V650" />
+
+    <!-- Central tower -->
+    <path d="M585 650 V245 L615 215 L645 245 V650" />
+
+    <!-- Right inner tower -->
+    <path d="M685 650 V285 L760 360 V600" />
+    <!-- Right outer building -->
+    <path d="M760 315 L880 430 V650" />
+
+    <!-- House / stewardship roof -->
+    <path d="M430 655 L615 515 L800 655" />
+  </g><g fill="#C9A66B">
+    <rect x="583" y="585" width="28" height="28"/>
+    <rect x="619" y="585" width="28" height="28"/>
+    <rect x="583" y="621" width="28" height="28"/>
+    <rect x="619" y="621" width="28" height="28"/>
+  </g></svg>
