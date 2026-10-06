@@ -1,21 +1,20 @@
-import { fieldLabels, type ConsultationValues } from "./validation";
-
+import { fieldLabels, type ServiceRequestValues } from "./validation";
+import { getRequestService } from "@/lib/request-context";
 function escapeHtml(value: string): string {
-  return value.replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[character]!);
+  return value.replace(/[&<>"']/g, character => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[character]!);
 }
-
-export function consultationEmail(values: ConsultationValues, submittedAt = new Date()) {
-  const rows = [
-    ["Submitted (UTC)", submittedAt.toISOString()],
-    ["Submitted (Pakistan)", new Intl.DateTimeFormat("en-GB", { dateStyle: "long", timeStyle: "long", timeZone: "Asia/Karachi" }).format(submittedAt)],
-    ...Object.entries(fieldLabels).map(([field, label]) => {
-      const value = values[field as keyof ConsultationValues];
-      return [label, (Array.isArray(value) ? value.join(", ") : value) || "Not provided"];
-    }),
+export const preferenceNote = "Preferred date and time are customer preferences in Lahore (Asia/Karachi), not confirmed appointments.";
+export function serviceRequestEmail(values: ServiceRequestValues, serviceId?: string, submittedAt?: Date) {
+  const service = getRequestService(serviceId);
+  const rows: string[][] = [
+    ...(submittedAt ? [["Submitted (UTC)", submittedAt.toISOString()], ["Submitted (Pakistan)", new Intl.DateTimeFormat("en-GB", { dateStyle: "long", timeStyle: "long", timeZone: "Asia/Karachi" }).format(submittedAt)]] : []),
+    ...Object.entries(fieldLabels).filter(([field]) => values[field as keyof ServiceRequestValues]).map(([field, label]) => [field === "message" ? "Request" : label, values[field as keyof ServiceRequestValues]]),
+    ...(service ? [["Service context (optional)", service.name]] : []),
   ];
+  // Delivery omits a changing timestamp so the provider payload stays identical on retries.
   return {
-    subject: `New Pur Aitmaad Consultation Enquiry — ${values.fullName}`,
-    text: "New Pur Aitmaad consultation enquiry\n\n" + rows.map(([label, value]) => `${label}: ${value}`).join("\n\n"),
-    html: `<div style="font-family:Arial,sans-serif;color:#292b27;max-width:680px"><h1 style="font-size:24px">New consultation enquiry</h1><p>Pur Aitmaad · Property Stewardship &amp; Management</p><table style="border-collapse:collapse;width:100%">${rows.map(([label, value]) => `<tr><th scope="row" style="padding:12px;text-align:left;vertical-align:top;border-bottom:1px solid #d7d2c6">${escapeHtml(label)}</th><td style="padding:12px;border-bottom:1px solid #d7d2c6;overflow-wrap:anywhere">${escapeHtml(value).replace(/\r?\n/g, "<br>")}</td></tr>`).join("")}</table></div>`,
+    subject: "New Puraitmaad Service Request",
+    text: "New Puraitmaad Service Request\n\n" + rows.map(([label, value]) => `${label}: ${value}`).join("\n\n") + "\n\n" + preferenceNote,
+    html: `<div style="font-family:Arial,sans-serif;color:#203a32;max-width:680px"><h1 style="font-size:24px">New Puraitmaad Service Request</h1><table style="border-collapse:collapse;width:100%">${rows.map(([label, value]) => `<tr><th scope="row" style="padding:12px;text-align:left;vertical-align:top;border-bottom:1px solid #ddd9cf">${escapeHtml(label)}</th><td style="padding:12px;border-bottom:1px solid #ddd9cf;overflow-wrap:anywhere">${escapeHtml(value).replace(/\r?\n/g, "<br>")}</td></tr>`).join("")}</table><p>${preferenceNote}</p></div>`,
   };
 }

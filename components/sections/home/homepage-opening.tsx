@@ -5,6 +5,7 @@ import { ServiceIcon } from "@/components/ui/service-icon";
 import { HomepagePhotography } from "@/components/ui/homepage-photography";
 import { homepage } from "@/content/homepage";
 import { featuredServices } from "@/content/services";
+import { serviceRequestHref } from "@/lib/request-context";
 import { EditorialHeading, RequestLink, TextLink } from "./homepage-shared";
 
 export function HomepageHero() {
@@ -24,7 +25,7 @@ export function FeaturedServices() {
   return <section className="hp-section hp-services" aria-labelledby="featured-services-heading">
     <Container>
       <div className="hp-section-intro"><EditorialHeading eyebrow="Our services" id="featured-services-heading">{homepage.services.heading}</EditorialHeading><p>{homepage.services.description}</p></div>
-      <ul className="hp-service-grid">{featuredServices.map(service => <li key={service.id}><Link className="hp-service-card" href={homepage.requestHref} aria-label={`Request ${service.name}`}><ServiceIcon name={service.icon} /><h3>{service.name}</h3><p>{service.description}</p><span className="hp-card-arrow" aria-hidden="true">→</span></Link></li>)}</ul>
+      <ul className="hp-service-grid">{featuredServices.map(service => <li key={service.id}><Link className="hp-service-card" href={serviceRequestHref(service.id)} aria-label={`Request ${service.name}`}><ServiceIcon name={service.icon} /><h3>{service.name}</h3><p>{service.description}</p><span className="hp-card-arrow" aria-hidden="true">→</span></Link></li>)}</ul>
       <TextLink href="/services">View all services</TextLink>
     </Container>
   </section>;

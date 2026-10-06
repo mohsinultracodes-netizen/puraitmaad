@@ -2,167 +2,106 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import fs from "node:fs";
 import path from "node:path";
-import { createRequire } from "node:module";
+import Module, { createRequire } from "node:module";
 import { fileURLToPath } from "node:url";
 import ts from "typescript";
-import Module from "node:module";
-
-// Next enforces this marker at bundle time; allow server modules in the Node test runner.
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
 const originalLoad = Module._load;
-Module._load = function (name, ...args) {
-  if (name === "server-only") return {};
-  return originalLoad.call(this, name, ...args);
+Module._load = function (name,...args) { if(name === "server-only") return {}; return originalLoad.call(this,name,...args); };
+const load = createRequire(import.meta.url), root = path.resolve(path.dirname(fileURLToPath(import.meta.url)),"..");
+for(const extension of [".ts",".tsx"])load.extensions[extension] = (module,filename) => {
+  const source=fs.readFileSync(filename,"utf8").replace(/(["'])@\/([^"']+)\1/g,(_,quote,target)=>JSON.stringify(path.resolve(root,target)));
+  module._compile(ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,jsx:ts.JsxEmit.ReactJSX,esModuleInterop:true}}).outputText,filename);
 };
-
-const loadModule = createRequire(import.meta.url);
-const testDirectory = path.dirname(fileURLToPath(import.meta.url));
-
-// Exercise the actual TypeScript validator and Server Action using the installed compiler.
-loadModule.extensions[".ts"] = (module, filename) => {
-  const source = fs.readFileSync(filename, "utf8").replace(/(["'])@\/([^"']+)\1/g, (_, _quote, target) => JSON.stringify(path.resolve(testDirectory, "..", target)));
-  const output = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 } });
-  module._compile(output.outputText, filename);
-};
-const { validateConsultation, validateFullName } = loadModule("../lib/consultation/validation.ts");
-const { requestConsultation } = loadModule("../app/contact/actions.ts");
-const { deliverConsultation } = loadModule("../lib/consultation/delivery.ts");
-const { consultationEmail } = loadModule("../lib/consultation/email.ts");
-
-function validForm() {
-  const form = new FormData();
-  for (const [name, value] of Object.entries({ fullName: "  Test Owner  ", email: " owner@example.com ", location: " Lahore ", propertyType: "Estate", overseas: "Yes", help: "Not Sure Yet" })) form.append(name, value);
-  return form;
-}
-
-test("Full Name accepts the requested examples and Unicode names", () => {
-  for (const name of ["Mohsin Iqbal", "Ali Raza", "Maryam", "Anne-Marie", "O'Connor", "علی", "José", "Jose\u0301", "  Mohsin Iqbal  "]) {
-    assert.equal(validateFullName(name), undefined, name);
-    const form = validForm(); form.set("fullName", name);
-    assert.equal(validateConsultation(form).errors.fullName, undefined, name);
-  }
+load.extensions[".css"] = () => {};
+const {validateServiceRequest,validateFullName,getLahoreDate,requestSuccess,requestFailure}=load("../lib/consultation/validation.ts");
+const {requestService}=load("../app/contact/actions.ts");
+const {deliverServiceRequest}=load("../lib/consultation/delivery.ts");
+const {serviceRequestEmail}=load("../lib/consultation/email.ts");
+const {getRequestService,serviceRequestHref}=load("../lib/request-context.ts");
+const {ServiceRequestForm}=load("../components/forms/service-request-form.tsx");
+const {RequestFeedback}=load("../components/forms/request-feedback.tsx");
+const fixedNow=new Date("2026-10-06T20:00:00Z");
+function validForm(contact={email:" owner@example.com "}){const form=new FormData();for(const [key,value]of Object.entries({fullName:" Test Owner ",location:" Lahore ",message:"Please arrange a repair.\nThe kitchen tap is leaking.",...contact}))form.append(key,value);return form;}
+test("Name preserves Unicode, combining marks, hyphens and apostrophes",()=>{
+  for(const name of ["Mohsin Iqbal","Ali Raza","Maryam","Anne-Marie","O'Connor","O’Connor","علی","José","Jose\u0301","  Mohsin Iqbal  "])assert.equal(validateFullName(name),undefined,name);
 });
-test("Full Name rejects numbers and special characters with the requested message", async () => {
-  for (const name of ["Mohsin123", "12345", "Mohsin@Iqbal", "Test!", "@@@", "M0hsin", "--", "Ali\tRaza"]) {
-    const message = "Please enter a valid name using letters only.";
-    assert.equal(validateFullName(name), message, name);
-    const form = validForm(); form.set("fullName", name);
-    const response = await requestConsultation({}, form);
-    assert.equal(response.status, "invalid");
-    assert.equal(response.errors.fullName, message, name);
-  }
+test("Name rejects numbers, special characters, controls and excessive length",async()=>{
+  for(const name of ["Mohsin123","12345","Mohsin@Iqbal","Test!","@@@","M0hsin","--","Ali\tRaza","Ali\u0000Raza"]){assert.ok(validateFullName(name),name);const form=validForm();form.set("fullName",name);assert.equal((await requestService({},form)).status,"invalid");}
+  assert.equal(validateFullName(""),"Name is required.");assert.equal(validateFullName("A"),"Please enter at least 2 characters.");assert.equal(validateFullName("a".repeat(121)),"Please use 120 characters or fewer.");
 });
-test("Full Name distinguishes empty and too-short values", () => {
-  for (const name of ["", "   "]) assert.equal(validateFullName(name), "Full name is required.");
-  for (const name of ["A", "  A  ", "é"]) assert.equal(validateFullName(name), "Please enter at least 2 characters.");
+test("phone-only, email-only and both-contact requests are valid",()=>{
+  for(const contact of [{phone:"0300 1234567"},{email:"owner@example.com"},{phone:"+92 (300) 123-4567",email:"owner@example.com"}])assert.deepEqual(validateServiceRequest(validForm(contact)).errors,{});
 });
-
-test("valid values are trimmed and optional fields may be empty", () => {
-  const result = validateConsultation(validForm());
-  assert.deepEqual(result.errors, {});
-  assert.equal(result.values.fullName, "Test Owner");
-  assert.equal(result.values.email, "owner@example.com");
+test("neither contact method is rejected and malformed optional contacts stay invalid",()=>{
+  const neither=validateServiceRequest(validForm({}));assert.ok(neither.errors.phone&&neither.errors.email);
+  for(const email of ["owner@invalid","a..b@example.com","a@example.com\r\nBcc:other@example.com","a@-bad.com"]){assert.ok(validateServiceRequest(validForm({phone:"03001234567",email})).errors.email);}
+  for(const phone of ["letters","123","00000000000","+92+3001234567","1234567890123456"]){assert.ok(validateServiceRequest(validForm({email:"owner@example.com",phone})).errors.phone);}
 });
-test("missing required values are rejected", () => {
-  assert.equal(Object.keys(validateConsultation(new FormData()).errors).length, 6);
+test("realistic international formats, trimming and email-domain normalization work",()=>{
+  for(const phone of ["+44 (20) 7946-0123","001 (415) 555-0123","042 34567890"]){assert.deepEqual(validateServiceRequest(validForm({phone})).errors,{});}
+  const result=validateServiceRequest(validForm({email:" Owner@EXAMPLE.COM "}));assert.equal(result.values.email,"Owner@example.com");assert.equal(result.values.fullName,"Test Owner");assert.equal(result.values.location,"Lahore");
 });
-test("malformed email, excessive lengths and invalid phone are rejected", () => {
-  const form = validForm();
-  form.set("email", "owner@invalid"); form.set("fullName", "a".repeat(121)); form.set("phone", "letters");
-  const { errors } = validateConsultation(form);
-  assert.ok(errors.email && errors.fullName && errors.phone);
+test("required location and request remain free text with sensible bounds",()=>{
+  const form=validForm();form.set("location","");form.set("message","");const missing=validateServiceRequest(form);assert.ok(missing.errors.location&&missing.errors.message);
+  for(const field of ["location","message"]){form.set(field,"abc\u0000def");assert.ok(validateServiceRequest(form).errors[field]);}
+  const long=validForm();long.set("location","a".repeat(161));long.set("message","a".repeat(4001));assert.ok(validateServiceRequest(long).errors.location&&validateServiceRequest(long).errors.message);
+  const human=validForm();human.set("location","Township, Lahore — near the park");human.set("message","Tap leaking (again)! Can you help?\nAvailable after 4pm; thanks.");assert.deepEqual(validateServiceRequest(human).errors,{});
 });
-test("tampered select and multi-select values are rejected", () => {
-  const form = validForm();
-  form.set("propertyType", "tampered"); form.set("overseas", "Maybe"); form.set("occupancy", "tampered"); form.append("help", "tampered");
-  const { errors } = validateConsultation(form);
-  assert.ok(errors.propertyType && errors.overseas && errors.occupancy && errors.help);
+test("duplicate scalar entries and uploaded files are rejected",()=>{
+  for(const field of ["fullName","phone","email","location","message","preferredDate","preferredTime"]){const form=validForm();form.append(field,"duplicate");form.append(field,"again");assert.ok(validateServiceRequest(form).errors[field],field);const file=validForm();file.set(field,new Blob(["data"]),"test.txt");assert.ok(validateServiceRequest(file).errors[field],field);}
 });
-test("duplicate scalar values, duplicate help values and files are rejected", () => {
-  const form = validForm();
-  form.append("email", "another@example.com"); form.append("help", "Not Sure Yet"); form.set("message", new Blob(["file"]), "test.txt");
-  const { errors } = validateConsultation(form);
-  assert.ok(errors.email && errors.help && errors.message);
+test("optional preferences and real calendar dates use Lahore local midnight",()=>{
+  assert.equal(getLahoreDate(fixedNow),"2026-10-07");assert.deepEqual(validateServiceRequest(validForm(),fixedNow).errors,{});
+  for(const date of ["2026-10-07","2026-10-08","2028-02-29"]){const form=validForm();form.set("preferredDate",date);form.set("preferredTime","23:59");assert.deepEqual(validateServiceRequest(form,fixedNow).errors,{});}
+  for(const date of ["2026-10-06","2026-02-30","2027-02-29","2026-13-01","not-a-date"]){const form=validForm();form.set("preferredDate",date);assert.ok(validateServiceRequest(form,fixedNow).errors.preferredDate,date);}
+  assert.equal(getLahoreDate(new Date("2026-10-06T18:59:59Z")),"2026-10-06");
 });
-test("unicode names, international phone numbers and multiple allowed selections work", () => {
-  const form = validForm();
-  form.set("fullName", "علی"); form.set("phone", "+92 (300) 123-4567"); form.append("help", "Arrival Ready");
-  assert.deepEqual(validateConsultation(form).errors, {});
+test("malformed times are rejected while time-only preferences are allowed",()=>{
+  for(const time of ["24:00","12:60","9:30","noon","12:30:00"]){const form=validForm();form.set("preferredTime",time);assert.ok(validateServiceRequest(form).errors.preferredTime,time);}
+  const form=validForm();form.set("preferredTime","09:30");assert.deepEqual(validateServiceRequest(form).errors,{});
 });
-test("Server Action rejects invalid submissions independently of the browser", async () => {
-  const response = await requestConsultation({ status: "success", errors: {}, message: "untrusted" }, new FormData());
-  assert.equal(response.status, "invalid"); assert.ok(response.errors.email);
+test("server action independently validates and ignores untrusted previous success",async()=>{
+  const result=await requestService({status:"success",message:"untrusted",errors:{}},new FormData());assert.equal(result.status,"invalid");for(const field of ["fullName","phone","email","location","message"])assert.ok(result.errors[field]);assert.equal("values" in result,false);
 });
-test("missing credentials never claim delivery success", async () => {
-  const previousKey = process.env.RESEND_API_KEY;
-  delete process.env.RESEND_API_KEY;
-  try {
-  const response = await requestConsultation({ status: "idle", errors: {}, message: "" }, validForm());
-  assert.equal(response.status, "error");
-  assert.equal(response.message, "Your enquiry could not be submitted. Please try again later.");
-  assert.deepEqual(response.errors, {});
-  assert.equal("values" in response, false);
-  } finally {
-    if (previousKey === undefined) delete process.env.RESEND_API_KEY;
-    else process.env.RESEND_API_KEY = previousKey;
-  }
+test("honeypot, duplicate identity/context and malformed UUID never deliver",async()=>{
+  for(const value of ["spam",new Blob(["spam"])]){const form=validForm();form.set("website",value);assert.equal((await requestService({},form)).status,"error");}
+  for(const field of ["website","submissionId","serviceId"]){const form=validForm();form.append(field,"");form.append(field,"");assert.equal((await requestService({},form)).status,"error");}
+  const form=validForm();form.set("submissionId","injected-key");assert.equal((await requestService({},form)).status,"error");
 });
-
-test("honeypot submissions are rejected before any email call", async () => {
-  for (const value of ["spam", new Blob(["spam"])]) {
-    const form = validForm(); form.set("website", value);
-    assert.equal((await requestConsultation({}, form)).status, "error");
-  }
-  const form = validForm(); form.append("website", ""); form.append("website", "");
-  assert.equal((await requestConsultation({}, form)).status, "error");
+test("notifications escape HTML, include request/preferences and retain optional timestamp utility",()=>{
+  const values=validateServiceRequest(validForm()).values;values.message='<script>alert("test")</script>\nSecond line & details';values.preferredDate="2030-01-02";values.preferredTime="09:30";
+  const mail=serviceRequestEmail(values,"gardening",new Date("2026-10-07T10:00:00Z"));assert.equal(mail.subject,"New Puraitmaad Service Request");assert.ok(!mail.html.includes("<script>"));assert.ok(mail.html.includes("&lt;script&gt;"));assert.ok(mail.html.includes("<br>Second line &amp; details"));assert.ok(mail.text.includes("2026-10-07T10:00:00.000Z"));
+  for(const label of ["Name","Email","Location / Area","Request","Preferred date","Preferred time","not confirmed appointments","Gardening & Outdoor Care"])assert.ok(mail.text.includes(label),label);
+  assert.deepEqual(serviceRequestEmail(values),serviceRequestEmail(values));assert.ok(!serviceRequestEmail(values).text.includes("Phone / WhatsApp:"));
 });
-
-test("notification escapes visitor HTML and includes every field and submission time", () => {
-  const values = validateConsultation(validForm()).values;
-  values.message = '<script>alert("test")</script>\nSecond line';
-  const email = consultationEmail(values, new Date("2026-10-04T10:00:00Z"));
-  assert.ok(!email.html.includes("<script>"));
-  assert.ok(email.html.includes("&lt;script&gt;"));
-  assert.ok(email.html.includes("<br>Second line"));
-  assert.ok(email.text.includes("2026-10-04T10:00:00.000Z"));
-  for (const label of ["Full Name", "Email", "Phone / WhatsApp", "Property Location", "Property Type", "outside Pakistan", "occupied", "help with", "Tell us a little more"]) assert.ok(email.text.includes(label));
+test("known service context is editable, unknown/array values safely fall back",()=>{
+  assert.equal(getRequestService("gardening").name,"Gardening & Outdoor Care");for(const value of ["unknown","<script>",["gardening"],null,undefined])assert.equal(getRequestService(value),undefined);
+  assert.equal(serviceRequestHref("gardening"),"/contact?service=gardening#request-service");assert.equal(serviceRequestHref("unknown"),"/contact#request-service");
+  const html=renderToStaticMarkup(createElement(ServiceRequestForm,{serviceId:"gardening"}));assert.ok(html.includes("Gardening &amp; Outdoor Care"));assert.match(html,/name="serviceId" value="gardening"/);assert.doesNotMatch(renderToStaticMarkup(createElement(ServiceRequestForm,{serviceId:"unknown"})),/name="serviceId"/);
 });
-
-test("Resend acceptance is required; API errors, exceptions, timeout and absent IDs fail safely", async () => {
-  const previousKey = process.env.RESEND_API_KEY;
-  const previousFetch = globalThis.fetch;
-  process.env.RESEND_API_KEY = "re_test_mock_only";
-  const values = validateConsultation(validForm()).values;
-  let calls = 0;
-  try {
-    globalThis.fetch = async (_url, options) => {
-      calls++;
-      const body = JSON.parse(options.body);
-      assert.equal(body.from, "Pur Aitmaad <onboarding@resend.dev>");
-      assert.equal(body.to, "mohsin.ultracodes@gmail.com");
-      assert.equal(body.reply_to, "owner@example.com");
-      assert.ok(options.signal instanceof AbortSignal);
-      return Response.json({ id: "accepted-test-id" });
-    };
-    assert.equal((await requestConsultation({}, validForm())).status, "success");
-    assert.equal(calls, 1);
-    const blocked = validForm(); blocked.set("website", "bot");
-    await requestConsultation({}, blocked);
-    const invalid = validForm(); invalid.set("email", "invalid");
-    await requestConsultation({}, invalid);
-    assert.equal(calls, 1);
-    for (const response of [Response.json({ message: "private provider error", name: "validation_error" }, { status: 403 }), Response.json({})]) {
-      globalThis.fetch = async () => response;
-      const result = await deliverConsultation(values);
-      assert.equal(result.status, "error");
-      assert.ok(!result.message.includes("private provider"));
-    }
-    for (const exception of [new Error("network exception"), new DOMException("Timed out", "TimeoutError")]) {
-      globalThis.fetch = async () => { throw exception; };
-      assert.equal((await deliverConsultation(values)).status, "error");
-    }
-  } finally {
-    globalThis.fetch = previousFetch;
-    if (previousKey === undefined) delete process.env.RESEND_API_KEY;
-    else process.env.RESEND_API_KEY = previousKey;
-  }
+test("shared form has seven public fields, correct controls, anchor-safe labels and no retired wording",()=>{
+  const html=renderToStaticMarkup(createElement(ServiceRequestForm));for(const name of ["fullName","phone","email","location","message","preferredDate","preferredTime"])assert.ok(html.includes(`name="${name}"`));for(const type of ["tel","email","date","time"])assert.ok(html.includes(`type="${type}"`));assert.match(html,/autoComplete="name"/i);assert.match(html,/autoComplete="tel"/i);assert.match(html,/autoComplete="email"/i);assert.match(html,/Send Request/);assert.doesNotMatch(html,/Property Type|Stewardship enquiry|Request Consultation|name="help"/);
+});
+test("success, error and pending copy is truthful and WhatsApp-aware",()=>{
+  const render=(status,message,whatsappHref,pending=false)=>renderToStaticMarkup(createElement(RequestFeedback,{state:{status,message,errors:{}},pending,whatsappHref}));assert.match(render("success",requestSuccess),/Request received\./);assert.match(render("error",requestFailure),/Something went wrong\./);assert.doesNotMatch(render("error",requestFailure),/WhatsApp|wa.me/);assert.match(render("error",requestFailure,"https://wa.me/923001234567"),/contact us directly on WhatsApp/);assert.equal(render("idle","",null,true),"<p>Sending...</p>");
+});
+test("missing and invalid server configuration never claims delivery",async()=>{
+  const previous={...process.env};try{delete process.env.RESEND_API_KEY;assert.equal((await requestService({},validForm())).status,"error");process.env.RESEND_API_KEY="re_mock_only";delete process.env.RESEND_TO;delete process.env.RESEND_FROM;assert.equal((await requestService({},validForm())).message,requestFailure);}finally{for(const key of ["RESEND_API_KEY","RESEND_FROM","RESEND_TO"]){if(previous[key]===undefined)delete process.env[key];else process.env[key]=previous[key];}}
+});
+test("Resend requires acceptance, separates server config, conditional Reply-To and stable idempotency",async()=>{
+  const previous={...process.env}, fetchBefore=globalThis.fetch;
+  Object.assign(process.env,{RESEND_API_KEY:"re_test_mock_only",RESEND_FROM:"Puraitmaad <sender@example.com>",RESEND_TO:"team@example.com"});const captures=[];
+  try{
+    globalThis.fetch=async(_url,options)=>{captures.push({body:JSON.parse(options.body),headers:new Headers(options.headers),signal:options.signal});return Response.json({id:"accepted-test-id"});};
+    const form=validForm();form.set("submissionId","12345678-1234-4123-8123-123456789abc");form.set("serviceId","gardening");assert.equal((await requestService({},form)).status,"success");await requestService({},form);
+    assert.equal(captures[0].body.from,process.env.RESEND_FROM);assert.equal(captures[0].body.to,process.env.RESEND_TO);assert.equal(captures[0].body.reply_to,"owner@example.com");assert.ok(captures[0].signal instanceof AbortSignal);assert.deepEqual(captures[0].body,captures[1].body);
+    const id=captures[0].headers.get("idempotency-key");assert.match(id,/^service-request\/[a-f0-9]{64}$/);assert.equal(id,captures[1].headers.get("idempotency-key"));assert.ok(!id.includes("owner"));
+    const phone=validForm({phone:"03001234567"});assert.equal((await requestService({},phone)).status,"success");assert.ok(!("reply_to"in captures.at(-1).body));
+    form.set("message","Different request");await requestService({},form);assert.notEqual(id,captures.at(-1).headers.get("idempotency-key"));form.set("serviceId","unknown");await requestService({},form);assert.ok(!captures.at(-1).body.text.includes("Service context"));
+    let count=0;globalThis.fetch=async()=>++count===1?Response.json({name:"internal_server_error",message:"provider detail"},{status:500}):Response.json({id:"retry-accepted"});assert.equal((await requestService({},validForm())).status,"success");assert.equal(count,2);
+    for(const response of [()=>Response.json({name:"validation_error",message:"private provider detail"},{status:403}),()=>Response.json({})]){globalThis.fetch=async()=>response();const result=await deliverServiceRequest(validateServiceRequest(validForm()).values);assert.equal(result.status,"error");assert.equal(result.message,requestFailure);}
+    for(const exception of [new Error("private network detail"),new DOMException("Timed out","TimeoutError")]){globalThis.fetch=async()=>{throw exception;};assert.equal((await requestService({},validForm())).message,requestFailure);}
+  }finally{globalThis.fetch=fetchBefore;for(const key of ["RESEND_API_KEY","RESEND_FROM","RESEND_TO"]){if(previous[key]===undefined)delete process.env[key];else process.env[key]=previous[key];}}
 });

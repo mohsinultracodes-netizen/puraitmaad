@@ -4,6 +4,8 @@ import { navigation, primaryCta, site, siteConfig } from "@/content/site";
 import { serviceCategories } from "@/content/services";
 import { getContactLinks } from "@/lib/contact-links";
 import { BrandLogo } from "@/components/ui/brand-logo";
+import { legalNavigation } from "@/content/legal";
+import "./footer-legal.css";
 
 export function SiteFooter() {
   const links = getContactLinks();
@@ -45,7 +47,7 @@ export function SiteFooter() {
         </div>
         <div className="footer-bottom">
           <p>© {new Date().getFullYear()} {site.name}. All rights reserved.</p>
-          <nav aria-label="Legal"><Link href="/privacy-policy">Privacy Policy</Link></nav>
+          <nav aria-label="Legal" className="footer-legal-links">{legalNavigation.map(item => <Link key={item.href} href={item.href}>{item.label}</Link>)}</nav>
         </div>
       </Container>
     </footer>

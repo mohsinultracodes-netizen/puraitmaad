@@ -11,7 +11,7 @@ export function OverseasOwners() {
           <div><h2 id="overseas-heading">{continuation.overseas.heading}</h2><p className="overseas-location">Local oversight. Lahore, Pakistan.</p></div>
           <div className="editorial-copy">
             {continuation.overseas.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
-            <ButtonLink className="section-link" href="/overseas-owners" variant="secondary" prefetch={false}>For Overseas Owners</ButtonLink>
+            <ButtonLink className="section-link" href="/services/property-care" variant="secondary" prefetch={false}>For Overseas Owners</ButtonLink>
           </div>
         </div>
       </Container>

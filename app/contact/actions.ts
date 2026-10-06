@@ -1,20 +1,18 @@
 "use server";
-
-import { validateConsultation } from "@/lib/consultation/validation";
-import type { ConsultationState } from "@/lib/consultation/validation";
-import { deliverConsultation } from "@/lib/consultation/delivery";
-
-export async function requestConsultation(_previous: ConsultationState, formData: FormData): Promise<ConsultationState> {
+import { validateServiceRequest, requestFailure, type ServiceRequestState } from "@/lib/consultation/validation";
+import { deliverServiceRequest } from "@/lib/consultation/delivery";
+import { getRequestService } from "@/lib/request-context";
+export async function requestService(_previous: ServiceRequestState, formData: FormData): Promise<ServiceRequestState> {
+  const failure: ServiceRequestState = { status: "error", errors: {}, message: requestFailure };
   const honeypot = formData.getAll("website");
-  if (honeypot.length > 1 || honeypot.some((value) => typeof value !== "string" || value.trim())) {
-    return { status: "error", errors: {}, message: "Your enquiry could not be submitted. Please try again later." };
-  }
-  const { values, errors } = validateConsultation(formData);
+  if (honeypot.length > 1 || honeypot.some(value => typeof value !== "string" || value.trim())) return failure;
+  const { values, errors } = validateServiceRequest(formData);
   if (Object.keys(errors).length) return { status: "invalid", errors, message: "Please review the fields below." };
-  try {
-    const result = await deliverConsultation(values);
-    return { ...result, errors: {} };
-  } catch {
-    return { status: "error", errors: {}, message: "Your enquiry could not be delivered. Please try again later." };
-  }
+  const identity = formData.getAll("submissionId"), context = formData.getAll("serviceId");
+  if ([identity, context].some(entries => entries.length > 1 || entries.some(value => typeof value !== "string"))) return failure;
+  const submissionId = (identity[0] as string | undefined) || "";
+  if (submissionId && !/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(submissionId)) return failure;
+  const service = getRequestService(context[0]);
+  try { return { ...await deliverServiceRequest(values, submissionId, service?.id), errors: {} }; }
+  catch { return failure; }
 }

@@ -2,7 +2,7 @@ import type { ServiceIconKey } from "./services";
 
 /** New homepage copy. Service, membership and scenario details live in their shared catalogs. */
 export const homepage = {
-  requestHref: "#consultation",
+  requestHref: "#request-service",
   hero: {
     eyebrow: "Premium home & lifestyle services",
     lines: ["Your problem →", "our responsibility."],

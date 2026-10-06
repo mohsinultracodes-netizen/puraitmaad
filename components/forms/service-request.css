@@ -1,0 +1,32 @@
+.service-request-form { min-width: 0; }
+.request-fields { min-width: 0; }
+.request-grid { display: grid; gap: 1.5rem; }
+.request-field { min-width: 0; }
+.request-field label { display: block; font-size: .875rem; font-weight: 500; margin-bottom: .625rem; }
+.request-field input, .request-field textarea { width: 100%; min-width: 0; max-width: 100%; min-height: 3.25rem; padding: .75rem; border: 1px solid var(--muted); border-radius: var(--radius-control); background: var(--background); color: var(--foreground); font: inherit; font-size: 1rem; }
+.request-field textarea { resize: vertical; min-height: 9rem; }
+.request-field input::placeholder, .request-field textarea::placeholder { color: var(--muted); }
+.request-field [aria-invalid="true"] { border-color: #794332; }
+.request-field input:focus-visible, .request-field textarea:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
+.request-hint { font-size: .8125rem; color: var(--muted); line-height: 1.65; max-width: 65ch; margin-top: .75rem; }
+.request-hint a { text-decoration: underline; text-underline-offset: .2em; }
+.request-field-message, .request-preferences { margin-top: 1.5rem; }
+.request-consent { margin-bottom: 1.5rem; }
+.service-request-form .form-feedback h3 { font-size: 1.5rem; margin-bottom: .5rem; }
+.request-anchor-compat { display: block; height: 0; scroll-margin-top: 6.5rem; }
+#request-service { scroll-margin-top: 2rem; }
+.request-assistance { padding: 2rem; background: var(--surface); border-radius: var(--radius-card); min-width: 0; }
+.request-assistance > .service-icon { width: 32px; height: 32px; margin-bottom: 1.5rem; }
+.request-assistance h3 { font-size: 1.875rem; }
+.request-assistance > p { margin-top: 1rem; color: var(--muted); max-width: 45ch; }
+.request-assistance ol { display: grid; gap: 1rem; margin-top: 1.5rem; font-size: .9375rem; }
+.request-assistance li { display: grid; grid-template-columns: 24px 1fr; gap: .75rem; }
+.request-assistance li span { color: var(--muted); font-size: .75rem; padding-top: 3px; }
+.request-assistance .request-panel-city { margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border); color: var(--foreground); }
+.request-contact-link { display: flex; align-items: center; gap: .75rem; min-height: 3rem; font-size: .9375rem; text-decoration: underline; text-underline-offset: .2em; }
+.request-contact-page .page-hero { padding-bottom: 0; }
+.request-contact-page .page-hero h1 { font-size: clamp(2.5rem,5vw,3.75rem); }
+.request-contact-page .page-introduction { max-width: 55ch; }
+.request-contact-page .contact-grid { gap: 2rem; }
+@media (min-width: 40rem) { .request-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } }
+@media (max-width: 25rem) { .request-assistance { padding: 1.5rem; } }

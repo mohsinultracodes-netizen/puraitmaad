@@ -53,9 +53,11 @@ export function socialHref(value: string | null | undefined): string | null {
 
 type ContactConfig = Record<"PHONE" | "WHATSAPP" | "EMAIL" | "INSTAGRAM" | "FACEBOOK" | "LINKEDIN", string>;
 
-export function getContactLinks(config: ContactConfig = siteConfig) {
+export function publicContactText(value: string | null | undefined): string | null { return configured(value); }
+
+export function getContactLinks(config: ContactConfig = siteConfig, serviceName?: string) {
   return {
-    phone: phoneHref(config.PHONE), email: emailHref(config.EMAIL), whatsapp: whatsappHref(config.WHATSAPP),
+    phone: phoneHref(config.PHONE), email: emailHref(config.EMAIL), whatsapp: whatsappHref(config.WHATSAPP, serviceName),
     instagram: socialHref(config.INSTAGRAM), facebook: socialHref(config.FACEBOOK), linkedin: socialHref(config.LINKEDIN),
   };
 }

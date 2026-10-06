@@ -23,6 +23,7 @@ for (const extension of [".ts", ".tsx"]) {
 }
 // Simulate Next's static-image module boundary; browser QA uses the actual assets.
 load.extensions[".png"] = (module, filename) => { module.exports = { src: `/images/property/${path.basename(filename)}`, width: 1200, height: 800, blurDataURL: "data:image/png;base64,iVBORw0KGgo=" }; };
+load.extensions[".css"] = () => {};
 const render = component => renderToStaticMarkup(createElement(component));
 const { FeaturedServices, HomepageHero } = load("../components/sections/home/homepage-opening.tsx");
 const { ManagedProcess } = load("../components/sections/home/homepage-process.tsx");
@@ -40,7 +41,7 @@ test("homepage opening has the new promise and exactly six shared request cards"
   const cards = render(FeaturedServices);
   assert.equal((cards.match(/class="hp-service-card"/g) || []).length, 6);
   for (const service of featuredServices) assert.ok(cards.includes(service.name.replaceAll("&", "&amp;")));
-  assert.equal((cards.match(/href="#consultation"/g) || []).length, 6);
+  for (const service of featuredServices) assert.ok(cards.includes(`href="/contact?service=${service.id}#request-service"`));
   assert.match(cards, /href="\/services"/);
 });
 
@@ -73,9 +74,10 @@ test("homepage contact and closing sections omit placeholder channels", () => {
     assert.doesNotMatch(html, /\[YOUR|\[WHATSAPP|coming soon|schema migration/i);
   }
   const request = render(HomepageRequest);
-  assert.match(request, /id="consultation"/);
-  for (const name of ["fullName", "email", "propertyType", "overseas", "help", "message", "website"]) assert.ok(request.includes(`name="${name}"`));
-  assert.doesNotMatch(request, /name="preferredDate"|name="preferredTime"/);
+  assert.match(request, /id="request-service"/);
+  assert.match(request, /id="consultation"/); // Deliberate compatibility alias only.
+  for (const name of ["fullName", "phone", "email", "location", "message", "preferredDate", "preferredTime", "website"]) assert.ok(request.includes(`name="${name}"`));
+  assert.doesNotMatch(request, /name="propertyType"|name="overseas"|name="help"|Request Consultation/);
 });
 
 test("real configured WhatsApp is available in homepage assistance and final CTA", () => {

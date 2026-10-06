@@ -11,7 +11,7 @@ export function ArrivalReady() {
           <div>
             <h2 id="arrival-heading">{continuation.arrival.heading}</h2>
             <p className="section-description">{continuation.arrival.description}</p>
-            <ButtonLink className="section-link" href="/arrival-ready" variant="secondary" prefetch={false}>Discover Arrival Ready</ButtonLink>
+            <ButtonLink className="section-link" href="/services/property-care#coming-home" variant="secondary" prefetch={false}>Discover Arrival Ready</ButtonLink>
           </div>
           <dl className="arrival-preparations">
             {continuation.arrival.groups.map((group) => (

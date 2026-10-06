@@ -1,47 +1,12 @@
-import { PropertyPhotography } from "@/components/ui/property-photography";
+import Link from "next/link";
 import { pageMetadata } from "@/lib/seo";
 import { Container } from "@/components/ui/container";
-import { ButtonLink } from "@/components/ui/button-link";
-import { SectionHeading } from "@/components/ui/section-heading";
-import { PageHero } from "@/components/sections/page-hero";
-import { ConsultationCta } from "@/components/sections/consultation-cta";
-import { services } from "@/content/legacy-property-services";
-
-const description = "Explore property inspections, preventive maintenance and service coordination for private residences, farmhouses and estates in Lahore.";
-export const metadata = pageMetadata("Services", description, "/services");
-
+import { EditorialIntro, RequestClosing, ServiceList, SupportingPage } from "@/components/sections/supporting/editorial";
+import { serviceCategories, servicesForCategory, specialRequestInvitation } from "@/content/services";
+export const metadata = pageMetadata("Services", "Practical home, property, personal and business assistance in Lahore. Tell Puraitmaad what needs to be handled.", "/services");
 export default function ServicesPage() {
-  return (
-    <>
-      <PageHero photographySlot="servicesHero" eyebrow="Our Services" title="Professional care for the property you value." description="Pur Aitmaad provides ongoing property oversight, preventive care and service coordination for owners who want their property properly looked after.">
-        <p className="coverage-note">For private residences, farmhouses and estates in Lahore.</p>
-      </PageHero>
-      <Container>
-        {services.map((service) => (
-          <section key={service.id} className={`service-detail editorial-grid${service.id === "vendors" || service.id === "vehicles" ? " service-detail-alternate" : ""}`} aria-labelledby={service.id}>
-            <div><SectionHeading id={service.id}>{service.title}</SectionHeading>
-              <div className="service-photography"><PropertyPhotography slot={service.photographySlot} loading={service.photographyLoading} /></div>
-            </div>
-            <div className="detail-copy">
-              <p>{service.description}</p>
-              {service.items && <ul className="detail-list">{service.items.map((item) => <li key={item}>{item}</li>)}</ul>}
-              {service.steps && <ol className="workflow-list">{service.steps.map((step) => <li key={step}>{step}</li>)}</ol>}
-              {service.note && <p className="detail-note">{service.note}</p>}
-              {service.link && <ButtonLink className="section-link" href={service.link.href} variant="secondary" prefetch={false}>{service.link.label}</ButtonLink>}
-            </div>
-          </section>
-        ))}
-      </Container>
-      <section className="home-section solution-section" aria-labelledby="boundaries-heading">
-        <Container className="editorial-grid">
-          <div><SectionHeading eyebrow="Responsible boundaries" id="boundaries-heading">Care with a clear scope.</SectionHeading><div className="service-photography"><PropertyPhotography slot="careClearScope" /></div></div>
-          <div className="editorial-copy">
-            <p>Our role is property stewardship and agreed service coordination. Banking and investment management are outside that scope.</p>
-            <p>We do not take custody of cash, jewellery or precious metals, or request financial credentials or safe combinations. Clear boundaries keep the service focused on the care of your property.</p>
-          </div>
-        </Container>
-      </section>
-      <ConsultationCta heading="Your property may need a different level of care." description="Stewardship plans can be tailored to property type, size, systems and the level of oversight you need. A consultation helps establish an appropriate scope." />
-    </>
-  );
+  return <SupportingPage><EditorialIntro eyebrow="Our services" title={<>Comprehensive support<br />for your home, property, business &amp; everyday needs.</>} photo="services"><p>Tell us what needs to be handled. We&apos;ll help identify the appropriate next step.</p></EditorialIntro>
+    {serviceCategories.map((category,index) => <section className="sp-section sp-category" key={category.id} id={category.id} aria-labelledby={`${category.id}-heading`}><Container className="sp-editorial-grid"><div className="sp-category-intro"><p className="eyebrow">0{index+1} / Our services</p><h2 id={`${category.id}-heading`}>{category.name}</h2><p>{category.description}</p>{category.id === "property-care" && <Link href="/services/property-care">Explore Property Care <span aria-hidden="true">&nbsp;&#8594;</span></Link>}</div><ServiceList items={servicesForCategory(category.id)} /></Container></section>)}
+    <RequestClosing title="Not sure who to call?" label="Tell Us What You Need"><p>Tell us what you need and we&apos;ll help figure out the next step.</p><p>{specialRequestInvitation}</p></RequestClosing>
+  </SupportingPage>;
 }

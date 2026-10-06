@@ -3,7 +3,8 @@ import { DM_Serif_Display, Geist } from "next/font/google";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { site } from "@/content/site";
-import { getSiteUrl } from "@/lib/seo";
+import { getSiteUrl, socialImage } from "@/lib/seo";
+import { organizationAndServices, serializeJsonLd } from "@/lib/structured-data";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -41,7 +42,10 @@ export const metadata: Metadata = {
     siteName: site.name,
     type: "website",
     locale: "en_PK",
+    url: getSiteUrl().href,
+    images: [socialImage],
   },
+  twitter: { card: "summary_large_image", title: `${site.name} | ${site.descriptor}`, description: site.description, images: [socialImage] },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -51,6 +55,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${geistSans.variable} ${editorialSerif.variable} h-full antialiased`}
     >
       <body>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(organizationAndServices()) }} />
         <a className="skip-link" href="#main-content">Skip to content</a>
         <SiteHeader />
         <main id="main-content" tabIndex={-1}>{children}</main>

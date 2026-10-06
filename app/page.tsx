@@ -12,6 +12,7 @@ export const metadata = {
   ...homeMetadata,
   title: { absolute: `${site.name} | ${site.descriptor}` },
   openGraph: { ...homeMetadata.openGraph, title: `${site.name} | ${site.descriptor}` },
+  twitter: { ...homeMetadata.twitter, title: `${site.name} | ${site.descriptor}` },
 };
 
 export default function Home() {

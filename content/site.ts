@@ -37,5 +37,4 @@ export const navigation = [
   { label: "Contact", href: "/contact", available: true },
 ] as const;
 
-// Existing form destination until the dedicated request-form migration.
-export const primaryCta = { label: "Request a Service", href: "/contact#consultation" } as const;
+export const primaryCta = { label: "Request a Service", href: "/contact#request-service" } as const;

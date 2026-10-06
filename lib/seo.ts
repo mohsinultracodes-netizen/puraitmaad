@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { site } from "@/content/site";
 
-export const publicRoutes = ["/", "/services", "/stewardship-plans", "/how-it-works", "/overseas-owners", "/arrival-ready", "/about", "/privacy-and-discretion", "/contact", "/privacy-policy"] as const;
+export const publicRoutes = ["/", "/services", "/services/property-care", "/how-it-works", "/about", "/contact", "/membership", "/privacy-policy", "/terms-and-conditions", "/cancellation-policy", "/service-disclaimer"] as const;
+export const socialImage = { url: "/images/og-puraitmaad.jpg", width: 1200, height: 630, alt: "Puraitmaad — Your problem → our responsibility. Premium home, property & business assistance. Lahore, Pakistan." };
 
 export function getSiteUrl(): URL {
   const configured = process.env.SITE_URL?.trim() || site.url;
@@ -26,6 +27,8 @@ export function pageMetadata(title: string, description: string, route: typeof p
       type: "website",
       locale: "en_PK",
       url,
+      images: [socialImage],
     },
+    twitter: { card: "summary_large_image", title: `${title} | ${site.name}`, description, images: [socialImage] },
   };
 }

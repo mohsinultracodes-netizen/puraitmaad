@@ -13,7 +13,7 @@ export function Hero() {
           <h1 id="hero-heading">{home.hero.headline[0]}<br />{home.hero.headline[1]}</h1>
           <p className="hero-description">{home.hero.description}</p>
           <div className="hero-actions">
-            <ButtonLink href="/contact#consultation" prefetch={false}>Request a Private Consultation</ButtonLink>
+            <ButtonLink href="/contact#request-service" prefetch={false}>Request a Service</ButtonLink>
             <ButtonLink href="/services" variant="secondary" prefetch={false}>Explore Our Services</ButtonLink>
           </div>
           <p className="coverage-note">{home.hero.coverage}</p>

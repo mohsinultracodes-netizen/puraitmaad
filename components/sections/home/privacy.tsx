@@ -16,7 +16,7 @@ export function Privacy() {
                 <div key={principle.title}><dt>{principle.title}</dt><dd>{principle.description}</dd></div>
               ))}
             </dl>
-            <ButtonLink className="section-link" href="/privacy-and-discretion" variant="secondary" prefetch={false}>Privacy &amp; Discretion</ButtonLink>
+            <ButtonLink className="section-link" href="/privacy-policy#privacy-and-discretion" variant="secondary" prefetch={false}>Privacy &amp; Discretion</ButtonLink>
           </div>
         </div>
       </Container>

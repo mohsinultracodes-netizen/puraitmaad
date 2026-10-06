@@ -16,6 +16,7 @@ for (const extension of [".ts", ".tsx"]) {
     module._compile(ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022, jsx: ts.JsxEmit.ReactJSX, esModuleInterop: true } }).outputText, filename);
   };
 }
+load.extensions[".css"] = () => {};
 const { SiteFooter } = load("../components/layout/site-footer.tsx");
 const { siteConfig } = load("../content/site.ts");
 
@@ -31,7 +32,8 @@ test("footer omits placeholder destinations and displays the confirmed city and 
 test("footer only links available routes; future service categories remain plain text", () => {
   const html = renderToStaticMarkup(createElement(SiteFooter));
   assert.match(html, /href="\/privacy-policy"/);
-  assert.doesNotMatch(html, /href="\/(?:terms-and-conditions|cancellation-policy|service-disclaimer|services\/)/);
+  for (const route of ["terms-and-conditions", "cancellation-policy", "service-disclaimer"]) assert.ok(html.includes(`href="/${route}"`));
+  assert.doesNotMatch(html, /href="\/services\//);
   for (const label of ["Home Care", "Property Care", "Personal Assistance", "Business Support"]) assert.ok(html.includes(`<li>${label}</li>`));
 });
 
