@@ -1,21 +1,72 @@
 import { Container } from "@/components/ui/container";
-import { ServiceIcon } from "@/components/ui/service-icon";
+import { ServicePhotography } from "@/components/ui/service-photography";
 import { homepage } from "@/content/homepage";
 import { membershipPlans, membershipScope } from "@/content/membership";
 import { homePreparationScenario } from "@/content/scenarios";
 import { testimonials } from "@/content/testimonials";
+import { operatingPhilosophy } from "@/content/supporting";
 import { EditorialHeading, RequestLink, SupportList } from "./homepage-shared";
 
-export function MembershipAndPrivate() {
-  return <section className="hp-section hp-membership" aria-labelledby="membership-heading"><Container>
-    <div className="hp-section-intro"><EditorialHeading eyebrow="Membership" id="membership-heading">{homepage.membership.heading[0]}<br />{homepage.membership.heading[1]}</EditorialHeading><div><p>{homepage.membership.description}</p><RequestLink text>Ask About Membership</RequestLink></div></div>
-    <div className="hp-membership-layout"><div><div className="hp-plan-grid">{membershipPlans.map((plan,index)=><article key={plan.id} aria-labelledby={`membership-${plan.id}`}><span className="hp-plan-number" aria-hidden="true">0{index+1}</span><h3 id={`membership-${plan.id}`}>{plan.name}</h3><p className="hp-plan-description">{plan.description}</p><p className="hp-plan-price">{plan.pricingLabel}</p><SupportList items={plan.inclusions} /></article>)}</div><p className="hp-small hp-membership-scope">{membershipScope}</p></div>
-    <aside className="hp-private" aria-labelledby="private-service-heading"><ServiceIcon name="leaf" /><EditorialHeading eyebrow="Private service" id="private-service-heading">{homepage.private.heading[0]}<br />{homepage.private.heading[1]}</EditorialHeading><p>{homepage.private.description}</p><p className="hp-private-example">{homepage.private.example}</p><RequestLink tone="dark" text>Talk to us about Private</RequestLink></aside></div>
-  </Container></section>;
+export function MembershipSupportLevels() {
+  return (
+    <section className="hp-section hp-membership" aria-labelledby="membership-heading">
+      <Container>
+        <div className="hp-section-intro">
+          <EditorialHeading eyebrow="Membership" id="membership-heading">{homepage.membership.heading[0]}<br />{homepage.membership.heading[1]}</EditorialHeading>
+          <p>{homepage.membership.description}</p>
+        </div>
+        <div className="hp-plan-grid">
+          {membershipPlans.map((plan, index) => <article key={plan.id} data-plan={plan.id} aria-labelledby={`membership-${plan.id}`}>
+            <span className="hp-plan-number" aria-hidden="true">0{index + 1}</span>
+            <h3 id={`membership-${plan.id}`}>{plan.name}</h3>
+            <p className="hp-plan-description">{plan.description}</p>
+            <SupportList items={plan.inclusions} />
+            <p className="hp-plan-tailored">{plan.pricingLabel}</p>
+          </article>)}
+        </div>
+        <div className="hp-membership-ending">
+          <p className="hp-small hp-membership-scope">{membershipScope}</p>
+          <RequestLink text>Ask About Membership</RequestLink>
+        </div>
+      </Container>
+    </section>
+  );
+}
+
+export function PrivateAssistanceFeature() {
+  const discretion = operatingPhilosophy.find(item => item.title === "Discretion");
+  return (
+    <section className="hp-section hp-private-section" aria-labelledby="private-service-heading">
+      <Container className="hp-feature-layout">
+        <div className="hp-feature-intro">
+          <EditorialHeading eyebrow="Private service" id="private-service-heading">
+            {homepage.private.heading[0]}<br />{homepage.private.heading[1]}
+          </EditorialHeading>
+          <p className="hp-body-copy">{homepage.private.description}</p>
+        </div>
+        <div className="hp-feature-media">
+          <ServicePhotography image="personalAssistance" sizes="(min-width: 1280px) 600px, (min-width: 768px) 46vw, 100vw" />
+        </div>
+        <div className="hp-feature-details">
+          {discretion && <p className="hp-private-discretion">{discretion.description}</p>}
+          <RequestLink text>Talk to us about Private</RequestLink>
+        </div>
+      </Container>
+    </section>
+  );
 }
 
 export function VendorCare() {
-  return <section className="hp-section hp-vendor-care" aria-labelledby="vendor-care-heading"><Container className="hp-section-intro"><div><EditorialHeading eyebrow="Care, considered" id="vendor-care-heading">{homepage.trust.heading}</EditorialHeading><ul className="hp-trust-words">{homepage.trust.principles.map(item=><li key={item}>{item}</li>)}</ul></div><div><p>{homepage.trust.description}</p><p className="hp-small">{homepage.trust.note}</p></div></Container></section>;
+  return (
+    <section className="hp-section hp-vendor-care" aria-labelledby="vendor-care-heading">
+      <Container className="hp-trust-layout">
+        <EditorialHeading eyebrow="Care, considered" id="vendor-care-heading">{homepage.trust.heading}</EditorialHeading>
+        <p className="hp-trust-description">{homepage.trust.description}</p>
+        <ul className="hp-trust-words">{homepage.trust.principles.map(item => <li key={item}>{item}</li>)}</ul>
+        <p className="hp-small hp-trust-note">{homepage.trust.note}</p>
+      </Container>
+    </section>
+  );
 }
 
 export function SampleScenario() {

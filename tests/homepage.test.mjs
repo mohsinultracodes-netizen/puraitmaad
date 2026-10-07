@@ -27,11 +27,15 @@ load.extensions[".css"] = () => {};
 const render = component => renderToStaticMarkup(createElement(component));
 const { FeaturedServices, HomepageHero } = load("../components/sections/home/homepage-opening.tsx");
 const { ManagedProcess } = load("../components/sections/home/homepage-process.tsx");
-const { ComingHomeStory } = load("../components/sections/home/homepage-care.tsx");
-const { MembershipAndPrivate, SampleScenario, CustomerStories } = load("../components/sections/home/homepage-membership.tsx");
+const { ComingHomeStory, PropertyCareFeature, BusinessSupportFeature } = load("../components/sections/home/homepage-care.tsx");
+const { MembershipSupportLevels, PrivateAssistanceFeature, VendorCare, SampleScenario, CustomerStories } = load("../components/sections/home/homepage-membership.tsx");
 const { HomepageClosing, HomepageRequest } = load("../components/sections/home/homepage-request.tsx");
 const { featuredServices } = load("../content/services.ts");
 const { siteConfig } = load("../content/site.ts");
+const { homepage } = load("../content/homepage.ts");
+const { operatingPhilosophy } = load("../content/supporting.ts");
+const { comingHomeScenario } = load("../content/scenarios.ts");
+const { membershipPlans, membershipScope } = load("../content/membership.ts");
 
 test("homepage opening has the new promise and exactly six shared request cards", () => {
   const hero = render(HomepageHero);
@@ -49,6 +53,21 @@ test("managed process renders five ordered steps and qualified verification", ()
   const html = render(ManagedProcess);
   for (const title of ["You Ask", "We Source", "We Coordinate", "We Verify", "Done"]) assert.ok(html.includes(`<h3>${title}</h3>`));
   assert.match(html, /Where appropriate, we confirm completion/);
+  assert.match(html, /Clear communication/);
+  assert.match(html, /Less time chasing people/);
+  assert.doesNotMatch(html, /hp-step-label/);
+});
+
+test("homepage follows the consolidated order, retains one scenario and preserves the shared request form", () => {
+  const html = render(load("../app/page.tsx").default);
+  const sectionIds = ["homepage-heading", "managed-process-heading", "featured-services-heading", "property-care-heading", "coming-home-heading", "membership-heading", "private-service-heading", "business-support-heading", "vendor-care-heading", "homepage-request-heading", "homepage-closing-heading"];
+  const positions = sectionIds.map(id => html.indexOf(`aria-labelledby="${id}"`));
+  positions.forEach((position, index) => { assert.ok(position >= 0, sectionIds[index]); if (index) assert.ok(position > positions[index - 1], sectionIds[index]); });
+  assert.doesNotMatch(html, /id="emotional-heading"|id="unsure-heading"|id="sample-heading"|id="customer-stories-heading"/);
+  assert.equal((html.match(/<form\b/g) || []).length, 1);
+  assert.match(html, /Not sure what you need\?/);
+  assert.match(html, /Tell us what happened and we/);
+  assert.match(html, /Illustrative example/);
 });
 
 test("homepage scenarios visibly disclose illustrative status and conditional timing", () => {
@@ -60,12 +79,87 @@ test("homepage scenarios visibly disclose illustrative status and conditional ti
   assert.match(sample, /A hypothetical request/);
 });
 
+test("Coming Home keeps its exact illustrative sequence and one restrained request action", () => {
+  const html = render(ComingHomeStory);
+  assert.match(html, /arrival-ready.png/);
+  assert.match(html, /alt="Illustrative arrival scene:/);
+  const text = html.replace(/<[^>]*>/g, "").replaceAll("&#x27;", "'");
+  for (const copy of [comingHomeScenario.title, comingHomeScenario.ending, comingHomeScenario.disclosure, comingHomeScenario.scopeNote]) assert.ok(text.includes(copy));
+  const positions = comingHomeScenario.timeline.map(step => {
+    assert.ok(text.includes(step.action));
+    return text.indexOf(step.when);
+  });
+  positions.forEach((position, index) => { assert.ok(position >= 0); if (index) assert.ok(position > positions[index - 1]); });
+  assert.equal((html.match(/<li\b/g) || []).length, 5);
+  assert.equal((html.match(/<a\b/g) || []).length, 1);
+  assert.match(html, /href="#request-service"/);
+  assert.ok(html.indexOf("hp-story-copy") < html.indexOf("hp-story-photo"));
+  assert.ok(html.indexOf("hp-story-photo") < html.indexOf("hp-timeline"));
+  assert.ok(html.indexOf("hp-timeline") < html.indexOf("hp-story-ending"));
+});
+
 test("homepage membership contains current plan names, no retired prices, and no fake testimonials", () => {
-  const html = render(MembershipAndPrivate);
+  const html = render(MembershipSupportLevels) + render(PrivateAssistanceFeature);
   for (const name of ["Essential", "Premium", "Private"]) assert.ok(html.includes(`>${name}</h3>`));
   assert.equal((html.match(/Speak to us for a tailored plan\./g) || []).length, 3);
   assert.doesNotMatch(html, /PKR|Signature|Private Stewardship|24\/7|Most popular|14,500|24,500|39,500/);
   assert.equal(render(CustomerStories), "");
+});
+
+test("support levels retain every approved inclusion, shared qualification and one membership action", () => {
+  const html = render(MembershipSupportLevels);
+  const text = html.replace(/<[^>]*>/g, "");
+  assert.equal((html.match(/<article\b/g) || []).length, 3);
+  for (const plan of membershipPlans) {
+    assert.ok(html.includes(`data-plan="${plan.id}"`));
+    assert.ok(text.includes(plan.description));
+    for (const inclusion of plan.inclusions) assert.ok(text.includes(inclusion));
+  }
+  assert.ok(text.includes(membershipScope));
+  assert.equal((html.match(/<a\b/g) || []).length, 1);
+  assert.match(html, /href="#request-service"/);
+  assert.doesNotMatch(html, /Most popular|monthly fee|savings|guaranteed/i);
+});
+
+test("Trust retains qualified promises and reads explanation, principles, qualification on mobile", () => {
+  const html = render(VendorCare);
+  const text = html.replace(/<[^>]*>/g, "");
+  for (const copy of [homepage.trust.heading, homepage.trust.description, ...homepage.trust.principles, homepage.trust.note]) assert.ok(text.includes(copy));
+  assert.match(text, /We aim/);
+  assert.match(text, /Depending on the work/);
+  assert.ok(html.indexOf("hp-trust-description") < html.indexOf("hp-trust-words"));
+  assert.ok(html.indexOf("hp-trust-words") < html.indexOf("hp-trust-note"));
+  assert.equal((html.match(/<li\b/g) || []).length, 3);
+  assert.doesNotMatch(html, /<a\b|<article\b/);
+});
+
+test("homepage features preserve qualified content, truthful photography and one request action each", () => {
+  const property = render(PropertyCareFeature);
+  const personal = render(PrivateAssistanceFeature);
+  const business = render(BusinessSupportFeature);
+  const text = html => html.replace(/<[^>]*>/g, "").replaceAll("&amp;", "&").replaceAll("&#x27;", "'");
+  for (const [html, content, image] of [
+    [property, homepage.property, "property-health.png"],
+    [personal, homepage.private, "service-personal-assistance.webp"],
+    [business, homepage.business, "service-home-repairs.webp"],
+  ]) {
+    assert.ok(text(html).includes(content.description));
+    assert.ok(html.includes(image));
+    assert.equal((html.match(/<img\b/g) || []).length, 1);
+    assert.equal((html.match(/<a\b/g) || []).length, 1);
+    assert.match(html, /href="#request-service"/);
+    assert.ok(html.indexOf("hp-feature-intro") < html.indexOf("hp-feature-media"));
+    assert.ok(html.indexOf("hp-feature-media") < html.indexOf("hp-feature-details"));
+  }
+  assert.ok(text(property).includes(homepage.scope));
+  assert.ok(text(business).includes(homepage.business.contexts));
+  for (const item of homepage.property.support) assert.ok(text(property).includes(item));
+  for (const item of homepage.business.support) assert.ok(text(business).includes(item));
+  assert.ok(text(personal).includes(operatingPhilosophy.find(item => item.title === "Discretion").description));
+  assert.ok(!text(personal).includes(homepage.private.example));
+  assert.match(personal, /alt="Personal delivery being handed over at a residence"/);
+  assert.match(business, /alt="Technician working on residential smart-home controls"/);
+  assert.doesNotMatch(business, /hp-office-art/);
 });
 
 test("homepage contact and closing sections omit placeholder channels", () => {

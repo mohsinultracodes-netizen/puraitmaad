@@ -4,9 +4,10 @@ import { homepage } from "@/content/homepage";
 import { EditorialHeading, SupportList } from "./homepage-shared";
 
 export function ManagedProcess() {
+  const benefits = homepage.emotional.points.filter(point => point === "Clear communication" || point === "Less time chasing people");
   return <section className="hp-process-section hp-section" aria-labelledby="managed-process-heading"><Container>
-    <div className="hp-difference"><HomepagePhotography slot="difference" /><div><EditorialHeading eyebrow="How it works" id="managed-process-heading">{homepage.difference.heading}</EditorialHeading><p className="hp-body-copy">{homepage.difference.description}</p><p className="hp-promise">{homepage.difference.promise.map(line => <span key={line}>{line}</span>)}</p></div></div>
-    <ol className="hp-process">{homepage.process.map((step,index) => <li key={step.title}><div className="hp-process-marker"><span>{String(index+1).padStart(2,"0")}</span><span aria-hidden="true">{index < 4 ? "→" : "·"}</span></div><h3>{step.title}</h3><p className="hp-step-label">{step.label}</p><p>{step.description}</p></li>)}</ol>
+    <div className="hp-difference"><div><EditorialHeading eyebrow="How it works" id="managed-process-heading">{homepage.difference.heading}</EditorialHeading><p className="hp-body-copy">{homepage.difference.description}</p><p className="hp-promise">{homepage.difference.promise.map(line => <span key={line}>{line}</span>)}</p><ul className="hp-model-benefits">{benefits.map(benefit => <li key={benefit}>{benefit}</li>)}</ul></div><HomepagePhotography slot="difference" /></div>
+    <ol className="hp-process">{homepage.process.map((step,index) => <li key={step.title}><div className="hp-process-marker"><span>{String(index+1).padStart(2,"0")}</span><span aria-hidden="true">{index < 4 ? "→" : "·"}</span></div><h3>{step.title}</h3><p>{step.description}</p></li>)}</ol>
   </Container></section>;
 }
 

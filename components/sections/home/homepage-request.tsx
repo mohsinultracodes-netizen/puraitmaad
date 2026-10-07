@@ -9,6 +9,7 @@ export function HomepageRequest() {
   const links = getContactLinks();
   return <section className="hp-section hp-request" id="request-service" aria-labelledby="homepage-request-heading"><span className="request-anchor-compat" id="consultation" aria-hidden="true" /><Container>
     <EditorialHeading eyebrow="Let's start with you" id="homepage-request-heading">{homepage.request.heading}</EditorialHeading><p className="hp-request-intro">{homepage.request.description}</p>
+    <p className="hp-request-reassurance"><strong>{homepage.unsure.heading}</strong> {homepage.unsure.description}</p>
     <div className="hp-request-grid"><div className="hp-form-wrap">
       <ServiceRequestForm whatsappHref={links.whatsapp} />
     </div><RequestAssistance /></div>

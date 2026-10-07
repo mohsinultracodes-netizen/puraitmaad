@@ -9,6 +9,7 @@ import { homepage } from "@/content/homepage";
 import { featuredServices } from "@/content/services";
 import { serviceRequestHref } from "@/lib/request-context";
 import { EditorialHeading, RequestLink, TextLink } from "./homepage-shared";
+import { HeroPrinciples } from "./hero-principles";
 
 export function HomepageHero() {
   return <section className="hp-hero" aria-labelledby="homepage-heading">
@@ -17,9 +18,9 @@ export function HomepageHero() {
       <h1 id="homepage-heading"><span>{homepage.hero.lines[0].replace(/\s*→$/, "")} <span className="hp-hero-arrow" aria-hidden="true">→</span></span><span>{homepage.hero.lines[1]}</span></h1>
       <p className="hp-lead">{homepage.hero.description}</p>
       <div className="hp-actions"><RequestLink /><ButtonLink href="/how-it-works" variant="secondary">How It Works</ButtonLink></div>
-      <div className="hp-principles"><p className="sr-only">Our service principles</p><ul>{homepage.principles.map(principle => <li key={principle.label}>{principle.label}</li>)}</ul></div>
+      <HeroPrinciples />
     </div>
-    <div className="hp-hero-visual"><HomepagePhotography slot="hero" /><p className="hp-image-note">{homepage.hero.imageNote}</p></div>
+    <div className="hp-hero-visual"><HomepagePhotography slot="hero" /><p className="hp-image-note"><span>{homepage.hero.imageNote.slice(0, 13)} </span><span>{homepage.hero.imageNote.slice(14)}</span></p></div>
   </section>;
 }
 
