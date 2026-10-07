@@ -170,6 +170,8 @@
   .hp-principles ul { grid-template-columns: repeat(4, 1fr); gap: var(--space-4); }
   .hp-principles li { font-size: 0.8125rem; }
   .hp-service-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-4); }
+  .hp-service-grid { grid-auto-rows: 1fr; }
+  .hp-service-card .service-image-frame { aspect-ratio: 16 / 9; }
   .hp-process { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--space-6); }
   .hp-process li { display: block; padding-bottom: 0; }
   .hp-process-marker { display: flex; justify-content: space-between; padding-bottom: var(--space-4); border-top: 1px solid var(--border); padding-top: var(--space-4); }

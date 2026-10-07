@@ -12,6 +12,7 @@ export const servicePhotography = {
   // These two supplied filenames depict the opposite subjects. Map by content.
   homeRepairs: photo("service-smart-home.webp", "Plumber carrying out a bathroom repair", "55% 50%"),
   electrical: photo("service-home-repairs.webp", "Technician working on residential smart-home controls", "55% 50%"),
+  renovationCoordination: photo("vendor-coordination.png", "Illustrative project coordination: two people review a tablet beside drawings, tools and a service van."),
   restocking: photo("service-restocking.webp", "Home pantry being checked and organized"),
   housekeeping: photo("service-housekeeping.webp", "Housekeeper preparing a bedroom"),
   cleaning: photo("service-deep-cleaning.webp", "Professional cleaning in a residential living room", "40% 50%"),
@@ -25,9 +26,10 @@ export type ServicePhotoKey = keyof typeof servicePhotography;
 export const featuredServicePhotography: Partial<Record<string, ServicePhotoKey>> = {
   gardening: "gardening",
   "ac-appliances": "appliances",
-  renovation: "homeRepairs",
+  renovation: "renovationCoordination",
   restocking: "restocking",
   "property-maintenance": "propertyCare",
+  "office-services": "electrical",
 };
 
 export const categoryPhotography: Partial<Record<ServiceCategory, ServicePhotoKey>> = {
