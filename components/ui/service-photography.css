@@ -1,0 +1,2 @@
+.service-image-frame { position: relative; aspect-ratio: 3 / 2; overflow: hidden; min-width: 0; background: var(--surface); border-radius: var(--radius-card); }
+.service-image-frame img { display: block; width: 100%; height: 100%; }

@@ -2,6 +2,8 @@ import Link from "next/link";
 import { Container } from "@/components/ui/container";
 import { ButtonLink } from "@/components/ui/button-link";
 import { ServiceIcon } from "@/components/ui/service-icon";
+import { ServicePhotography } from "@/components/ui/service-photography";
+import { featuredServicePhotography } from "@/content/service-photography";
 import { HomepagePhotography } from "@/components/ui/homepage-photography";
 import { homepage } from "@/content/homepage";
 import { featuredServices } from "@/content/services";
@@ -25,7 +27,7 @@ export function FeaturedServices() {
   return <section className="hp-section hp-services" aria-labelledby="featured-services-heading">
     <Container>
       <div className="hp-section-intro"><EditorialHeading eyebrow="Our services" id="featured-services-heading">{homepage.services.heading}</EditorialHeading><p>{homepage.services.description}</p></div>
-      <ul className="hp-service-grid">{featuredServices.map(service => <li key={service.id}><Link className="hp-service-card" href={serviceRequestHref(service.id)} aria-label={`Request ${service.name}`}><ServiceIcon name={service.icon} /><h3>{service.name}</h3><p>{service.description}</p><span className="hp-card-arrow" aria-hidden="true">→</span></Link></li>)}</ul>
+      <ul className="hp-service-grid">{featuredServices.map(service => { const image = featuredServicePhotography[service.id]; return <li key={service.id}><Link className="hp-service-card" href={serviceRequestHref(service.id)}>{image && <ServicePhotography image={image} sizes="(min-width: 1440px) 389px, (min-width: 1024px) 28vw, (min-width: 640px) 43vw, 90vw" />}<div className="hp-service-content"><ServiceIcon name={service.icon} /><h3>{service.name}</h3><p>{service.description}</p><span className="hp-card-arrow" aria-hidden="true">→</span></div></Link></li>; })}</ul>
       <TextLink href="/services">View all services</TextLink>
     </Container>
   </section>;
