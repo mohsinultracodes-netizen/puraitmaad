@@ -140,6 +140,37 @@
 .hp-testimonials { display: grid; gap: var(--space-8); margin-top: var(--space-8); }
 .hp-testimonials blockquote { font-family: var(--font-display); font-size: 1.5rem; }
 .hp-testimonials figcaption { margin-top: var(--space-4); color: var(--muted); }
+/* Isolated customer-review feature; existing homepage sections are unchanged. */
+.hp-customer-stories { padding-bottom: var(--space-8); }
+.hp-customer-stories-panel { background: var(--forest); color: var(--background); border-radius: var(--radius-card); padding: var(--space-8) var(--space-4); }
+.hp-customer-stories-intro { max-width: 40rem; margin-inline: auto; text-align: center; }
+.hp-customer-stories-intro .hp-eyebrow { color: var(--logo-gold); }
+.hp-customer-stories-description { margin-top: var(--space-4); color: #e0e5de; line-height: 1.65; }
+.hp-customer-stories-notice { margin-top: var(--space-4); color: #e0e5de; font-size: .75rem; line-height: 1.6; }
+.hp-customer-stories-grid { display: grid; gap: var(--space-4); margin-top: var(--space-8); }
+.hp-customer-story { display: flow-root; padding: var(--space-4); background: var(--surface-elevated); color: var(--foreground); border: 1px solid var(--border); border-radius: var(--radius-control); min-width: 0; }
+.hp-customer-story-photo { position: relative; float: left; width: 80px; margin: 0 var(--space-4) var(--space-2) 0; aspect-ratio: 4 / 5; background: var(--surface); border: 1px solid var(--border); border-radius: .25rem; overflow: hidden; }
+.hp-customer-story-photo img { object-fit: cover; }
+.hp-customer-story-placeholder { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--space-2); color: var(--muted); font-size: .625rem; }
+.hp-customer-story-monogram { font-family: var(--font-display); font-size: 1.75rem; line-height: 1; color: var(--accent); }
+.hp-customer-story-status { font-size: .6875rem; line-height: 1.5; color: var(--muted); margin-bottom: var(--space-3); }
+.hp-customer-story blockquote { font-family: var(--font-geist-sans), Arial, sans-serif; font-size: 1rem; line-height: 1.6; overflow-wrap: anywhere; }
+.hp-customer-story figcaption { clear: both; margin-top: var(--space-4); font-family: var(--font-geist-sans), Arial, sans-serif; }
+.hp-customer-story-name { display: block; font-size: .9375rem; font-weight: 600; line-height: 1.5; }
+.hp-customer-story-relationship { display: block; margin-top: var(--space-1); font-size: .8125rem; line-height: 1.5; color: var(--muted); overflow-wrap: anywhere; }
+@media (min-width: 40rem) {
+  .hp-customer-story { display: grid; grid-template-columns: 80px minmax(0, 1fr); gap: var(--space-4); align-items: start; }
+  .hp-customer-story-photo { float: none; width: auto; margin: 0; }
+}
+@media (min-width: 48rem) {
+  .hp-customer-stories { padding-bottom: var(--space-12); }
+  .hp-customer-stories-panel { padding: var(--space-12) var(--space-8); }
+}
+@media (min-width: 64rem) {
+  .hp-customer-stories-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-6); }
+  .hp-customer-story { grid-template-columns: 136px minmax(0, 1fr); gap: var(--space-6); padding: var(--space-6); }
+  .hp-customer-story blockquote { font-size: 1.125rem; }
+}
 @media (min-width: 40rem) {
   .hp-service-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .hp-plan-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-6); }

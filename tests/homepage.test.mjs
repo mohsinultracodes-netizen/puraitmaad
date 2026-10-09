@@ -30,6 +30,8 @@ const { ManagedProcess } = load("../components/sections/home/homepage-process.ts
 const { ComingHomeStory, PropertyCareFeature, BusinessSupportFeature } = load("../components/sections/home/homepage-care.tsx");
 const { MembershipSupportLevels, PrivateAssistanceFeature, VendorCare, SampleScenario, CustomerStories } = load("../components/sections/home/homepage-membership.tsx");
 const { HomepageClosing, HomepageRequest } = load("../components/sections/home/homepage-request.tsx");
+const { HomepageTestimonials } = load("../components/sections/home/homepage-testimonials.tsx");
+const { homepageTestimonialEntries, testimonials } = load("../content/testimonials.ts");
 const { featuredServices } = load("../content/services.ts");
 const { siteConfig } = load("../content/site.ts");
 const { homepage } = load("../content/homepage.ts");
@@ -60,7 +62,7 @@ test("managed process renders five ordered steps and qualified verification", ()
 
 test("homepage follows the consolidated order, retains one scenario and preserves the shared request form", () => {
   const html = render(load("../app/page.tsx").default);
-  const sectionIds = ["homepage-heading", "managed-process-heading", "featured-services-heading", "property-care-heading", "coming-home-heading", "membership-heading", "private-service-heading", "business-support-heading", "vendor-care-heading", "homepage-request-heading", "homepage-closing-heading"];
+  const sectionIds = ["homepage-heading", "managed-process-heading", "featured-services-heading", "property-care-heading", "coming-home-heading", "membership-heading", "private-service-heading", "business-support-heading", "vendor-care-heading", "homepage-testimonials-heading", "homepage-request-heading", "homepage-closing-heading"];
   const positions = sectionIds.map(id => html.indexOf(`aria-labelledby="${id}"`));
   positions.forEach((position, index) => { assert.ok(position >= 0, sectionIds[index]); if (index) assert.ok(position > positions[index - 1], sectionIds[index]); });
   assert.doesNotMatch(html, /id="emotional-heading"|id="unsure-heading"|id="sample-heading"|id="customer-stories-heading"/);
@@ -77,6 +79,49 @@ test("homepage scenarios visibly disclose illustrative status and conditional ti
   assert.match(timeline, /Timing and work depend on the agreed scope and availability/);
   assert.match(sample, /SAMPLE SCENARIO/);
   assert.match(sample, /A hypothetical request/);
+});
+
+test("final customer reviews preserve the exact owner-approved quotes, portrait mapping and service labels", () => {
+  assert.deepEqual(testimonials, []);
+  assert.deepEqual(homepageTestimonialEntries.map(entry => entry.name), ["Zeeshan", "Sara Khan"]);
+  const approvedQuotes = [
+    "“We were away from home for a few weeks, and Pur Aitmaad took care of everything. From regular home checks to handling maintenance issues, everything was managed smoothly. It was such a relief knowing our home was in safe hands while we were away. Really happy with their service!”",
+    "“Pur Aitmaad helped us arrange our Nikkah and find reliable vendors. The whole experience was wonderful! From coordinating everything to taking care of the little details, their team made the process so easy for our family. We were able to enjoy our special day without worrying about the arrangements. Truly grateful for their support!”",
+  ];
+  for (const [index, entry] of homepageTestimonialEntries.entries()) {
+    assert.equal(entry.quote, approvedQuotes[index]);
+    assert.equal(entry.image.src, `/images/testimonials/${entry.id}.webp`);
+    assert.equal(entry.image.objectPosition, "50% 50%");
+    assert.equal(entry.relationshipLabel, ["Property Care", "Personal Assistance"][index]);
+    assert.equal(entry.isPlaceholder, false);
+  }
+  const html = render(HomepageTestimonials);
+  assert.equal((html.match(/<figure\b/g) || []).length, 2);
+  assert.equal((html.match(/<blockquote\b/g) || []).length, 2);
+  const figures = [...html.matchAll(/<figure\b[^>]*>([\s\S]*?)<\/figure>/g)].map(match => match[1]);
+  figures.forEach((figure, index) => {
+    assert.ok(figure.includes(approvedQuotes[index]));
+    assert.ok(figure.includes(homepageTestimonialEntries[index].name));
+    assert.ok(figure.includes(encodeURIComponent(homepageTestimonialEntries[index].image.src)));
+    assert.ok(!figure.includes(approvedQuotes[1 - index]));
+  });
+  assert.equal((html.match(/<img\b/g) || []).length, 2);
+  assert.equal((html.match(/loading="lazy"/g) || []).length, 2);
+  assert.match(html, /alt="Man wearing maroon traditional clothing"/);
+  assert.match(html, /alt="Woman wearing teal traditional clothing"/);
+  assert.equal((html.match(/class="hp-customer-story-relationship"/g) || []).length, 2);
+  assert.doesNotMatch(render(load("../app/page.tsx").default), /Development placeholder|Customer review will be added here|Photo pending/);
+  assert.doesNotMatch(html, /<button\b|rating|stars|rel="preload"/i);
+});
+
+test("approved customer material fits the same layout with lazy optimized photos and optional factual labels", () => {
+  const html = renderToStaticMarkup(createElement(HomepageTestimonials, { entries: [{ id: "fixture", name: "QA fixture", quote: "Supplied fixture quote.", image: { src: "/test-portrait.webp", alt: "QA fixture portrait" }, relationshipLabel: "Supplied fixture label", isPlaceholder: false }] }));
+  assert.match(html, /loading="lazy"/);
+  assert.match(html, /alt="QA fixture portrait"/);
+  assert.match(html, /\/_next\/image\?/);
+  assert.match(html, /Supplied fixture label/);
+  assert.doesNotMatch(html, /Development placeholder|Photo pending|rel="preload"/);
+  assert.equal(renderToStaticMarkup(createElement(HomepageTestimonials, { entries: [] })), "");
 });
 
 test("Coming Home keeps its exact illustrative sequence and one restrained request action", () => {
