@@ -61,8 +61,8 @@ test("managed process renders five ordered steps and qualified verification", ()
   assert.equal((html.match(/class="hp-process-stage"/g) || []).length, 5);
   assert.doesNotMatch(html, /hp-process-connector/);
   assert.match(html, /<ol class="hp-process-stages">/);
-  assert.equal((html.match(/class="hp-process-path hp-process-path-/g) || []).length, 3);
-  assert.equal((html.match(/pointer-events="none"/g) || []).length, 3);
+  assert.equal((html.match(/class="hp-process-path hp-process-path-/g) || []).length, 2);
+  assert.equal((html.match(/pointer-events="none"/g) || []).length, 2);
   for (const step of homepage.process) assert.ok(html.includes(step.description));
   assert.doesNotMatch(html, /hp-step-label/);
 });

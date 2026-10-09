@@ -8,7 +8,7 @@ import { ProcessJourneyPath } from "./process-journey-path";
 export function ManagedProcess() {
   return <section className="hp-process-section hp-section" aria-labelledby="managed-process-heading"><Container>
     <div className="hp-process-intro">
-      <p className="hp-process-pill"><span aria-hidden="true">↗</span> How it works</p>
+      <p className="hp-process-pill">How it works</p>
       <h2 id="managed-process-heading">One request.<br />We handle the rest.</h2>
       <p>Tell us what you need and Puraitmaad coordinates the people, details and follow-through.</p>
     </div>
