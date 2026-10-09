@@ -23,6 +23,8 @@ const {getRequestService,serviceRequestHref,getRequestPlan,planRequestHref}=load
 const {membershipPlans}=load("../content/membership.ts");
 const {ServiceRequestForm}=load("../components/forms/service-request-form.tsx");
 const {RequestFeedback}=load("../components/forms/request-feedback.tsx");
+const {siteConfig}=load("../content/site.ts");
+const {getContactLinks,submittedRequestWhatsappHref}=load("../lib/contact-links.ts");
 const fixedNow=new Date("2026-10-06T20:00:00Z");
 function validForm(contact={email:" owner@example.com "}){const form=new FormData();for(const [key,value]of Object.entries({fullName:" Test Owner ",location:" Lahore ",message:"Please arrange a repair.\nThe kitchen tap is leaking.",...contact}))form.append(key,value);return form;}
 test("Name preserves Unicode, combining marks, hyphens and apostrophes",()=>{
@@ -118,10 +120,57 @@ test("server plan context survives edited request text and participates in deliv
   }finally{globalThis.fetch=fetchBefore;for(const key of keys){if(previous[key]===undefined)delete process.env[key];else process.env[key]=previous[key];}}
 });
 test("success, error and pending copy is truthful and WhatsApp-aware",()=>{
-  const render=(status,message,whatsappHref,pending=false)=>renderToStaticMarkup(createElement(RequestFeedback,{state:{status,message,errors:{}},pending,whatsappHref}));assert.match(render("success",requestSuccess),/Request received\./);assert.match(render("error",requestFailure),/Something went wrong\./);assert.doesNotMatch(render("error",requestFailure),/WhatsApp|wa.me/);assert.match(render("error",requestFailure,"https://wa.me/923001234567"),/contact us directly on WhatsApp/);assert.equal(render("idle","",null,true),"<p>Sending...</p>");
+  const render=(status,message,whatsappHref,pending=false)=>renderToStaticMarkup(createElement(RequestFeedback,{state:{status,message,errors:{}},pending,whatsappHref}));assert.match(render("success",requestSuccess),/Request received<\/h3>/);assert.match(render("error",requestFailure),/Something went wrong\./);assert.doesNotMatch(render("error",requestFailure),/WhatsApp|wa.me/);assert.match(render("error",requestFailure,"https://wa.me/923001234567"),/contact us directly on WhatsApp/);assert.equal(render("idle","",null,true),"<p>Sending...</p>");
+});
+
+test("Continue on WhatsApp is offered only after success, never on errors or while sending",()=>{
+  const href="https://wa.me/923001234567?text=request-draft";
+  const render=(status,pending=false)=>renderToStaticMarkup(createElement(RequestFeedback,{state:{status,message:requestSuccess,errors:{}},pending,submittedWhatsappHref:href}));
+  assert.match(render("success"),/Continue on WhatsApp/);
+  assert.match(render("success"),/Review the draft in WhatsApp, then press Send/);
+  assert.match(render("success"),/We&#x27;ll review the details and get back to you\./);
+  for(const status of ["idle","invalid","error"]) assert.doesNotMatch(render(status),/Continue on WhatsApp|request-draft/);
+  assert.doesNotMatch(render("success",true),/Continue on WhatsApp|request-draft/);
 });
 test("missing and invalid server configuration never claims delivery",async()=>{
   const previous={...process.env};try{delete process.env.RESEND_API_KEY;assert.equal((await requestService({},validForm())).status,"error");process.env.RESEND_API_KEY="re_mock_only";delete process.env.RESEND_TO;delete process.env.RESEND_FROM;assert.equal((await requestService({},validForm())).message,requestFailure);}finally{for(const key of ["RESEND_API_KEY","RESEND_FROM","RESEND_TO"]){if(previous[key]===undefined)delete process.env[key];else process.env[key]=previous[key];}}
+});
+
+test("missing or invalid WhatsApp hides follow-up links without blocking Resend lead capture", async () => {
+  const previousNumber = siteConfig.WHATSAPP, fetchBefore = globalThis.fetch;
+  const keys = ["RESEND_API_KEY", "RESEND_FROM", "RESEND_TO"];
+  const previous = Object.fromEntries(keys.map(key => [key, process.env[key]]));
+  const deliveries = [];
+  Object.assign(process.env, { RESEND_API_KEY: "re_mock_only", RESEND_FROM: "Puraitmaad <requests@example.com>", RESEND_TO: "team@example.com" });
+  globalThis.fetch = async (_url, options) => { deliveries.push(JSON.parse(options.body)); return Response.json({ id: "accepted-without-whatsapp" }); };
+  try {
+    for (const number of ["", "javascript:alert(1)"]) {
+      siteConfig.WHATSAPP = number;
+      const links = getContactLinks(), form = validForm();
+      assert.equal(links.whatsapp, null);
+      const formHtml = renderToStaticMarkup(createElement(ServiceRequestForm, { whatsappHref: links.whatsapp }));
+      assert.match(formHtml, /Send Request/);
+      assert.match(formHtml, /name="message"/);
+      assert.doesNotMatch(formHtml, /wa\.me|href="#"/);
+      const state = await requestService({}, form);
+      assert.equal(state.status, "success");
+      assert.equal(state.message, requestSuccess);
+      const followUp = submittedRequestWhatsappHref(validateServiceRequest(form).values);
+      assert.equal(followUp, null);
+      const feedback = renderToStaticMarkup(createElement(RequestFeedback, { state, pending: false, submittedWhatsappHref: followUp }));
+      assert.match(feedback, /Request received/);
+      assert.doesNotMatch(feedback, /Continue on WhatsApp|wa\.me|href="#"/);
+    }
+    assert.equal(deliveries.length, 2);
+    for (const delivery of deliveries) {
+      assert.equal(delivery.reply_to, "owner@example.com");
+      assert.ok(delivery.text.includes("The kitchen tap is leaking."));
+    }
+  } finally {
+    siteConfig.WHATSAPP = previousNumber;
+    globalThis.fetch = fetchBefore;
+    for (const key of keys) { if (previous[key] === undefined) delete process.env[key]; else process.env[key] = previous[key]; }
+  }
 });
 test("Resend requires acceptance, separates server config, conditional Reply-To and stable idempotency",async()=>{
   const previous={...process.env}, fetchBefore=globalThis.fetch;

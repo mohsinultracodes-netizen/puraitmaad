@@ -6,7 +6,8 @@ export const siteConfig = {
   TAGLINE: "Your problem → our responsibility.",
   SECONDARY_BRAND_LINE: "Done For You.",
   PHONE: "[YOUR PHONE]",
-  WHATSAPP: "[YOUR WHATSAPP NUMBER]",
+  // Official business WhatsApp contact; all WhatsApp links read this value.
+  WHATSAPP: "+923284631311",
   EMAIL: "[YOUR EMAIL]",
   // Temporary login destinations approved by the owner; replace with profile URLs.
   INSTAGRAM: "https://www.instagram.com/accounts/login/",

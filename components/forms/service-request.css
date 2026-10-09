@@ -1,5 +1,8 @@
 .service-request-form { min-width: 0; }
 .request-fields { min-width: 0; }
+.request-one-time { margin-bottom: 1.5rem; color: var(--foreground); font-size: .9375rem; }
+.request-whatsapp-next { margin-top: 1.25rem; }
+.form-feedback .request-whatsapp-next .button { text-decoration: none; max-width: 100%; text-align: center; }
 .request-grid { display: grid; gap: 1.5rem; }
 .request-field { min-width: 0; }
 .request-field label { display: block; font-size: .875rem; font-weight: 500; margin-bottom: .625rem; }

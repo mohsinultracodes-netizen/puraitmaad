@@ -169,10 +169,25 @@ test("support levels retain every approved inclusion, qualification and three pl
     for (const inclusion of plan.inclusions) assert.ok(text.includes(inclusion));
   }
   assert.ok(text.includes(membershipScope));
-  assert.equal((html.match(/<a\b/g) || []).length, 3);
+  assert.equal((html.match(/<a\b(?=[^>]*class="[^"]*\bplans-request\b)/g) || []).length, 3);
   for (const id of ["essential", "signature", "bespoke"]) assert.ok(html.includes(`href="/contact?plan=${id}"`));
   assert.equal((html.match(/>Request Info<\/a>/g) || []).length, 3);
   assert.doesNotMatch(html, /Most popular|monthly fee|savings|guaranteed/i);
+});
+
+test("plans distinguish one-time requests from ongoing membership with two clear actions", () => {
+  const html = render(MembershipSupportLevels);
+  assert.match(html, /Need help with something once\?/);
+  assert.match(html, /Tell us what needs to be handled\. No membership required\./);
+  assert.match(html, /Membership is for customers who need ongoing support\./);
+  assert.match(html, /href="\/contact#request-service"[^>]*>Request a Service/);
+  assert.match(html, /WhatsApp Us/);
+  const previous = siteConfig.WHATSAPP;
+  try {
+    siteConfig.WHATSAPP = "";
+    assert.doesNotMatch(render(MembershipSupportLevels), /WhatsApp Us|wa.me/);
+    assert.match(render(MembershipSupportLevels), /Request a Service/);
+  } finally { siteConfig.WHATSAPP = previous; }
 });
 
 test("Trust retains qualified promises and reads explanation, principles, qualification on mobile", () => {
@@ -217,6 +232,9 @@ test("homepage features preserve qualified content, truthful photography and one
 });
 
 test("homepage contact and closing sections omit placeholder channels", () => {
+  const previous = siteConfig.WHATSAPP;
+  try {
+  siteConfig.WHATSAPP = "";
   for (const html of [render(HomepageRequest), render(HomepageClosing)]) {
     assert.doesNotMatch(html, /href="(?:https:\/\/wa.me|tel:|mailto:)/);
     assert.doesNotMatch(html, /\[YOUR|\[WHATSAPP|coming soon|schema migration/i);
@@ -226,6 +244,7 @@ test("homepage contact and closing sections omit placeholder channels", () => {
   assert.match(request, /id="consultation"/); // Deliberate compatibility alias only.
   for (const name of ["fullName", "phone", "email", "location", "message", "preferredDate", "preferredTime", "website"]) assert.ok(request.includes(`name="${name}"`));
   assert.doesNotMatch(request, /name="propertyType"|name="overseas"|name="help"|Request Consultation/);
+  } finally { siteConfig.WHATSAPP = previous; }
 });
 
 test("real configured WhatsApp is available in homepage assistance and final CTA", () => {

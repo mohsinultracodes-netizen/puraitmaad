@@ -2,9 +2,12 @@ import { Container } from "@/components/ui/container";
 import { ButtonLink } from "@/components/ui/button-link";
 import { membershipPlans, membershipScope, membershipSection } from "@/content/membership";
 import { planRequestHref } from "@/lib/request-context";
+import { contextualWhatsappHref } from "@/lib/contact-links";
+import { WhatsAppIcon } from "@/components/ui/whatsapp-icon";
 import "./membership-plans.css";
 
 export function MembershipPlans({ id = "membership-heading", className = "" }: { id?: string; className?: string }) {
+  const whatsapp = contextualWhatsappHref();
   return <section className={`plans-section ${className}`} aria-labelledby={id}>
     <Container>
       <header className="plans-intro">
@@ -25,6 +28,10 @@ export function MembershipPlans({ id = "membership-heading", className = "" }: {
       </div>
       <p className="plans-invitation">{membershipSection.invitation}</p>
       <p className="plans-scope">{membershipScope}</p>
+      <div className="plans-one-time">
+        <div><h3>Need help with something once?</h3><p>Tell us what needs to be handled. No membership required.</p><p className="plans-ongoing-note">Membership is for customers who need ongoing support.</p></div>
+        <div className="plans-one-time-actions"><ButtonLink href="/contact#request-service" prefetch={false}>Request a Service</ButtonLink>{whatsapp && <ButtonLink href={whatsapp} variant="secondary"><WhatsAppIcon />WhatsApp Us</ButtonLink>}</div>
+      </div>
     </Container>
   </section>;
 }

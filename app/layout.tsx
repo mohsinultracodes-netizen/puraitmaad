@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Manrope } from "next/font/google";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
+import { FloatingWhatsApp } from "@/components/layout/floating-whatsapp";
 import { site } from "@/content/site";
 import { getSiteUrl, socialImage } from "@/lib/seo";
 import { organizationAndServices, serializeJsonLd } from "@/lib/structured-data";
@@ -52,6 +53,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <SiteHeader />
         <main id="main-content" tabIndex={-1}>{children}</main>
         <SiteFooter />
+        <FloatingWhatsApp />
       </body>
     </html>
   );

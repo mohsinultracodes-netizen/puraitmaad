@@ -17,7 +17,7 @@ for (const extension of [".ts", ".tsx"]) {
   };
 }
 const { siteConfig, site, navigation, primaryCta } = load("../content/site.ts");
-const { phoneHref, emailHref, socialHref, whatsappHref, getContactLinks } = load("../lib/contact-links.ts");
+const { phoneHref, emailHref, socialHref, whatsappHref, getContactLinks, contextualWhatsappHref, submittedRequestWhatsappHref } = load("../lib/contact-links.ts");
 const { services, serviceCategories, featuredServices, serviceIconKeys, servicesForCategory } = load("../content/services.ts");
 const { membershipPlans, membershipPricing } = load("../content/membership.ts");
 const { comingHomeScenario, homePreparationScenario, scenarioDisclosure } = load("../content/scenarios.ts");
@@ -34,7 +34,7 @@ test("public configuration has exact brand and five-link navigation", () => {
 });
 
 test("unknown contacts never produce working destinations", () => {
-  assert.ok(Object.values(getContactLinks()).every(value => value === null));
+  assert.ok(Object.values(getContactLinks({ ...siteConfig, WHATSAPP: "" })).every(value => value === null));
   for (const value of [null, "", " ", "[YOUR PHONE]", "[YOUR EMAIL]", "[WHATSAPP_NUMBER]", "TBD", "N/A", "javascript:alert(1)", "<script>"]) {
     for (const helper of [phoneHref, emailHref, whatsappHref, socialHref]) assert.equal(helper(value), null, `${helper.name}: ${value}`);
   }
@@ -57,6 +57,78 @@ test("WhatsApp messages round-trip special characters and preserve the service c
   assert.equal(specific.searchParams.get("text"), `Hi Puraitmaad, I'd like to request ${service}.`);
   assert.equal([...specific.searchParams].length, 1);
   assert.equal(new URL(whatsappHref("923001234567", "[SERVICE NAME]")).searchParams.get("text"), general.searchParams.get("text"));
+});
+
+test("configured WhatsApp contact is centralized and uses the digits-only wa.me destination", () => {
+  assert.match(siteConfig.WHATSAPP, /^\+[1-9]\d{7,14}$/);
+  const expectedNumber = siteConfig.WHATSAPP.replace(/\D/g, "");
+  const href = whatsappHref();
+  assert.equal(new URL(href).origin + new URL(href).pathname, `https://wa.me/${expectedNumber}`);
+  assert.ok(href.endsWith(`?text=${encodeURIComponent("Hi Puraitmaad, I'd like help with a service.")}`));
+  const previous = siteConfig.WHATSAPP;
+  try {
+    siteConfig.WHATSAPP = "+92 300 1234567";
+    assert.equal(new URL(contextualWhatsappHref()).pathname, "/923001234567");
+    assert.equal(new URL(submittedRequestWhatsappHref({ fullName: "", location: "", message: "", preferredDate: "", preferredTime: "" })).pathname, "/923001234567");
+    siteConfig.WHATSAPP = "";
+    assert.equal(contextualWhatsappHref(), null);
+    assert.equal(submittedRequestWhatsappHref({ fullName: "", location: "", message: "", preferredDate: "", preferredTime: "" }), null);
+  } finally { siteConfig.WHATSAPP = previous; }
+});
+
+test("production WhatsApp helpers target the approved official business number", () => {
+  // Pin the owner-approved destination independently of the configuration so a
+  // mistaken configuration change cannot make both actual and expected agree.
+  const expected = "https://wa.me/923284631311";
+  assert.equal(siteConfig.WHATSAPP, `+${new URL(expected).pathname.slice(1)}`);
+  const destinations = [
+    whatsappHref(),
+    getContactLinks().whatsapp,
+    contextualWhatsappHref("general"),
+    contextualWhatsappHref("property-care"),
+    contextualWhatsappHref("arrival-ready"),
+    submittedRequestWhatsappHref({ fullName: "Mohsin", location: "DHA Lahore", message: "Install 5 ACs", preferredDate: "", preferredTime: "" }),
+  ];
+  for (const href of destinations) {
+    assert.ok(href);
+    const url = new URL(href);
+    assert.equal(url.origin + url.pathname, expected);
+    assert.equal([...url.searchParams].length, 1);
+    assert.ok(url.searchParams.get("text"));
+  }
+});
+
+test("contextual WhatsApp drafts use the three concise approved messages", () => {
+  for (const [context, message] of [
+    ["general", "Hi Puraitmaad, I'd like help with a service."],
+    ["property-care", "Hi Puraitmaad, I'd like help with Property Care."],
+    ["arrival-ready", "Hi Puraitmaad, I'd like help preparing my home before arrival."],
+  ]) {
+    const url = new URL(contextualWhatsappHref(context));
+    assert.equal(url.pathname, `/${siteConfig.WHATSAPP.replace(/\D/g, "")}`);
+    assert.equal(url.searchParams.get("text"), message);
+  }
+});
+
+test("submitted WhatsApp draft includes only filled request fields and URL-encodes special characters", () => {
+  const values = { fullName: " Mohsin ", location: "DHA Lahore", message: "Install 5 ACs & check sockets / گھر", preferredDate: "2026-10-17", preferredTime: "09:30", email: "private@example.com", phone: "+923001234567", website: "private-honeypot", submissionId: "private-submission-id", serviceId: "private-service-id", planId: "private-plan-id", apiKey: "private-api-key", environment: "private-environment", serverMetadata: "private-server-metadata" };
+  const href = submittedRequestWhatsappHref(values), url = new URL(href);
+  const message = "Hi Puraitmaad, I just submitted a service request.\n\nName: Mohsin\nLocation: DHA Lahore\nRequest: Install 5 ACs & check sockets / گھر\nPreferred date/time: 2026-10-17 at 09:30 (Lahore time)";
+  assert.equal(url.pathname, `/${siteConfig.WHATSAPP.replace(/\D/g, "")}`);
+  assert.equal(url.searchParams.get("text"), message);
+  assert.ok(href.endsWith(`?text=${encodeURIComponent(message)}`));
+  assert.equal([...url.searchParams].length, 1);
+  assert.doesNotMatch(url.searchParams.get("text"), /private-|private@example|923001234567|submission|website|Email:|undefined|null/);
+  const empty = new URL(submittedRequestWhatsappHref({ ...values, fullName: " ", location: "", message: " ", preferredDate: "", preferredTime: "" })).searchParams.get("text");
+  assert.equal(empty, "Hi Puraitmaad, I just submitted a service request.");
+  const partial = new URL(submittedRequestWhatsappHref({ ...values, fullName: " ", location: "", preferredDate: "", preferredTime: "" })).searchParams.get("text");
+  assert.doesNotMatch(partial, /Name:|Location:|Preferred date\/time:/);
+  assert.match(partial, /Request: Install/);
+  for (const prefs of [{ preferredDate: "2026-10-17", preferredTime: "" }, { preferredDate: "", preferredTime: "09:30" }]) {
+    const draft = new URL(submittedRequestWhatsappHref({ ...values, ...prefs })).searchParams.get("text");
+    assert.ok(draft.includes(`Preferred date/time: ${prefs.preferredDate || prefs.preferredTime} (Lahore time)`));
+    assert.doesNotMatch(draft, / at \(/);
+  }
 });
 
 test("social links accept real profile-shaped HTTPS URLs and reject unsafe destinations", () => {
