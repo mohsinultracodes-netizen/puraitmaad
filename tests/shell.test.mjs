@@ -26,7 +26,8 @@ test("footer omits placeholder destinations and displays the confirmed city and 
   assert.match(html, /Request a Service/);
   assert.match(html, /Puraitmaad\. All rights reserved/);
   assert.doesNotMatch(html, /\[YOUR|\[BUSINESS|href="(?:tel:|mailto:|https:\/\/wa\.me)/);
-  assert.doesNotMatch(html, /Social accounts/);
+  for (const platform of ["Facebook", "Instagram", "TikTok"]) assert.ok(html.includes(`aria-label="${platform}"`));
+  assert.doesNotMatch(html, /Follow us|target="_blank"/);
 });
 
 test("footer only links available routes; future service categories remain plain text", () => {
@@ -51,4 +52,18 @@ test("footer renders configured contact/social destinations through the safe hel
   } finally {
     Object.assign(siteConfig, previous);
   }
+});
+
+test("footer hides empty and invalid social links without fake destinations", () => {
+  const previous = { ...siteConfig };
+  try {
+    Object.assign(siteConfig, { FACEBOOK: "", INSTAGRAM: "[YOUR INSTAGRAM URL]", TIKTOK: "javascript:alert(1)", LINKEDIN: "" });
+    const html = renderToStaticMarkup(createElement(SiteFooter));
+    assert.doesNotMatch(html, /Social accounts|footer-social|href="#"/);
+    Object.assign(siteConfig, { TIKTOK: "https://www.tiktok.com/@qa.account" });
+    const configured = renderToStaticMarkup(createElement(SiteFooter));
+    assert.match(configured, /aria-label="TikTok"/);
+    assert.doesNotMatch(configured, /aria-label="Facebook"|aria-label="Instagram"/);
+    assert.match(configured, /<svg[^>]*width="22"[^>]*aria-hidden="true"[^>]*focusable="false"/);
+  } finally { Object.assign(siteConfig, previous); }
 });

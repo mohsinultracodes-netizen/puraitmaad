@@ -37,21 +37,25 @@ export function whatsappHref(value: string | null | undefined = siteConfig.WHATS
   return `https://wa.me/${digits}?text=${encodeURIComponent(message)}`;
 }
 
-export function socialHref(value: string | null | undefined): string | null {
+export function socialHref(value: string | null | undefined, options: { allowLogin?: boolean } = {}): string | null {
   const text = configured(value);
   if (!text || /\s/.test(text)) return null;
   try {
     const url = new URL(text);
-    const allowed = ["instagram.com", "www.instagram.com", "facebook.com", "www.facebook.com", "linkedin.com", "www.linkedin.com"];
+    const allowed = ["instagram.com", "www.instagram.com", "facebook.com", "www.facebook.com", "linkedin.com", "www.linkedin.com", "tiktok.com", "www.tiktok.com"];
     if (url.protocol !== "https:" || url.username || url.password || url.port || !allowed.includes(url.hostname) || url.pathname === "/") return null;
     if (/(?:your[-_ ]|placeholder|example|replace[-_ ]|\[|\])/i.test(decodeURIComponent(url.pathname))) return null;
+    // Login pages are temporary footer destinations, never business identity links.
+    const loginPath = /^(?:www\.)?instagram\.com$/.test(url.hostname) ? /^\/accounts\/login\/?$/ : /^\/login\/?$/;
+    if (loginPath.test(url.pathname)) return options.allowLogin ? url.href : null;
+    if (url.hostname.endsWith("tiktok.com") && !/^\/@[a-z\d_.]{1,24}\/?$/i.test(url.pathname)) return null;
     return url.href;
   } catch {
     return null;
   }
 }
 
-type ContactConfig = Record<"PHONE" | "WHATSAPP" | "EMAIL" | "INSTAGRAM" | "FACEBOOK" | "LINKEDIN", string>;
+type ContactConfig = Record<"PHONE" | "WHATSAPP" | "EMAIL" | "INSTAGRAM" | "FACEBOOK" | "LINKEDIN", string> & { TIKTOK?: string };
 
 export function publicContactText(value: string | null | undefined): string | null { return configured(value); }
 
@@ -59,5 +63,6 @@ export function getContactLinks(config: ContactConfig = siteConfig, serviceName?
   return {
     phone: phoneHref(config.PHONE), email: emailHref(config.EMAIL), whatsapp: whatsappHref(config.WHATSAPP, serviceName),
     instagram: socialHref(config.INSTAGRAM), facebook: socialHref(config.FACEBOOK), linkedin: socialHref(config.LINKEDIN),
+    tiktok: socialHref(config.TIKTOK),
   };
 }

@@ -8,8 +8,10 @@ export const siteConfig = {
   PHONE: "[YOUR PHONE]",
   WHATSAPP: "[YOUR WHATSAPP NUMBER]",
   EMAIL: "[YOUR EMAIL]",
-  INSTAGRAM: "[YOUR INSTAGRAM URL]",
-  FACEBOOK: "[YOUR FACEBOOK URL]",
+  // Temporary login destinations approved by the owner; replace with profile URLs.
+  INSTAGRAM: "https://www.instagram.com/accounts/login/",
+  FACEBOOK: "https://www.facebook.com/login/",
+  TIKTOK: "https://www.tiktok.com/login",
   LINKEDIN: "[YOUR LINKEDIN URL]",
   ADDRESS: "[YOUR BUSINESS ADDRESS]",
   CITY: "Lahore, Pakistan",

@@ -2,10 +2,12 @@ import Link from "next/link";
 import { Container } from "@/components/ui/container";
 import { navigation, primaryCta, site, siteConfig } from "@/content/site";
 import { serviceCategories } from "@/content/services";
-import { getContactLinks } from "@/lib/contact-links";
+import { getContactLinks, socialHref } from "@/lib/contact-links";
 import { BrandLogo } from "@/components/ui/brand-logo";
+import { SocialIcon, type SocialPlatform } from "@/components/ui/social-icon";
 import { legalNavigation } from "@/content/legal";
 import "./footer-legal.css";
+import "./footer-social.css";
 
 export function SiteFooter() {
   const links = getContactLinks();
@@ -14,11 +16,12 @@ export function SiteFooter() {
     { label: "WhatsApp", href: links.whatsapp },
     { label: "Email", href: links.email },
   ].filter((item) => item.href !== null);
-  const socials = [
-    { label: "Instagram", href: links.instagram },
-    { label: "Facebook", href: links.facebook },
+  const socials = ([
+    { label: "Facebook", href: socialHref(siteConfig.FACEBOOK, { allowLogin: true }) },
+    { label: "Instagram", href: socialHref(siteConfig.INSTAGRAM, { allowLogin: true }) },
+    { label: "TikTok", href: socialHref(siteConfig.TIKTOK, { allowLogin: true }) },
     { label: "LinkedIn", href: links.linkedin },
-  ].filter((item) => item.href !== null);
+  ] satisfies { label: SocialPlatform; href: string | null }[]).filter((item) => item.href !== null);
   return (
     <footer className="site-footer">
       <Container>
@@ -42,7 +45,7 @@ export function SiteFooter() {
             <p className="footer-location">{siteConfig.CITY}</p>
             {contacts.length > 0 && <ul className="footer-links">{contacts.map((item) => <li key={item.label}><a href={item.href!}>{item.label}</a></li>)}</ul>}
             <Link className="footer-request" href={primaryCta.href} prefetch={false}>{primaryCta.label}<span aria-hidden="true"> →</span></Link>
-            {socials.length > 0 && <nav className="footer-social" aria-label="Social accounts"><h2 className="footer-heading">Follow us</h2><ul className="footer-links">{socials.map((item) => <li key={item.label}><a href={item.href!} rel="noopener noreferrer">{item.label}</a></li>)}</ul></nav>}
+            {socials.length > 0 && <nav className="footer-social" aria-label="Social accounts"><ul>{socials.map((item) => <li key={item.label}><a href={item.href!} aria-label={item.label} rel="noopener noreferrer"><SocialIcon platform={item.label} /></a></li>)}</ul></nav>}
           </section>
         </div>
         <div className="footer-bottom">
