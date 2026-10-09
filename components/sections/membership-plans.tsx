@@ -8,7 +8,7 @@ export function MembershipPlans({ id = "membership-heading", className = "" }: {
   return <section className={`plans-section ${className}`} aria-labelledby={id}>
     <Container>
       <header className="plans-intro">
-        <p className="eyebrow"><span aria-hidden="true">↗</span>{membershipSection.label}</p>
+        <p className="eyebrow">{membershipSection.label}</p>
         <h2 id={id}>{membershipSection.heading}</h2>
         <p>{membershipSection.subtitle}</p>
       </header>

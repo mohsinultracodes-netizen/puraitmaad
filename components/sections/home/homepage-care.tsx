@@ -70,7 +70,7 @@ export function ComingHomeStory() {
         <ArrivalTimeline />
         <div className="hp-story-ending">
           <div><p className="hp-small">{story.scopeNote}</p><p className="hp-small">{story.disclosure}</p></div>
-          <RequestLink text>Prepare My Home</RequestLink>
+          <RequestLink>Prepare My Home</RequestLink>
         </div>
       </Container>
     </section>

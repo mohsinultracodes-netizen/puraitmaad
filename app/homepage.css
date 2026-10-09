@@ -1,47 +1,33 @@
 /* Homepage composition only. Supporting pages retain their existing layouts. */
 .puraitmaad-home { font-size: 1rem; }
-/* A single decorative journey joins the five floating interface compositions. */
+/* Five editorial process cards retain one quiet, decorative dotted journey. */
 .hp-process-section { background: var(--background); padding-block: clamp(3.5rem, 6vw, 6rem); }
 .hp-process-intro { text-align: center; max-width: 48rem; margin-inline: auto; }
 .hp-process-pill { font-size: .6875rem; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; }
 .hp-process-pill span { font-size: .875rem; }
 .puraitmaad-home .hp-process-intro h2 { margin-top: 1.5rem; font-size: clamp(2.25rem, 4.3vw, 3.75rem); line-height: 1.12; font-weight: 500; letter-spacing: -.045em; }
 .hp-process-intro > p:last-child { max-width: 54ch; margin: 1.25rem auto 0; color: var(--muted); font-size: 1rem; line-height: 1.7; }
-.hp-process-journey { position: relative; isolation: isolate; margin-top: clamp(2rem, 4vw, 3.5rem); }
-.hp-process-stages { position: relative; display: grid; gap: 2.5rem; list-style: none; padding: 0; }
-.hp-process-stage { min-width: 0; text-align: center; }
+.hp-process-journey { position: relative; isolation: isolate; max-width: 36rem; margin: clamp(2rem, 4vw, 3.5rem) auto 0; }
+.hp-process-stages { position: relative; z-index: 1; display: grid; grid-auto-rows: 1fr; gap: 2.25rem; list-style: none; padding: 0; margin: 0; }
+.hp-process-stage { position: relative; min-width: 0; min-height: 310px; padding: 1.5rem; text-align: center; border: 1px solid var(--border); border-radius: 24px; background: var(--surface-elevated); box-shadow: 0 4px 14px rgb(32 58 50 / .025); }
 .hp-process-art { position: relative; display: flex; justify-content: center; align-items: center; height: 150px; }
 .hp-process-illustration { width: 220px; height: auto; max-width: 100%; overflow: visible; }
 .hp-process-floating-panel { filter: drop-shadow(0 5px 7px rgb(32 58 50 / .07)); }
-.hp-process-stage-copy { position: relative; width: fit-content; max-width: 32ch; margin-inline: auto; padding: .5rem .75rem 0; background: var(--background); }
+.hp-process-stage-copy { position: relative; max-width: 32ch; margin-inline: auto; padding-top: .75rem; }
 .hp-process-number { font-size: .625rem; line-height: 1.5; text-transform: uppercase; letter-spacing: .12em; font-weight: 500; color: var(--muted); }
-.puraitmaad-home .hp-process-stage h3 { margin-top: .5rem; font-size: 1.1875rem; line-height: 1.3; font-weight: 500; letter-spacing: -.025em; }
+.puraitmaad-home .hp-process-stage h3 { margin-top: .875rem; font-size: 1.1875rem; line-height: 1.3; font-weight: 500; letter-spacing: -.025em; }
 .hp-process-description { margin-top: .75rem; color: var(--muted); font-size: .875rem; line-height: 1.6; }
-.hp-process-path { position: absolute; inset: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; opacity: .65; }
-.hp-process-path-desktop, .hp-process-path-tablet { display: none; }
-@media (min-width: 48rem) {
-  .hp-process-stages { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 2.5rem 1.25rem; }
-  .hp-process-stage { grid-column: span 2; }
-  .hp-process-stage:nth-child(4) { grid-column: 2 / span 2; }
-  .hp-process-stage:nth-child(5) { grid-column: 4 / span 2; }
-  .hp-process-art { height: 200px; }
-  .hp-process-illustration { width: 240px; }
-  .hp-process-stage:nth-child(3) .hp-process-illustration { width: 260px; }
-  .hp-process-stage-copy { min-height: 120px; padding-inline: .25rem; }
+.hp-process-path { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; opacity: .65; }
+.hp-process-path-desktop { display: none; }
+@media (min-width: 64rem) {
+  .hp-process-journey { max-width: none; }
+  .hp-process-stages { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: clamp(1rem, 2vw, 1.75rem); }
+  .hp-process-stage { min-height: 340px; padding: 1.25rem .875rem 1.75rem; }
+  .hp-process-art { height: 130px; }
+  .hp-process-illustration { width: 180px; }
+  .hp-process-stage-copy { padding-top: 1rem; }
   .hp-process-path-mobile { display: none; }
-  .hp-process-path-tablet { display: block; }
-}
-@media (min-width: 75rem) {
-  .hp-process-stages { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 1.25rem; }
-  .hp-process-stage, .hp-process-stage:nth-child(4), .hp-process-stage:nth-child(5) { grid-column: auto; grid-row: auto; }
-  .hp-process-art { height: 220px; }
-  .hp-process-stage:nth-child(1) .hp-process-illustration { transform: translateY(-8px); }
-  .hp-process-stage:nth-child(2) .hp-process-illustration { transform: translateY(10px); }
-  .hp-process-stage:nth-child(3) .hp-process-illustration { transform: translateY(-16px); }
-  .hp-process-stage:nth-child(4) .hp-process-illustration { transform: translateY(8px); }
-  .hp-process-stage:nth-child(5) .hp-process-illustration { transform: translateY(-6px); }
-  .hp-process-path-tablet { display: none; }
-  .hp-process-path-desktop { display: block; height: 220px; }
+  .hp-process-path-desktop { display: block; top: 1.25rem; height: 130px; }
 }
 .puraitmaad-home h2 { font-size: clamp(2rem, 3.1vw, 2.875rem); line-height: 1.12; letter-spacing: -0.025em; }
 .puraitmaad-home h3 { font-size: 1.5rem; line-height: 1.2; }
@@ -332,7 +318,7 @@
 .hp-coming-home .hp-story-ending > div { max-width: 65ch; }
 .hp-coming-home .hp-story-ending .hp-small { font-size: .8125rem; }
 .hp-coming-home .hp-story-ending .hp-small + .hp-small { margin-top: .375rem; }
-.hp-coming-home .hp-story-ending .button { padding-left: 0; }
+.hp-coming-home .hp-story-ending .button-text { padding-left: 0; }
 .hp-membership .hp-section-intro { gap: 1rem; margin-bottom: 1.5rem; }
 .hp-membership .hp-section-intro h2 { max-width: 24ch; font-size: clamp(2rem, 3.1vw, 2.75rem); }
 .hp-membership .hp-section-intro > p { font-size: .9375rem; }
@@ -374,4 +360,34 @@
   .hp-trust-words { grid-area: principles; }
   .hp-trust-note { grid-area: note; }
   .hp-request { padding-top: 3rem; }
+}
+
+/* Coming Home spacing only; the shared Property Care timeline keeps its layout. */
+.puraitmaad-home .hp-coming-home { padding-block: 1.5rem; }
+.hp-coming-home .hp-story-intro { gap: 1rem; }
+.hp-coming-home .hp-story-copy .hp-body-copy { margin-top: .5rem; }
+.hp-coming-home .arrival-timeline.arrival-timeline { gap: .75rem; margin-block: 1rem; }
+.hp-coming-home .arrival-timeline.arrival-timeline > li { gap: .75rem; }
+.hp-coming-home .arrival-timeline > li:not(:last-child)::before { bottom: -34px; }
+.hp-coming-home .arrival-timeline-card { padding: .75rem 1rem; }
+.hp-coming-home .arrival-timeline .arrival-timeline-card h3 { margin-top: .5rem; }
+.hp-coming-home .hp-story-ending { margin-top: 1rem; }
+@media (min-width: 48rem) {
+  .puraitmaad-home .hp-coming-home { padding-block: 2rem; }
+  .hp-coming-home .hp-story-intro { gap: 1.5rem; }
+  .hp-coming-home .hp-story-ending { gap: 1rem; }
+}
+@media (min-width: 64rem) {
+  .hp-coming-home .arrival-timeline.arrival-timeline { gap: .875rem; }
+  .hp-coming-home .arrival-timeline-card { min-height: 104px; padding: .75rem .875rem; }
+}
+
+/* Mobile density only: natural card heights and continuous 40px circle alignment. */
+@media (max-width: 47.999rem) {
+  .hp-coming-home .arrival-timeline.arrival-timeline { gap: .375rem; }
+  .hp-coming-home .arrival-timeline.arrival-timeline > li { grid-template-columns: 40px minmax(0, 1fr); }
+  .hp-coming-home .arrival-timeline-marker { width: 40px; height: 40px; }
+  .hp-coming-home .arrival-timeline-card { min-height: 0; padding-block: .5rem; }
+  .hp-coming-home .arrival-timeline .arrival-timeline-card h3 { margin-top: .375rem; }
+  .hp-coming-home .arrival-timeline > li:not(:last-child)::before { left: 19px; top: 20px; bottom: -26px; }
 }
