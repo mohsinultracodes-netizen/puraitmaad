@@ -64,6 +64,15 @@ test("social links accept real profile-shaped HTTPS URLs and reject unsafe desti
   for (const value of ["http://instagram.com/puraitmaad", "https://instagram.com", "https://instagram.com.evil.test/puraitmaad", "https://user:pass@instagram.com/puraitmaad", "https://instagram.com/your_profile", "https://instagram.com/%5BYOUR%20PROFILE%5D", "https://instagram.com:444/puraitmaad", "https://unrelated.com/profile"]) assert.equal(socialHref(value), null);
 });
 
+test("TikTok supports HTTPS profiles and explicit footer-only login destinations", () => {
+  assert.equal(socialHref("https://www.tiktok.com/@qa.account"), "https://www.tiktok.com/@qa.account");
+  for (const value of ["https://www.facebook.com/login/", "https://www.instagram.com/accounts/login/", "https://www.tiktok.com/login"]) {
+    assert.equal(socialHref(value), null);
+    assert.equal(socialHref(value, { allowLogin: true }), value);
+  }
+  for (const value of ["https://www.tiktok.com/", "https://tiktok.com/tag/care", "http://tiktok.com/@care", "https://tiktok.com.evil.test/@care", "https://user:pass@tiktok.com/@care"]) assert.equal(socialHref(value), null);
+});
+
 test("service catalog has unique identities, four complete categories and six shared featured objects", () => {
   assert.equal(new Set(services.map(item => item.id)).size, services.length);
   assert.deepEqual(serviceCategories.map(item => item.name), ["Home Care", "Property Care", "Personal Assistance", "Business Support"]);
