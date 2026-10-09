@@ -20,7 +20,7 @@ export function HomepageHero() {
       <div className="hp-actions"><RequestLink /><ButtonLink href="/how-it-works" variant="secondary">How It Works</ButtonLink></div>
       <HeroPrinciples />
     </div>
-    <div className="hp-hero-visual"><HomepagePhotography slot="hero" /><p className="hp-image-note"><span>{homepage.hero.imageNote.slice(0, 13)} </span><span>{homepage.hero.imageNote.slice(14)}</span></p></div>
+    <div className="hp-hero-visual"><HomepagePhotography slot="hero" /></div>
   </section>;
 }
 

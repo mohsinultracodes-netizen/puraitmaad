@@ -1,0 +1,45 @@
+/* Central label treatment. Specificity keeps text white on existing dark sections
+   without changing their body copy, controls or status badges. */
+:root body :is(.eyebrow, .hp-eyebrow, .hp-process-pill) {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  max-width: 100%;
+  padding: .375rem .875rem;
+  border: 1px solid var(--forest);
+  border-radius: 999px;
+  background: var(--forest);
+  color: #fff;
+  line-height: 1.5;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  vertical-align: middle;
+}
+
+:root body :is(.eyebrow, .hp-eyebrow, .hp-process-pill) :is(span, svg) {
+  color: inherit;
+}
+
+/* Process numbers remain rectangular, distinct from section eyebrow pills. */
+:root body :is(.step-number, .hp-process-number, .sp-process-number, .sp-story-number, .hp-timeline-dot) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  align-self: start;
+  width: fit-content;
+  min-width: 2rem;
+  height: 2rem;
+  padding: .25rem .5rem;
+  border: 0;
+  border-radius: var(--radius-control);
+  background: var(--forest);
+  color: #fff;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+:root body .hp-process-number {
+  margin: 0 auto;
+  padding-inline: .625rem;
+}

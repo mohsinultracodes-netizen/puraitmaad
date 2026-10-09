@@ -1,36 +1,14 @@
 import { Container } from "@/components/ui/container";
 import { ServicePhotography } from "@/components/ui/service-photography";
 import { homepage } from "@/content/homepage";
-import { membershipPlans, membershipScope } from "@/content/membership";
+import { MembershipPlans } from "@/components/sections/membership-plans";
 import { homePreparationScenario } from "@/content/scenarios";
 import { testimonials } from "@/content/testimonials";
 import { operatingPhilosophy } from "@/content/supporting";
 import { EditorialHeading, RequestLink, SupportList } from "./homepage-shared";
 
 export function MembershipSupportLevels() {
-  return (
-    <section className="hp-section hp-membership" aria-labelledby="membership-heading">
-      <Container>
-        <div className="hp-section-intro">
-          <EditorialHeading eyebrow="Membership" id="membership-heading">{homepage.membership.heading[0]}<br />{homepage.membership.heading[1]}</EditorialHeading>
-          <p>{homepage.membership.description}</p>
-        </div>
-        <div className="hp-plan-grid">
-          {membershipPlans.map((plan, index) => <article key={plan.id} data-plan={plan.id} aria-labelledby={`membership-${plan.id}`}>
-            <span className="hp-plan-number" aria-hidden="true">0{index + 1}</span>
-            <h3 id={`membership-${plan.id}`}>{plan.name}</h3>
-            <p className="hp-plan-description">{plan.description}</p>
-            <SupportList items={plan.inclusions} />
-            <p className="hp-plan-tailored">{plan.pricingLabel}</p>
-          </article>)}
-        </div>
-        <div className="hp-membership-ending">
-          <p className="hp-small hp-membership-scope">{membershipScope}</p>
-          <RequestLink text>Ask About Membership</RequestLink>
-        </div>
-      </Container>
-    </section>
-  );
+  return <MembershipPlans className="hp-membership" />;
 }
 
 export function PrivateAssistanceFeature() {

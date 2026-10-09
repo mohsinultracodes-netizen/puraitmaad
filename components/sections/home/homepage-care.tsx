@@ -6,6 +6,7 @@ import { homepage } from "@/content/homepage";
 import { comingHomeScenario } from "@/content/scenarios";
 import { photography } from "@/content/photography";
 import { EditorialHeading, RequestLink, SupportList } from "./homepage-shared";
+import { ArrivalTimeline } from "@/components/sections/arrival-timeline";
 
 export function PropertyCareFeature() {
   return (
@@ -59,20 +60,14 @@ export function ComingHomeStory() {
       <Container>
         <div className="hp-story-intro">
           <div className="hp-story-copy">
-            <EditorialHeading eyebrow={story.label} id="coming-home-heading">“{story.title}”</EditorialHeading>
+            <div className="hp-heading"><h2 id="coming-home-heading">“{story.title}”</h2></div>
             <p className="hp-body-copy">{story.ending}</p>
           </div>
           {arrival && <div className="hp-photo hp-story-photo">
             <Image src={arrival.src} alt={arrival.alt} fill sizes="(min-width: 1280px) 600px, (min-width: 768px) 46vw, 100vw" loading="lazy" placeholder="blur" style={{ objectFit: "cover", objectPosition: "50% 50%" }} />
           </div>}
         </div>
-        <ol className="hp-timeline">
-          {story.timeline.map((step, index) => <li key={step.when}>
-            <span className="hp-timeline-dot" aria-hidden="true">{index + 1}</span>
-            <p className="hp-eyebrow">{step.when}</p>
-            <h3>{step.action}</h3>
-          </li>)}
-        </ol>
+        <ArrivalTimeline />
         <div className="hp-story-ending">
           <div><p className="hp-small">{story.scopeNote}</p><p className="hp-small">{story.disclosure}</p></div>
           <RequestLink text>Prepare My Home</RequestLink>

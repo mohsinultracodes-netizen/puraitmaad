@@ -23,6 +23,7 @@ for (const extension of [".ts", ".tsx"]) {
 }
 // Simulate Next's static-image module boundary; browser QA uses the actual assets.
 load.extensions[".png"] = (module, filename) => { module.exports = { src: `/images/property/${path.basename(filename)}`, width: 1200, height: 800, blurDataURL: "data:image/png;base64,iVBORw0KGgo=" }; };
+load.extensions[".webp"] = load.extensions[".png"];
 load.extensions[".css"] = () => {};
 const { publicRoutes, socialImage, getSiteUrl } = load("../lib/seo.ts");
 const { siteConfig } = load("../content/site.ts");

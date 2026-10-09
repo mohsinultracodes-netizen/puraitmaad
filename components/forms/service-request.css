@@ -19,8 +19,9 @@
 .request-assistance > .service-icon { width: 32px; height: 32px; margin-bottom: 1.5rem; }
 .request-assistance h3 { font-size: 1.875rem; }
 .request-assistance > p { margin-top: 1rem; color: var(--muted); max-width: 45ch; }
+.request-plan-context { margin-bottom: 1.5rem; color: var(--foreground); font-size: .9375rem; }
 .request-assistance ol { display: grid; gap: 1rem; margin-top: 1.5rem; font-size: .9375rem; }
-.request-assistance li { display: grid; grid-template-columns: 24px 1fr; gap: .75rem; }
+.request-assistance li { display: grid; grid-template-columns: 2rem 1fr; gap: .75rem; }
 .request-assistance li span { color: var(--muted); font-size: .75rem; padding-top: 3px; }
 .request-assistance .request-panel-city { margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border); color: var(--foreground); }
 .request-contact-link { display: flex; align-items: center; gap: .75rem; min-height: 3rem; font-size: .9375rem; text-decoration: underline; text-underline-offset: .2em; }

@@ -7,7 +7,6 @@ export const homepage = {
     eyebrow: "Premium home & lifestyle services",
     lines: ["Your problem →", "our responsibility."],
     description: "From home maintenance to everyday assistance, Puraitmaad takes care of what needs to be done — so you can focus on what matters.",
-    imageNote: "More time for what matters.",
   },
   principles: [
     { label: "Trusted Professionals", icon: "house" },

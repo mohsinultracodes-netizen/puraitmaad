@@ -4,13 +4,13 @@ import { Resend } from "resend";
 import { requestFailure, requestSuccess, validEmail, type ServiceRequestValues } from "./validation";
 import { serviceRequestEmail } from "./email";
 export type DeliveryResult = { status: "error" | "success"; message: string };
-export async function deliverServiceRequest(values: ServiceRequestValues, submissionId = "", serviceId?: string): Promise<DeliveryResult> {
+export async function deliverServiceRequest(values: ServiceRequestValues, submissionId = "", serviceId?: string, planId?: string): Promise<DeliveryResult> {
   const key = process.env.RESEND_API_KEY?.trim();
   const from = process.env.RESEND_FROM?.trim();
   const to = process.env.RESEND_TO?.trim();
   const senderAddress = from?.match(/^[^<>\r\n]+<([^<>\r\n]+)>$/)?.[1]?.trim() ?? from;
   if (!key || !from || /[\r\n]/.test(from) || !senderAddress || !validEmail(senderAddress) || !to || !validEmail(to)) return { status: "error", message: requestFailure };
-  const payload = { from, to, ...(values.email ? { replyTo: values.email } : {}), ...serviceRequestEmail(values, serviceId) };
+  const payload = { from, to, ...(values.email ? { replyTo: values.email } : {}), ...serviceRequestEmail(values, serviceId, undefined, planId) };
   const idempotencyKey = "service-request/" + createHmac("sha256", key).update(JSON.stringify([submissionId, payload])).digest("hex");
   try {
     const resend = new Resend(key);

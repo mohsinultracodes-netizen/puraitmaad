@@ -5,15 +5,16 @@ import Link from "next/link";
 import { requestService } from "@/app/contact/actions";
 import { Button } from "@/components/ui/button";
 import { emptyValues, initialState, fieldLabels, fieldLimits, getLahoreDate, validateServiceRequest, type FieldName, type ServiceRequestState } from "@/lib/consultation/validation";
-import { getRequestService } from "@/lib/request-context";
+import { getRequestService, getRequestPlan } from "@/lib/request-context";
 import { RequestFeedback } from "./request-feedback";
 import "./service-request.css";
 
-export function ServiceRequestForm({ serviceId, whatsappHref }: { serviceId?: string; whatsappHref?: string | null }) {
+export function ServiceRequestForm({ serviceId, planId, whatsappHref }: { serviceId?: string; planId?: string; whatsappHref?: string | null }) {
   const service = getRequestService(serviceId);
+  const plan = getRequestPlan(planId);
   const [serverState, action, pending] = useActionState(requestService, initialState);
   const [clientState, setClientState] = useState<ServiceRequestState | null>(null);
-  const [values, setValues] = useState({ ...emptyValues, message: service ? `I'd like help with ${service.name}. ` : "" });
+  const [values, setValues] = useState({ ...emptyValues, message: `${plan ? `I'd like information about the ${plan.name} plan. ` : ""}${service ? `I'd like help with ${service.name}. ` : ""}` });
   // Static homepage HTML may outlive today's date. Refresh on focus, without a
   // server/client date mismatch; both validators still enforce the current Lahore day.
   const [today, setToday] = useState("");
@@ -52,19 +53,21 @@ export function ServiceRequestForm({ serviceId, whatsappHref }: { serviceId?: st
     if (Object.keys(validated.errors).length) {
       event.preventDefault();setClientState({ status: "invalid", errors: validated.errors, message: "Please review the fields below." });requestAnimationFrame(() => summary.current?.focus());return;
     }
-    const fingerprint = JSON.stringify([validated.values, service?.id]);
+    const fingerprint = JSON.stringify([validated.values, service?.id, plan?.id]);
     if (!attempt.current || attempt.current.fingerprint !== fingerprint) attempt.current = { fingerprint, id: crypto.randomUUID() };
     if (identity.current) identity.current.value = attempt.current.id;
     lock.current = true;setClientState(null);
   }}>
     <input ref={identity} type="hidden" name="submissionId" defaultValue="" />
     {service && <input type="hidden" name="serviceId" value={service.id} />}
+    {plan && <input type="hidden" name="planId" value={plan.id} />}
     <div className="consultation-honeypot" aria-hidden="true"><label htmlFor="website">Leave this field empty</label><input id="website" name="website" type="text" tabIndex={-1} autoComplete="off" maxLength={160} /></div>
     <div ref={summary} tabIndex={-1} className={`form-feedback feedback-${state.status}`} aria-live="polite" aria-atomic="true">
       <RequestFeedback state={state} pending={pending} whatsappHref={whatsappHref} />
     </div>
     <fieldset className="request-fields" disabled={pending || state.status === "success"}>
       <legend className="sr-only">Your service request</legend>
+      {plan && <p className="request-plan-context">Plan enquiry: <strong>{plan.name}</strong></p>}
       <div className="request-grid">
         {input("fullName", { type: "text", required: true, autoComplete: "name", placeholder: "Your name" }, "(required)")}
         {input("phone", { type: "tel", inputMode: "tel", required: !values.email.trim(), autoComplete: "tel", placeholder: "+92 XXX XXXXXXX" }, "(phone or email)", "request-contact-hint")}

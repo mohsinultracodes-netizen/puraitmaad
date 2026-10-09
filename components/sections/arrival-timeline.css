@@ -1,0 +1,14 @@
+.arrival-timeline.arrival-timeline { position: relative; isolation: isolate; display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.25rem; list-style: none; padding: 0; margin-block: 2rem; }
+.arrival-timeline.arrival-timeline > li { position: relative; display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 1rem; min-width: 0; align-items: start; }
+.arrival-timeline > li:not(:last-child)::before { content: ""; position: absolute; left: 21px; top: 22px; bottom: -42px; width: 2px; background: var(--border); z-index: -1; }
+.arrival-timeline-marker { display: grid; place-items: center; width: 44px; height: 44px; border: 2px solid var(--forest); border-radius: 50%; background: var(--surface-elevated); color: var(--forest); font-size: 1rem; font-weight: 700; line-height: 1; }
+.arrival-timeline-card { width: 100%; min-width: 0; padding: 1.25rem; border: 1px solid var(--border); border-radius: var(--radius-card); background: var(--surface-elevated); }
+:root body .arrival-timeline .arrival-timeline-timing { font-size: .625rem; letter-spacing: .08em; margin: 0; padding: .375rem .625rem; }
+.arrival-timeline .arrival-timeline-card h3 { margin: .875rem 0 0; color: var(--foreground); font-size: 1.0625rem; font-weight: 500; line-height: 1.4; }
+@media (min-width: 64rem) {
+  .arrival-timeline.arrival-timeline { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 1rem; }
+  .arrival-timeline::before { content: ""; position: absolute; left: 10%; right: 10%; top: 21px; height: 2px; background: var(--border); z-index: -1; }
+  .arrival-timeline.arrival-timeline > li { display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+  .arrival-timeline > li:not(:last-child)::before { display: none; }
+  .arrival-timeline-card { flex: 1; min-height: 148px; padding: 1.25rem .875rem; text-align: center; }
+}

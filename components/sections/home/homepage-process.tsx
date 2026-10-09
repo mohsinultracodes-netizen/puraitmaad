@@ -2,12 +2,27 @@ import { Container } from "@/components/ui/container";
 import { HomepagePhotography } from "@/components/ui/homepage-photography";
 import { homepage } from "@/content/homepage";
 import { EditorialHeading, SupportList } from "./homepage-shared";
+import { ProcessIllustration } from "./process-illustration";
+import { ProcessJourneyPath } from "./process-journey-path";
 
 export function ManagedProcess() {
-  const benefits = homepage.emotional.points.filter(point => point === "Clear communication" || point === "Less time chasing people");
   return <section className="hp-process-section hp-section" aria-labelledby="managed-process-heading"><Container>
-    <div className="hp-difference"><div><EditorialHeading eyebrow="How it works" id="managed-process-heading">{homepage.difference.heading}</EditorialHeading><p className="hp-body-copy">{homepage.difference.description}</p><p className="hp-promise">{homepage.difference.promise.map(line => <span key={line}>{line}</span>)}</p><ul className="hp-model-benefits">{benefits.map(benefit => <li key={benefit}>{benefit}</li>)}</ul></div><HomepagePhotography slot="difference" /></div>
-    <ol className="hp-process">{homepage.process.map((step,index) => <li key={step.title}><div className="hp-process-marker"><span>{String(index+1).padStart(2,"0")}</span><span aria-hidden="true">{index < 4 ? "→" : "·"}</span></div><h3>{step.title}</h3><p>{step.description}</p></li>)}</ol>
+    <div className="hp-process-intro">
+      <p className="hp-process-pill"><span aria-hidden="true">↗</span> How it works</p>
+      <h2 id="managed-process-heading">One request.<br />We handle the rest.</h2>
+      <p>Tell us what you need and Puraitmaad coordinates the people, details and follow-through.</p>
+    </div>
+    <div className="hp-process-journey">
+      <ProcessJourneyPath />
+      <ol className="hp-process-stages">{homepage.process.map((step,index) => <li className="hp-process-stage" key={step.title}>
+        <div className="hp-process-art"><ProcessIllustration step={index} /></div>
+        <div className="hp-process-stage-copy">
+          <p className="hp-process-number">Step {String(index+1).padStart(2,"0")}</p>
+          <h3>{step.title}</h3>
+          <p className="hp-process-description">{step.description}</p>
+        </div>
+      </li>)}</ol>
+    </div>
   </Container></section>;
 }
 

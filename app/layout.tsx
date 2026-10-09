@@ -1,26 +1,18 @@
 import type { Metadata } from "next";
-import { DM_Serif_Display, Geist } from "next/font/google";
+import { Manrope } from "next/font/google";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { site } from "@/content/site";
 import { getSiteUrl, socialImage } from "@/lib/seo";
 import { organizationAndServices, serializeJsonLd } from "@/lib/structured-data";
 import "./globals.css";
+import "./labels.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const manrope = Manrope({
+  variable: "--font-manrope",
   subsets: ["latin"],
   display: "swap",
   fallback: ["Arial", "sans-serif"],
-});
-
-const editorialSerif = DM_Serif_Display({
-  variable: "--font-editorial",
-  subsets: ["latin"],
-  weight: "400",
-  style: "normal",
-  display: "swap",
-  fallback: ["Georgia", "Times New Roman", "serif"],
 });
 
 export const metadata: Metadata = {
@@ -52,7 +44,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${editorialSerif.variable} h-full antialiased`}
+      className={`${manrope.variable} h-full antialiased`}
     >
       <body>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(organizationAndServices()) }} />

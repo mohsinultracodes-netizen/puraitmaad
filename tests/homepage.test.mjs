@@ -23,6 +23,7 @@ for (const extension of [".ts", ".tsx"]) {
 }
 // Simulate Next's static-image module boundary; browser QA uses the actual assets.
 load.extensions[".png"] = (module, filename) => { module.exports = { src: `/images/property/${path.basename(filename)}`, width: 1200, height: 800, blurDataURL: "data:image/png;base64,iVBORw0KGgo=" }; };
+load.extensions[".webp"] = load.extensions[".png"];
 load.extensions[".css"] = () => {};
 const render = component => renderToStaticMarkup(createElement(component));
 const { FeaturedServices, HomepageHero } = load("../components/sections/home/homepage-opening.tsx");
@@ -55,8 +56,14 @@ test("managed process renders five ordered steps and qualified verification", ()
   const html = render(ManagedProcess);
   for (const title of ["You Ask", "We Source", "We Coordinate", "We Verify", "Done"]) assert.ok(html.includes(`<h3>${title}</h3>`));
   assert.match(html, /Where appropriate, we confirm completion/);
-  assert.match(html, /Clear communication/);
-  assert.match(html, /Less time chasing people/);
+  assert.match(html, /One request\./);
+  assert.match(html, /We handle the rest\./);
+  assert.equal((html.match(/class="hp-process-stage"/g) || []).length, 5);
+  assert.doesNotMatch(html, /hp-process-connector/);
+  assert.match(html, /<ol class="hp-process-stages">/);
+  assert.equal((html.match(/class="hp-process-path hp-process-path-/g) || []).length, 3);
+  assert.equal((html.match(/pointer-events="none"/g) || []).length, 3);
+  for (const step of homepage.process) assert.ok(html.includes(step.description));
   assert.doesNotMatch(html, /hp-step-label/);
 });
 
@@ -139,19 +146,20 @@ test("Coming Home keeps its exact illustrative sequence and one restrained reque
   assert.equal((html.match(/<a\b/g) || []).length, 1);
   assert.match(html, /href="#request-service"/);
   assert.ok(html.indexOf("hp-story-copy") < html.indexOf("hp-story-photo"));
-  assert.ok(html.indexOf("hp-story-photo") < html.indexOf("hp-timeline"));
-  assert.ok(html.indexOf("hp-timeline") < html.indexOf("hp-story-ending"));
+  assert.ok(html.indexOf("hp-story-photo") < html.indexOf("arrival-timeline"));
+  assert.ok(html.indexOf("arrival-timeline") < html.indexOf("hp-story-ending"));
 });
 
 test("homepage membership contains current plan names, no retired prices, and no fake testimonials", () => {
   const html = render(MembershipSupportLevels) + render(PrivateAssistanceFeature);
   for (const name of ["Essential", "Premium", "Private"]) assert.ok(html.includes(`>${name}</h3>`));
-  assert.equal((html.match(/Speak to us for a tailored plan\./g) || []).length, 3);
+  assert.match(html, /Choose Your Plan/);
+  assert.doesNotMatch(html, /Speak to us for a tailored plan\./);
   assert.doesNotMatch(html, /PKR|Signature|Private Stewardship|24\/7|Most popular|14,500|24,500|39,500/);
   assert.equal(render(CustomerStories), "");
 });
 
-test("support levels retain every approved inclusion, shared qualification and one membership action", () => {
+test("support levels retain every approved inclusion, qualification and three plan enquiries", () => {
   const html = render(MembershipSupportLevels);
   const text = html.replace(/<[^>]*>/g, "");
   assert.equal((html.match(/<article\b/g) || []).length, 3);
@@ -161,8 +169,9 @@ test("support levels retain every approved inclusion, shared qualification and o
     for (const inclusion of plan.inclusions) assert.ok(text.includes(inclusion));
   }
   assert.ok(text.includes(membershipScope));
-  assert.equal((html.match(/<a\b/g) || []).length, 1);
-  assert.match(html, /href="#request-service"/);
+  assert.equal((html.match(/<a\b/g) || []).length, 3);
+  for (const id of ["essential", "signature", "bespoke"]) assert.ok(html.includes(`href="/contact?plan=${id}"`));
+  assert.equal((html.match(/>Request Info<\/a>/g) || []).length, 3);
   assert.doesNotMatch(html, /Most popular|monthly fee|savings|guaranteed/i);
 });
 

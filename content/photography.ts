@@ -9,7 +9,7 @@ import careClearScopeImage from "@/public/images/property/care-clear-scope.png";
 import vendorCoordinationImage from "@/public/images/property/vendor-coordination.png";
 import vehicleReadinessImage from "@/public/images/property/vehicle-readiness.png";
 import aboutImage from "@/public/images/property/about.png";
-import interiorImage from "@/public/images/property/arrival-ready-interior.png";
+import heroPuraitmaadImage from "@/public/images/property/hero-puraitmaad.webp";
 
 type ApprovedPhotography = {
   src: StaticImageData;
@@ -168,10 +168,10 @@ type HomepagePhoto = {
 
 export const homepagePhotography = {
   hero: {
-    asset: { src: interiorImage, alt: "Warm seating and a coffee table beside an open terrace with trees and evening light." },
-    sizes: "(min-width: 1280px) 640px, (min-width: 1024px) 50vw, 100vw",
-    objectPosition: "50% 78%",
-    replacement: "A bright, daylit premium living-room/home interior with greenery and warm natural materials; a wide photograph with no people required.",
+    asset: { src: heroPuraitmaadImage, alt: "Conceptual home-service interface on a smartphone beside keys in a warm modern living room." },
+    sizes: "(min-width: 1024px) max(50vw, 1010px), (min-width: 768px) 100vw, 590px",
+    objectPosition: "var(--hp-hero-image-position, 50% 75%)",
+    replacement: "Approved conceptual home-service image; preserve the smartphone as the primary focal point.",
   },
   difference: {
     asset: photography.about.asset,

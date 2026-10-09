@@ -19,7 +19,8 @@ const {validateServiceRequest,validateFullName,getLahoreDate,requestSuccess,requ
 const {requestService}=load("../app/contact/actions.ts");
 const {deliverServiceRequest}=load("../lib/consultation/delivery.ts");
 const {serviceRequestEmail}=load("../lib/consultation/email.ts");
-const {getRequestService,serviceRequestHref}=load("../lib/request-context.ts");
+const {getRequestService,serviceRequestHref,getRequestPlan,planRequestHref}=load("../lib/request-context.ts");
+const {membershipPlans}=load("../content/membership.ts");
 const {ServiceRequestForm}=load("../components/forms/service-request-form.tsx");
 const {RequestFeedback}=load("../components/forms/request-feedback.tsx");
 const fixedNow=new Date("2026-10-06T20:00:00Z");
@@ -67,7 +68,7 @@ test("server action independently validates and ignores untrusted previous succe
 });
 test("honeypot, duplicate identity/context and malformed UUID never deliver",async()=>{
   for(const value of ["spam",new Blob(["spam"])]){const form=validForm();form.set("website",value);assert.equal((await requestService({},form)).status,"error");}
-  for(const field of ["website","submissionId","serviceId"]){const form=validForm();form.append(field,"");form.append(field,"");assert.equal((await requestService({},form)).status,"error");}
+  for(const field of ["website","submissionId","serviceId","planId"]){const form=validForm();form.append(field,"");form.append(field,"");assert.equal((await requestService({},form)).status,"error");}
   const form=validForm();form.set("submissionId","injected-key");assert.equal((await requestService({},form)).status,"error");
 });
 test("notifications escape HTML, include request/preferences and retain optional timestamp utility",()=>{
@@ -83,6 +84,38 @@ test("known service context is editable, unknown/array values safely fall back",
 });
 test("shared form has seven public fields, correct controls, anchor-safe labels and no retired wording",()=>{
   const html=renderToStaticMarkup(createElement(ServiceRequestForm));for(const name of ["fullName","phone","email","location","message","preferredDate","preferredTime"])assert.ok(html.includes(`name="${name}"`));for(const type of ["tel","email","date","time"])assert.ok(html.includes(`type="${type}"`));assert.match(html,/autoComplete="name"/i);assert.match(html,/autoComplete="tel"/i);assert.match(html,/autoComplete="email"/i);assert.match(html,/Send Request/);assert.doesNotMatch(html,/Property Type|Stewardship enquiry|Request Consultation|name="help"/);
+});
+
+test("plan enquiries resolve catalog tiers, prefill editable messages and keep validated hidden context",()=>{
+  for(const plan of membershipPlans){
+    assert.equal(getRequestPlan(plan.id),plan);
+    const queryId={essential:"essential",premium:"signature",private:"bespoke"}[plan.id];
+    assert.equal(planRequestHref(plan.id),`/contact?plan=${queryId}`);
+    const html=renderToStaticMarkup(createElement(ServiceRequestForm,{planId:plan.id}));
+    assert.ok(html.includes(`name="planId" value="${plan.id}"`));
+    assert.ok(html.includes(`information about the ${plan.name} plan.`));
+    assert.match(html,/Plan enquiry:/);
+    const mail=serviceRequestEmail(validateServiceRequest(validForm()).values,undefined,undefined,plan.id);
+    assert.ok(mail.text.includes(`Plan enquiry (optional): ${plan.name}`));
+  }
+  assert.equal(getRequestPlan("signature").id,"premium");assert.equal(getRequestPlan("bespoke").id,"private");
+  for(const raw of ["unknown","<script>","__proto__",["essential"],null,undefined])assert.equal(getRequestPlan(raw),undefined);
+  const html=renderToStaticMarkup(createElement(ServiceRequestForm,{planId:"unknown"}));assert.doesNotMatch(html,/name="planId"|Plan enquiry:/);
+  assert.ok(!serviceRequestEmail(validateServiceRequest(validForm()).values,undefined,undefined,"unknown").text.includes("Plan enquiry"));
+});
+
+test("server plan context survives edited request text and participates in delivery idempotency",async()=>{
+  const fetchBefore=globalThis.fetch,keys=["RESEND_API_KEY","RESEND_FROM","RESEND_TO"],previous=Object.fromEntries(keys.map(k=>[k,process.env[k]])),captures=[];
+  process.env.RESEND_API_KEY="test-key-only";process.env.RESEND_FROM="Puraitmaad <requests@example.com>";process.env.RESEND_TO="owner@example.com";
+  globalThis.fetch=async(_url,options)=>{captures.push({body:JSON.parse(options.body),headers:new Headers(options.headers)});return Response.json({id:"accepted-plan-fixture"});};
+  try{
+    const form=validForm();form.set("message","Please contact me to discuss my household needs.");form.set("submissionId","12345678-1234-4234-8234-123456789abc");
+    for(const plan of membershipPlans){form.set("planId",plan.id);assert.equal((await requestService({},form)).status,"success");assert.ok(captures.at(-1).body.text.includes(`Plan enquiry (optional): ${plan.name}`));assert.ok(captures.at(-1).body.text.includes("Please contact me"));}
+    assert.equal(new Set(captures.map(c=>c.headers.get("idempotency-key"))).size,3);
+    const id=captures.at(-1).headers.get("idempotency-key");await requestService({},form);assert.equal(captures.at(-1).headers.get("idempotency-key"),id);
+    form.set("planId","unknown");assert.equal((await requestService({},form)).status,"success");assert.ok(!captures.at(-1).body.text.includes("Plan enquiry"));
+    const before=captures.length;form.set("planId",new Blob(["private"]));assert.equal((await requestService({},form)).status,"error");assert.equal(captures.length,before);
+  }finally{globalThis.fetch=fetchBefore;for(const key of keys){if(previous[key]===undefined)delete process.env[key];else process.env[key]=previous[key];}}
 });
 test("success, error and pending copy is truthful and WhatsApp-aware",()=>{
   const render=(status,message,whatsappHref,pending=false)=>renderToStaticMarkup(createElement(RequestFeedback,{state:{status,message,errors:{}},pending,whatsappHref}));assert.match(render("success",requestSuccess),/Request received\./);assert.match(render("error",requestFailure),/Something went wrong\./);assert.doesNotMatch(render("error",requestFailure),/WhatsApp|wa.me/);assert.match(render("error",requestFailure,"https://wa.me/923001234567"),/contact us directly on WhatsApp/);assert.equal(render("idle","",null,true),"<p>Sending...</p>");

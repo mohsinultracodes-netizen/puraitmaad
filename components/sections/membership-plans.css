@@ -1,0 +1,22 @@
+.plans-section { padding-block: var(--section-space); background: var(--background); }
+.plans-intro { text-align: center; max-width: 42rem; margin: 0 auto 2.5rem; }
+.plans-section .plans-intro h2 { margin-top: 1.25rem; font-size: clamp(2rem, 4vw, 3rem); line-height: 1.15; }
+.plans-intro > p:last-child { margin-top: 1rem; color: var(--muted); font-size: 1.0625rem; }
+.plans-comparison { display: grid; border: 1px solid var(--border); border-radius: var(--radius-card); background: var(--surface-elevated); }
+.plans-card { min-width: 0; display: flex; flex-direction: column; padding: 2rem 1.5rem; }
+.plans-card + .plans-card { border-top: 1px solid var(--border); }
+.plans-section .plans-card h3 { padding-bottom: 1.25rem; border-bottom: 1px solid var(--border); font-size: 1.75rem; font-weight: 500; line-height: 1.25; }
+.plans-section .plans-card-accent h3 { border-color: var(--logo-gold); }
+.plans-description { margin-top: 1.25rem; color: var(--muted); font-size: 1rem; line-height: 1.65; }
+.plans-features { display: grid; align-content: start; gap: 1rem; list-style: none; padding: 0; margin: 1.75rem 0 2rem; }
+.plans-features li { display: grid; grid-template-columns: 16px minmax(0, 1fr); gap: .625rem; font-size: .9375rem; line-height: 1.6; }
+.plans-features svg { color: var(--forest); margin-top: .25rem; }
+.plans-card .plans-request { width: 100%; margin-top: auto; }
+.plans-invitation { margin-top: 1.5rem; text-align: center; color: var(--foreground); font-size: .9375rem; }
+.plans-scope { max-width: 88ch; margin: .75rem auto 0; text-align: center; color: var(--muted); font-size: .8125rem; line-height: 1.7; }
+@media (min-width: 64rem) {
+  .plans-comparison { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .plans-card { padding: 2.25rem clamp(1.5rem, 3vw, 2.5rem); }
+  .plans-card + .plans-card { border-top: 0; border-left: 1px solid var(--border); }
+  .plans-description { min-height: 3.3em; }
+}

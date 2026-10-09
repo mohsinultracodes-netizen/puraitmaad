@@ -10,6 +10,13 @@ export type MembershipPlan = {
 
 export const membershipPricing = "Speak to us for a tailored plan.";
 export const membershipScope = "Support, scheduling and inclusions are agreed for your needs before work begins. External vendor costs and materials are quoted separately.";
+export const membershipSection = {
+  label: "Our plans",
+  heading: "Choose Your Plan",
+  subtitle: "Thoughtful care, tailored to your needs.",
+  cta: "Request Info",
+  invitation: "Contact us to explore the plan that best fits your needs.",
+};
 
 export const membershipPlans: readonly MembershipPlan[] = [
   {
