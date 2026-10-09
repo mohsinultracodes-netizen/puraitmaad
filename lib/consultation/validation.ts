@@ -11,7 +11,7 @@ export const initialState: ServiceRequestState = { status: "idle", errors: {}, m
 export const fieldLabels: Record<FieldName, string> = { fullName: "Name", phone: "Phone / WhatsApp", email: "Email", location: "Location / Area", message: "What do you need?", preferredDate: "Preferred date", preferredTime: "Preferred time" };
 export const fieldLimits = { fullName: 120, phone: 40, email: 254, location: 160, message: 4000, preferredDate: 10, preferredTime: 5 };
 export const contactRequired = "Add a phone / WhatsApp number or email so we can get back to you.";
-export const requestSuccess = "Thank you. We've received your request and will get back to you shortly.";
+export const requestSuccess = "We'll review the details and get back to you.";
 export const requestFailure = "Please try again shortly.";
 
 export function getLahoreDate(now = new Date()): string {

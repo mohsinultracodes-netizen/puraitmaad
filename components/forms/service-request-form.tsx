@@ -4,7 +4,8 @@ import type { InputHTMLAttributes, ReactNode } from "react";
 import Link from "next/link";
 import { requestService } from "@/app/contact/actions";
 import { Button } from "@/components/ui/button";
-import { emptyValues, initialState, fieldLabels, fieldLimits, getLahoreDate, validateServiceRequest, type FieldName, type ServiceRequestState } from "@/lib/consultation/validation";
+import { emptyValues, initialState, fieldLabels, fieldLimits, getLahoreDate, validateServiceRequest, type FieldName, type ServiceRequestState, type ServiceRequestValues } from "@/lib/consultation/validation";
+import { submittedRequestWhatsappHref } from "@/lib/contact-links";
 import { getRequestService, getRequestPlan } from "@/lib/request-context";
 import { RequestFeedback } from "./request-feedback";
 import "./service-request.css";
@@ -14,6 +15,7 @@ export function ServiceRequestForm({ serviceId, planId, whatsappHref }: { servic
   const plan = getRequestPlan(planId);
   const [serverState, action, pending] = useActionState(requestService, initialState);
   const [clientState, setClientState] = useState<ServiceRequestState | null>(null);
+  const [submittedValues, setSubmittedValues] = useState<ServiceRequestValues | null>(null);
   const [values, setValues] = useState({ ...emptyValues, message: `${plan ? `I'd like information about the ${plan.name} plan. ` : ""}${service ? `I'd like help with ${service.name}. ` : ""}` });
   // Static homepage HTML may outlive today's date. Refresh on focus, without a
   // server/client date mismatch; both validators still enforce the current Lahore day.
@@ -56,6 +58,7 @@ export function ServiceRequestForm({ serviceId, planId, whatsappHref }: { servic
     const fingerprint = JSON.stringify([validated.values, service?.id, plan?.id]);
     if (!attempt.current || attempt.current.fingerprint !== fingerprint) attempt.current = { fingerprint, id: crypto.randomUUID() };
     if (identity.current) identity.current.value = attempt.current.id;
+    setSubmittedValues({ ...validated.values });
     lock.current = true;setClientState(null);
   }}>
     <input ref={identity} type="hidden" name="submissionId" defaultValue="" />
@@ -63,10 +66,11 @@ export function ServiceRequestForm({ serviceId, planId, whatsappHref }: { servic
     {plan && <input type="hidden" name="planId" value={plan.id} />}
     <div className="consultation-honeypot" aria-hidden="true"><label htmlFor="website">Leave this field empty</label><input id="website" name="website" type="text" tabIndex={-1} autoComplete="off" maxLength={160} /></div>
     <div ref={summary} tabIndex={-1} className={`form-feedback feedback-${state.status}`} aria-live="polite" aria-atomic="true">
-      <RequestFeedback state={state} pending={pending} whatsappHref={whatsappHref} />
+      <RequestFeedback state={state} pending={pending} whatsappHref={whatsappHref} submittedWhatsappHref={state.status === "success" && submittedValues ? submittedRequestWhatsappHref(submittedValues) : null} />
     </div>
     <fieldset className="request-fields" disabled={pending || state.status === "success"}>
       <legend className="sr-only">Your service request</legend>
+      <p className="request-one-time">One-time requests don&apos;t require membership.</p>
       {plan && <p className="request-plan-context">Plan enquiry: <strong>{plan.name}</strong></p>}
       <div className="request-grid">
         {input("fullName", { type: "text", required: true, autoComplete: "name", placeholder: "Your name" }, "(required)")}
@@ -85,6 +89,6 @@ export function ServiceRequestForm({ serviceId, planId, whatsappHref }: { servic
       <p className="request-hint request-consent">Sending this request allows Puraitmaad to contact you about it. Read our <Link href="/privacy-policy">Privacy Policy</Link>.</p>
       <Button type="submit" loading={pending} loadingLabel="Sending...">Send Request <span aria-hidden="true">→</span></Button>
     </fieldset>
-    {state.status === "success" && <Button variant="text" onClick={() => { setClientState(initialState);setValues({ ...emptyValues });attempt.current = null;if(identity.current)identity.current.value = "";requestAnimationFrame(() => document.getElementById("fullName")?.focus()); }}>Send another request</Button>}
+    {state.status === "success" && <Button variant="text" onClick={() => { setClientState(initialState);setValues({ ...emptyValues });setSubmittedValues(null);attempt.current = null;if(identity.current)identity.current.value = "";requestAnimationFrame(() => document.getElementById("fullName")?.focus()); }}>Send another request</Button>}
   </form>;
 }

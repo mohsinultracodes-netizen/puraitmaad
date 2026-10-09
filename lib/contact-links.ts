@@ -1,4 +1,5 @@
 import { siteConfig } from "../content/site";
+import type { ServiceRequestValues } from "./consultation/validation";
 
 function configured(value: string | null | undefined): string | null {
   const text = value?.trim();
@@ -28,13 +29,42 @@ export function emailHref(value: string | null | undefined = siteConfig.EMAIL): 
 }
 
 export function whatsappHref(value: string | null | undefined = siteConfig.WHATSAPP, serviceName?: string): string | null {
-  const digits = phoneDigits(value);
-  if (!digits) return null;
   const service = configured(serviceName);
   const message = service
     ? `Hi ${siteConfig.BRAND_NAME}, I'd like to request ${service}.`
     : `Hi ${siteConfig.BRAND_NAME}, I'd like help with a service.`;
-  return `https://wa.me/${digits}?text=${encodeURIComponent(message)}`;
+  return whatsappMessageHref(message, value);
+}
+
+function whatsappMessageHref(message: string, value: string | null | undefined = siteConfig.WHATSAPP): string | null {
+  const digits = phoneDigits(value);
+  return digits ? `https://wa.me/${digits}?text=${encodeURIComponent(message)}` : null;
+}
+
+export type WhatsAppContext = "general" | "property-care" | "arrival-ready";
+
+export function contextualWhatsappHref(context: WhatsAppContext = "general"): string | null {
+  const messages = {
+    general: `Hi ${siteConfig.BRAND_NAME}, I'd like help with a service.`,
+    "property-care": `Hi ${siteConfig.BRAND_NAME}, I'd like help with Property Care.`,
+    "arrival-ready": `Hi ${siteConfig.BRAND_NAME}, I'd like help preparing my home before arrival.`,
+  };
+  return whatsappMessageHref(messages[context]);
+}
+
+// An explicit allowlist keeps contact details and internal submission metadata
+// out of the WhatsApp draft. This is generated only after an accepted request.
+export function submittedRequestWhatsappHref(values: Pick<ServiceRequestValues, "fullName" | "location" | "message" | "preferredDate" | "preferredTime">): string | null {
+  const date = values.preferredDate.trim();
+  const time = values.preferredTime.trim();
+  const preferred = [date, time].filter(Boolean).join(" at ");
+  const fields = [
+    ["Name", values.fullName.trim()],
+    ["Location", values.location.trim()],
+    ["Request", values.message.trim()],
+    ["Preferred date/time", preferred ? `${preferred} (Lahore time)` : ""],
+  ].filter(([, value]) => value);
+  return whatsappMessageHref(`Hi ${siteConfig.BRAND_NAME}, I just submitted a service request.${fields.length ? `\n\n${fields.map(([label, value]) => `${label}: ${value}`).join("\n")}` : ""}`);
 }
 
 export function socialHref(value: string | null | undefined, options: { allowLogin?: boolean } = {}): string | null {

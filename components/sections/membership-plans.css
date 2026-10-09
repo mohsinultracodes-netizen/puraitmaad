@@ -14,6 +14,12 @@
 .plans-card .plans-request { width: 100%; margin-top: auto; }
 .plans-invitation { margin-top: 1.5rem; text-align: center; color: var(--foreground); font-size: .9375rem; }
 .plans-scope { max-width: 88ch; margin: .75rem auto 0; text-align: center; color: var(--muted); font-size: .8125rem; line-height: 1.7; }
+.plans-one-time { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1.5rem 2rem; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--border); }
+.plans-one-time h3 { font-size: 1.375rem; line-height: var(--line-height-h3); }
+.plans-one-time p { margin-top: .625rem; color: var(--muted); }
+.plans-one-time .plans-ongoing-note { font-size: .8125rem; }
+.plans-one-time-actions { display: flex; flex-wrap: wrap; gap: .75rem; }
+@media (max-width: 30rem) { .plans-one-time-actions { width: 100%; } .plans-one-time-actions .button { flex: 1 1 100%; } }
 @media (min-width: 64rem) {
   .plans-comparison { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .plans-card { padding: 2.25rem clamp(1.5rem, 3vw, 2.5rem); }
