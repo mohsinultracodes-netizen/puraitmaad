@@ -16,16 +16,16 @@ export function PrivateAssistanceFeature() {
   return (
     <section className="hp-section hp-private-section" aria-labelledby="private-service-heading">
       <Container className="hp-feature-layout">
-        <div className="hp-feature-intro">
+        <div className="hp-feature-intro" data-scroll-reveal>
           <EditorialHeading eyebrow="Private service" id="private-service-heading">
             {homepage.private.heading[0]}<br />{homepage.private.heading[1]}
           </EditorialHeading>
           <p className="hp-body-copy">{homepage.private.description}</p>
         </div>
-        <div className="hp-feature-media">
+        <div className="hp-feature-media" data-scroll-reveal="image">
           <ServicePhotography image="personalAssistance" sizes="(min-width: 1280px) 600px, (min-width: 768px) 46vw, 100vw" />
         </div>
-        <div className="hp-feature-details">
+        <div className="hp-feature-details" data-scroll-reveal>
           {discretion && <p className="hp-private-discretion">{discretion.description}</p>}
           <RequestLink text>Talk to us about Private</RequestLink>
         </div>

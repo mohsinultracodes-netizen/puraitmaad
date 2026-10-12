@@ -1,0 +1,51 @@
+/* Visible server defaults. Preparation is applied only to offscreen targets after setup. */
+[data-scroll-reveal] {
+  --reveal-distance: 20px;
+  --reveal-duration: 650ms;
+  --image-duration: 850ms;
+  --reveal-ease: cubic-bezier(.25, .75, .25, 1);
+}
+[data-scroll-sequence="process"] { --reveal-distance: 28px; --reveal-duration: 700ms; }
+[data-scroll-sequence="services"] { --reveal-distance: 24px; --reveal-duration: 680ms; }
+[data-scroll-sequence="arrival"] { --reveal-distance: 24px; --reveal-duration: 700ms; }
+[data-scroll-sequence="steps"] { --reveal-distance: 24px; }
+:where([data-scroll-reveal]:not([data-scroll-sequence="arrival"]):not([data-scroll-reveal="image"])).scroll-reveal-prepared,
+:where([data-scroll-sequence="arrival"].scroll-reveal-prepared) > :is(.arrival-timeline-marker, .arrival-timeline-card) {
+  opacity: .65;
+  translate: 0 var(--reveal-distance);
+}
+:where([data-scroll-reveal]:not([data-scroll-sequence="arrival"]):not([data-scroll-reveal="image"])).scroll-reveal-enter,
+:where([data-scroll-sequence="arrival"].scroll-reveal-enter) > :is(.arrival-timeline-marker, .arrival-timeline-card) {
+  animation: hp-scroll-reveal var(--reveal-duration) var(--reveal-ease) var(--reveal-delay, 0ms) backwards;
+}
+:where([data-scroll-reveal="image"].scroll-reveal-prepared) img {
+  opacity: .9;
+  transform: scale(1.035);
+}
+:where([data-scroll-reveal="image"].scroll-reveal-enter) img {
+  animation: hp-image-reveal var(--image-duration) var(--reveal-ease) backwards;
+}
+@keyframes hp-scroll-reveal {
+  from { opacity: .65; translate: 0 var(--reveal-distance); }
+  to { opacity: 1; translate: 0 0; }
+}
+@keyframes hp-image-reveal {
+  from { opacity: .9; transform: scale(1.035); }
+  to { opacity: 1; transform: scale(1); }
+}
+/* Custom properties avoid conflicting desktop/mobile animation shorthands. */
+@media (max-width: 63.999rem) {
+  [data-scroll-reveal] { --reveal-distance: 14px; --reveal-duration: 500ms; --image-duration: 550ms; --reveal-delay: 0ms !important; }
+}
+[data-scroll-reveal]:focus-within,
+[data-scroll-reveal]:focus-within > *,
+[data-scroll-reveal]:focus-within img {
+  animation: none !important; opacity: 1 !important; translate: none !important;
+}
+[data-scroll-reveal="image"]:focus-within img { transform: none !important; }
+@media (prefers-reduced-motion: reduce) {
+  [data-scroll-reveal], [data-scroll-reveal] > *, [data-scroll-reveal="image"] img {
+    animation: none !important; opacity: 1 !important; translate: none !important;
+  }
+  [data-scroll-reveal="image"] img { transform: none !important; }
+}

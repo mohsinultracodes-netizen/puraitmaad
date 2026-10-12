@@ -6,17 +6,17 @@ import { contextualWhatsappHref } from "@/lib/contact-links";
 import { WhatsAppIcon } from "@/components/ui/whatsapp-icon";
 import "./membership-plans.css";
 
-export function MembershipPlans({ id = "membership-heading", className = "" }: { id?: string; className?: string }) {
+export function MembershipPlans({ id = "membership-heading", className = "", reveal = false }: { id?: string; className?: string; reveal?: boolean }) {
   const whatsapp = contextualWhatsappHref();
   return <section className={`plans-section ${className}`} aria-labelledby={id}>
     <Container>
-      <header className="plans-intro">
+      <header className="plans-intro" data-scroll-reveal={reveal || undefined}>
         <p className="eyebrow">{membershipSection.label}</p>
         <h2 id={id}>{membershipSection.heading}</h2>
         <p>{membershipSection.subtitle}</p>
       </header>
       <div className="plans-comparison">
-        {membershipPlans.map((plan, index) => <article className={`plans-card ${index === 1 ? "plans-card-accent" : ""}`} key={plan.id} data-plan={plan.id} aria-labelledby={`plan-${plan.id}`}>
+        {membershipPlans.map((plan, index) => <article className={`plans-card ${index === 1 ? "plans-card-accent" : ""}`} key={plan.id} data-plan={plan.id} data-scroll-reveal={reveal || undefined} data-scroll-sequence={reveal ? "services" : undefined} aria-labelledby={`plan-${plan.id}`}>
           <h3 id={`plan-${plan.id}`}>{plan.name}</h3>
           <p className="plans-description">{plan.description}</p>
           <ul className="plans-features">{plan.inclusions.map(feature => <li key={feature}>

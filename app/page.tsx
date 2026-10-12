@@ -7,6 +7,7 @@ import { HomepageTestimonials } from "@/components/sections/home/homepage-testim
 import { pageMetadata } from "@/lib/seo";
 import { site } from "@/content/site";
 import "./homepage.css";
+import { ScrollReveals } from "@/components/ui/scroll-reveals";
 
 const homeMetadata = pageMetadata(site.descriptor, site.description, "/");
 export const metadata = {
@@ -19,6 +20,7 @@ export const metadata = {
 export default function Home() {
   return (
     <div className="puraitmaad-home">
+      <ScrollReveals scope=".puraitmaad-home" />
       <HomepageHero />
       <ManagedProcess />
       <FeaturedServices />

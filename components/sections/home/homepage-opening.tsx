@@ -27,8 +27,8 @@ export function HomepageHero() {
 export function FeaturedServices() {
   return <section className="hp-section hp-services" aria-labelledby="featured-services-heading">
     <Container>
-      <div className="hp-section-intro"><EditorialHeading eyebrow="Our services" id="featured-services-heading">{homepage.services.heading}</EditorialHeading><p>{homepage.services.description}</p></div>
-      <ul className="hp-service-grid">{featuredServices.map(service => { const image = featuredServicePhotography[service.id]; return <li key={service.id}><Link className="hp-service-card" href={serviceRequestHref(service.id)}>{image && <ServicePhotography image={image} sizes="(min-width: 1440px) 389px, (min-width: 1024px) 28vw, (min-width: 640px) 43vw, 90vw" />}<div className="hp-service-content"><ServiceIcon name={service.icon} /><h3>{service.name}</h3><p>{service.description}</p><span className="hp-card-arrow" aria-hidden="true">→</span></div></Link></li>; })}</ul>
+      <div className="hp-section-intro" data-scroll-reveal><EditorialHeading eyebrow="Our services" id="featured-services-heading">{homepage.services.heading}</EditorialHeading><p>{homepage.services.description}</p></div>
+      <ul className="hp-service-grid">{featuredServices.map(service => { const image = featuredServicePhotography[service.id]; return <li key={service.id} data-scroll-reveal data-scroll-sequence="services"><Link className="hp-service-card" href={serviceRequestHref(service.id)}>{image && <ServicePhotography image={image} sizes="(min-width: 1440px) 389px, (min-width: 1024px) 28vw, (min-width: 640px) 43vw, 90vw" />}<div className="hp-service-content"><ServiceIcon name={service.icon} /><h3>{service.name}</h3><p>{service.description}</p><span className="hp-card-arrow" aria-hidden="true">→</span></div></Link></li>; })}</ul>
       <TextLink href="/services">View all services</TextLink>
     </Container>
   </section>;

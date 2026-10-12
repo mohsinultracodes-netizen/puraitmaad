@@ -1,12 +1,13 @@
 import Link from "next/link";
+import { ScrollReveals } from "@/components/ui/scroll-reveals";
 import { pageMetadata } from "@/lib/seo";
 import { Container } from "@/components/ui/container";
 import { EditorialIntro, RequestClosing, SupportingPage } from "@/components/sections/supporting/editorial";
 import { MembershipPlans } from "@/components/sections/membership-plans";
 export const metadata = pageMetadata("Membership", "Recurring home and property assistance from Puraitmaad. Discuss Essential, Premium or Private support tailored around your needs.", "/membership");
 export default function MembershipPage() {
- return <SupportingPage><EditorialIntro eyebrow="Membership" title={<>A house manager —<br />without employing one.</>} photo="membership"><p>For people who want recurring assistance with their home and property responsibilities. An ongoing relationship, with support agreed around the way you live.</p></EditorialIntro>
- <MembershipPlans id="membership-options-heading" />
+ return <SupportingPage className="sp-membership"><ScrollReveals scope=".sp-membership" /><EditorialIntro reveal eyebrow="Membership" title={<>A house manager —<br />without employing one.</>} photo="membership"><p>For people who want recurring assistance with their home and property responsibilities. An ongoing relationship, with support agreed around the way you live.</p></EditorialIntro>
+ <MembershipPlans reveal id="membership-options-heading" />
  <Container><p className="sp-small">Need help with a single task instead? <Link className="sp-link" href="/services">Explore our services <span aria-hidden="true">&nbsp;&#8594;</span></Link></p></Container>
  <RequestClosing title="An arrangement that fits your home." label="Ask About Membership"><p>Tell us the kind of ongoing help you need. Mention Essential, Premium or Private if one feels appropriate; we&apos;ll discuss the scope together.</p></RequestClosing></SupportingPage>;
 }

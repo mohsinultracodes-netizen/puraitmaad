@@ -7,14 +7,14 @@ import { ProcessJourneyPath } from "./process-journey-path";
 
 export function ManagedProcess() {
   return <section className="hp-process-section hp-section" aria-labelledby="managed-process-heading"><Container>
-    <div className="hp-process-intro">
+    <div className="hp-process-intro" data-scroll-reveal>
       <p className="hp-process-pill">How it works</p>
       <h2 id="managed-process-heading">One request.<br />We handle the rest.</h2>
       <p>Tell us what you need and Puraitmaad coordinates the people, details and follow-through.</p>
     </div>
     <div className="hp-process-journey">
       <ProcessJourneyPath />
-      <ol className="hp-process-stages">{homepage.process.map((step,index) => <li className="hp-process-stage" key={step.title}>
+      <ol className="hp-process-stages">{homepage.process.map((step,index) => <li className="hp-process-stage" data-scroll-reveal data-scroll-sequence="process" key={step.title}>
         <div className="hp-process-art"><ProcessIllustration step={index} /></div>
         <div className="hp-process-stage-copy">
           <p className="hp-process-number">Step {String(index+1).padStart(2,"0")}</p>

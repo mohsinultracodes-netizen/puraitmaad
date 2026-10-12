@@ -12,14 +12,14 @@ export function PropertyCareFeature() {
   return (
     <section className="hp-section hp-property-feature" aria-labelledby="property-care-heading">
       <Container className="hp-feature-layout">
-        <div className="hp-feature-intro">
+        <div className="hp-feature-intro" data-scroll-reveal>
           <EditorialHeading eyebrow={homepage.property.eyebrow} id="property-care-heading">
             {homepage.property.heading[0]}<br />{homepage.property.heading[1]}
           </EditorialHeading>
           <p className="hp-body-copy">{homepage.property.description}</p>
         </div>
-        <div className="hp-feature-media"><HomepagePhotography slot="property" /></div>
-        <div className="hp-feature-details">
+        <div className="hp-feature-media" data-scroll-reveal="image"><HomepagePhotography slot="property" /></div>
+        <div className="hp-feature-details" data-scroll-reveal>
           <SupportList items={homepage.property.support} />
           <p className="hp-small">{homepage.scope}</p>
           <RequestLink tone="dark">{homepage.property.cta}</RequestLink>
@@ -33,16 +33,16 @@ export function BusinessSupportFeature() {
   return (
     <section className="hp-section hp-business-feature" aria-labelledby="business-support-heading">
       <Container className="hp-feature-layout">
-        <div className="hp-feature-intro">
+        <div className="hp-feature-intro" data-scroll-reveal>
           <EditorialHeading eyebrow={homepage.business.eyebrow} id="business-support-heading">
             {homepage.business.heading[0]}<br />{homepage.business.heading[1]}
           </EditorialHeading>
           <p className="hp-body-copy">{homepage.business.description}</p>
         </div>
-        <div className="hp-feature-media">
+        <div className="hp-feature-media" data-scroll-reveal="image">
           <ServicePhotography image="electrical" sizes="(min-width: 1280px) 600px, (min-width: 768px) 46vw, 100vw" />
         </div>
-        <div className="hp-feature-details">
+        <div className="hp-feature-details" data-scroll-reveal>
           <SupportList items={homepage.business.support} />
           <p className="hp-small">{homepage.business.contexts}</p>
           <RequestLink>{homepage.business.cta}</RequestLink>
@@ -59,11 +59,11 @@ export function ComingHomeStory() {
     <section className="hp-section hp-coming-home" aria-labelledby="coming-home-heading">
       <Container>
         <div className="hp-story-intro">
-          <div className="hp-story-copy">
+          <div className="hp-story-copy" data-scroll-reveal>
             <div className="hp-heading"><h2 id="coming-home-heading">“{story.title}”</h2></div>
             <p className="hp-body-copy">{story.ending}</p>
           </div>
-          {arrival && <div className="hp-photo hp-story-photo">
+          {arrival && <div className="hp-photo hp-story-photo" data-scroll-reveal="image">
             <Image src={arrival.src} alt={arrival.alt} fill sizes="(min-width: 1280px) 600px, (min-width: 768px) 46vw, 100vw" loading="lazy" placeholder="blur" style={{ objectFit: "cover", objectPosition: "50% 50%" }} />
           </div>}
         </div>

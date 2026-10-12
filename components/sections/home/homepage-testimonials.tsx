@@ -9,7 +9,7 @@ export function HomepageTestimonials({ entries = homepageTestimonialEntries }: {
     <section className="hp-customer-stories" aria-labelledby="homepage-testimonials-heading">
       <Container>
         <div className="hp-customer-stories-panel">
-          <div className="hp-customer-stories-intro">
+          <div className="hp-customer-stories-intro" data-scroll-reveal>
             <p className="hp-eyebrow">Customer testimonials</p>
             <h2 id="homepage-testimonials-heading">{testimonialSection.heading[0]}<br />{testimonialSection.heading[1]}</h2>
             <p className="hp-customer-stories-description">{testimonialSection.introduction}</p>
@@ -17,7 +17,7 @@ export function HomepageTestimonials({ entries = homepageTestimonialEntries }: {
           </div>
           <div className="hp-customer-stories-grid">
             {entries.map(entry => (
-              <figure className="hp-customer-story" key={entry.id}>
+              <figure className="hp-customer-story" data-scroll-reveal key={entry.id}>
                 <div className="hp-customer-story-photo">
                   {entry.image ? (
                     <Image src={entry.image.src} alt={entry.image.alt} fill sizes="(min-width: 1024px) 136px, 80px" loading="lazy" style={{ objectPosition: entry.image.objectPosition }} />

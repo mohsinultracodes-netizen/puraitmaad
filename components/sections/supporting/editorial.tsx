@@ -10,20 +10,20 @@ import "./supporting.css";
 export function SupportingPage({ children, className = "" }: { children: ReactNode; className?: string }) {
   return <div className={`sp-page ${className}`}>{children}</div>;
 }
-export function SupportingPhoto({ slot }: { slot: SupportingPhotoKey }) {
+export function SupportingPhoto({ slot, reveal = false }: { slot: SupportingPhotoKey; reveal?: boolean }) {
   const photo = supportingPhotography[slot];
   if (!photo.asset) return null;
   const servicePhoto = slot === "services" || slot === "property";
-  return <div className={`sp-photo sp-photo-${slot}`}><Image src={photo.asset.src} alt={photo.asset.alt} fill sizes={servicePhoto ? "(min-width: 1440px) 540px, (min-width: 768px) 44vw, 90vw" : "(min-width: 1440px) 540px, (min-width: 768px) 44vw, 100vw"} preload={servicePhoto} style={{ objectFit: "cover", objectPosition: photo.position }} /></div>;
+  return <div className={`sp-photo sp-photo-${slot}`} data-scroll-reveal={reveal ? "image" : undefined}><Image src={photo.asset.src} alt={photo.asset.alt} fill sizes={servicePhoto ? "(min-width: 1440px) 540px, (min-width: 768px) 44vw, 90vw" : "(min-width: 1440px) 540px, (min-width: 768px) 44vw, 100vw"} preload={servicePhoto} style={{ objectFit: "cover", objectPosition: photo.position }} /></div>;
 }
-export function EditorialIntro({ eyebrow, title, children, photo }: { eyebrow: string; title: ReactNode; children: ReactNode; photo?: SupportingPhotoKey }) {
-  return <section className={`sp-intro ${photo ? "sp-intro-with-photo" : ""}`} aria-labelledby="page-heading"><Container className="sp-intro-grid"><div><p className="eyebrow">{eyebrow}</p><h1 id="page-heading">{title}</h1><div className="sp-intro-copy">{children}</div></div>{photo && <SupportingPhoto slot={photo} />}</Container></section>;
+export function EditorialIntro({ eyebrow, title, children, photo, reveal = false }: { eyebrow: string; title: ReactNode; children: ReactNode; photo?: SupportingPhotoKey; reveal?: boolean }) {
+  return <section className={`sp-intro ${photo ? "sp-intro-with-photo" : ""}`} aria-labelledby="page-heading"><Container className="sp-intro-grid"><div data-scroll-reveal={reveal || undefined}><p className="eyebrow">{eyebrow}</p><h1 id="page-heading">{title}</h1><div className="sp-intro-copy">{children}</div></div>{photo && <SupportingPhoto slot={photo} reveal={reveal} />}</Container></section>;
 }
-export function EditorialSection({ id, title, eyebrow, children, className = "" }: { id: string; title: ReactNode; eyebrow?: string; children: ReactNode; className?: string }) {
-  return <section className={`sp-section ${className}`} aria-labelledby={id}><Container className="sp-editorial-grid"><div>{eyebrow && <p className="eyebrow">{eyebrow}</p>}<h2 id={id}>{title}</h2></div><div className="sp-prose">{children}</div></Container></section>;
+export function EditorialSection({ id, title, eyebrow, children, className = "", reveal = false, revealContent = true }: { id: string; title: ReactNode; eyebrow?: string; children: ReactNode; className?: string; reveal?: boolean; revealContent?: boolean }) {
+  return <section className={`sp-section ${className}`} aria-labelledby={id}><Container className="sp-editorial-grid"><div data-scroll-reveal={reveal || undefined}>{eyebrow && <p className="eyebrow">{eyebrow}</p>}<h2 id={id}>{title}</h2></div><div className="sp-prose" data-scroll-reveal={(reveal && revealContent) || undefined}>{children}</div></Container></section>;
 }
-export function ServiceList({ items }: { items: readonly Service[] }) {
-  return <ul className="sp-service-list">{items.map(service => <li key={service.id}><h3>{service.name}</h3><p>{service.description}</p></li>)}</ul>;
+export function ServiceList({ items, reveal = false }: { items: readonly Service[]; reveal?: boolean }) {
+  return <ul className="sp-service-list">{items.map(service => <li key={service.id} data-scroll-reveal={reveal || undefined} data-scroll-sequence={reveal ? "services" : undefined}><h3>{service.name}</h3><p>{service.description}</p></li>)}</ul>;
 }
 export function RequestClosing({ title, children, label = "Request a Service", href = requestDestination }: { title: string; children?: ReactNode; label?: string; href?: string }) {
   return <section className="sp-closing" aria-labelledby="request-next-heading"><Container><div><h2 id="request-next-heading">{title}</h2>{children && <div className="sp-closing-copy">{children}</div>}</div><ButtonLink href={href}>{label}<span aria-hidden="true">→</span></ButtonLink></Container></section>;
