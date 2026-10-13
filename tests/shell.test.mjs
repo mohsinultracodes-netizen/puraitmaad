@@ -63,7 +63,7 @@ test("missing or invalid WhatsApp hides global and footer chat links without fak
       const footer = renderToStaticMarkup(createElement(SiteFooter));
       assert.doesNotMatch(footer, /wa\.me|href="#"/);
       assert.match(footer, /Request a Service/);
-      assert.match(footer, /href="\/contact#request-service"/);
+      assert.match(footer, /href="\/contact#request-options"/);
     }
   } finally { siteConfig.WHATSAPP = previous; }
 });

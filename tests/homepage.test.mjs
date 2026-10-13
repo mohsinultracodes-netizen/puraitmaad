@@ -48,7 +48,7 @@ test("homepage opening has the new promise and exactly six shared request cards"
   const cards = render(FeaturedServices);
   assert.equal((cards.match(/class="hp-service-card"/g) || []).length, 6);
   for (const service of featuredServices) assert.ok(cards.includes(service.name.replaceAll("&", "&amp;")));
-  for (const service of featuredServices) assert.ok(cards.includes(`href="/contact?service=${service.id}#request-service"`));
+  for (const service of featuredServices) assert.ok(cards.includes(`href="/contact?service=${service.id}#request-options"`));
   assert.match(cards, /href="\/services"/);
 });
 
@@ -144,7 +144,7 @@ test("Coming Home keeps its exact illustrative sequence and one restrained reque
   positions.forEach((position, index) => { assert.ok(position >= 0); if (index) assert.ok(position > positions[index - 1]); });
   assert.equal((html.match(/<li\b/g) || []).length, 5);
   assert.equal((html.match(/<a\b/g) || []).length, 1);
-  assert.match(html, /href="#request-service"/);
+  assert.match(html, /href="\/contact#request-options"/);
   assert.ok(html.indexOf("hp-story-copy") < html.indexOf("hp-story-photo"));
   assert.ok(html.indexOf("hp-story-photo") < html.indexOf("arrival-timeline"));
   assert.ok(html.indexOf("arrival-timeline") < html.indexOf("hp-story-ending"));
@@ -180,7 +180,7 @@ test("plans distinguish one-time requests from ongoing membership with two clear
   assert.match(html, /Need help with something once\?/);
   assert.match(html, /Tell us what needs to be handled\. No membership required\./);
   assert.match(html, /Membership is for customers who need ongoing support\./);
-  assert.match(html, /href="\/contact#request-service"[^>]*>Request a Service/);
+  assert.match(html, /href="\/contact#request-options"[^>]*>Request a Service/);
   assert.match(html, /WhatsApp Us/);
   const previous = siteConfig.WHATSAPP;
   try {
@@ -216,7 +216,7 @@ test("homepage features preserve qualified content, truthful photography and one
     assert.ok(html.includes(image));
     assert.equal((html.match(/<img\b/g) || []).length, 1);
     assert.equal((html.match(/<a\b/g) || []).length, 1);
-    assert.match(html, /href="#request-service"/);
+    assert.match(html, /href="\/contact#request-options"/);
     assert.ok(html.indexOf("hp-feature-intro") < html.indexOf("hp-feature-media"));
     assert.ok(html.indexOf("hp-feature-media") < html.indexOf("hp-feature-details"));
   }
