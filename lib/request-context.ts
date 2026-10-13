@@ -1,12 +1,12 @@
 import { services } from "@/content/services";
 import { membershipPlans } from "@/content/membership";
-export const requestDestination = "/contact#request-service";
+export const requestDestination = "/contact#request-options";
 export function getRequestService(raw: unknown) {
   return typeof raw === "string" ? services.find(service => service.id === raw) : undefined;
 }
 export function serviceRequestHref(serviceId?: string) {
   const service = getRequestService(serviceId);
-  return service ? `/contact?service=${encodeURIComponent(service.id)}#request-service` : requestDestination;
+  return service ? `/contact?service=${encodeURIComponent(service.id)}#request-options` : requestDestination;
 }
 // The proposed names remain valid enquiry aliases for the approved catalog tiers.
 const planAliases: Readonly<Record<string, string>> = { signature: "premium", bespoke: "private" };

@@ -7,7 +7,7 @@ export function ConsultationCta({ heading, description, label = "Request a Servi
       <Container>
         <h2>{heading}</h2>
         {description && <p className="closing-description">{description}</p>}
-        <ButtonLink className="section-link" href="/contact#request-service" prefetch={false}>{label}</ButtonLink>
+        <ButtonLink className="section-link" href="/contact#request-options" prefetch={false}>{label}</ButtonLink>
       </Container>
     </section>
   );

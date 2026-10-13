@@ -81,7 +81,7 @@ test("notifications escape HTML, include request/preferences and retain optional
 });
 test("known service context is editable, unknown/array values safely fall back",()=>{
   assert.equal(getRequestService("gardening").name,"Gardening & Outdoor Care");for(const value of ["unknown","<script>",["gardening"],null,undefined])assert.equal(getRequestService(value),undefined);
-  assert.equal(serviceRequestHref("gardening"),"/contact?service=gardening#request-service");assert.equal(serviceRequestHref("unknown"),"/contact#request-service");
+  assert.equal(serviceRequestHref("gardening"),"/contact?service=gardening#request-options");assert.equal(serviceRequestHref("unknown"),"/contact#request-options");
   const html=renderToStaticMarkup(createElement(ServiceRequestForm,{serviceId:"gardening"}));assert.ok(html.includes("Gardening &amp; Outdoor Care"));assert.match(html,/name="serviceId" value="gardening"/);assert.doesNotMatch(renderToStaticMarkup(createElement(ServiceRequestForm,{serviceId:"unknown"})),/name="serviceId"/);
 });
 test("shared form has seven public fields, correct controls, anchor-safe labels and no retired wording",()=>{

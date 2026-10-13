@@ -1,0 +1,18 @@
+.request-methods { max-width: 58rem; margin-inline: auto; }
+.request-methods[hidden] { display: none; }
+.sp-contact .request-methods h2 { font-size: clamp(1.75rem, 3vw, 2.5rem); line-height: 1.2; letter-spacing: -.035em; }
+.request-method-lead { margin-top: .875rem; color: var(--muted); }
+.request-method-context { margin-top: .75rem; color: var(--muted); font-size: .875rem; }
+.request-method-grid { display: grid; gap: 1rem; margin-top: 1.75rem; }
+.request-method-card { display: flex; flex-direction: column; align-items: flex-start; min-width: 0; padding: 1.5rem; border: 1px solid var(--border); border-radius: var(--radius-card); background: var(--surface-elevated); }
+.request-method-card > svg { width: 1.5rem; height: 1.5rem; color: var(--forest); }
+.sp-contact .request-method-card h3 { margin-top: 1rem; font-size: 1.375rem; letter-spacing: -.025em; }
+.request-method-card p { margin-top: .75rem; margin-bottom: 1.5rem; color: var(--muted); font-size: .9375rem; line-height: 1.65; }
+.request-method-card .button { margin-top: auto; min-height: 48px; width: 100%; }
+.request-method-note { margin-top: 1.25rem; color: var(--muted); font-size: .8125rem; }
+.request-form-panel { margin-top: 2rem; }
+.request-journey #request-service { scroll-margin-top: 0; }
+.request-back { display: inline-flex; align-items: center; min-height: 44px; margin-bottom: 1rem; font-size: .875rem; color: var(--forest); text-decoration: underline; text-underline-offset: .25em; }
+.request-methods { scroll-margin-top: 0; }
+@media (min-width: 40rem) { .request-method-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .request-method-card { padding: 1.75rem; } }
+@media (max-width: 39.999rem) { .request-method-grid { margin-top: 1.25rem; } .request-method-card { padding: 1.25rem; } .request-method-card p { margin-bottom: 1.25rem; } }

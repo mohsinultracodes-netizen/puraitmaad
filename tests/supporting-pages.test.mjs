@@ -32,14 +32,14 @@ const { comingHomeScenario, scenarioDisclosure } = load("../content/scenarios.ts
 const { detailedProcess } = load("../content/supporting.ts");
 const { NavigationItems } = load("../components/navigation/navigation-items.tsx");
 const routes = ["services", "services/property-care", "how-it-works", "about", "contact", "membership"];
-async function page(route, service) { const component = load(`../app/${route}/page.tsx`).default; return renderToStaticMarkup(route === "contact" ? await component({ searchParams: Promise.resolve({ service }) }) : createElement(component)); }
+async function page(route, service, extra = {}) { const component = load(`../app/${route}/page.tsx`).default; return renderToStaticMarkup(route === "contact" ? await component({ searchParams: Promise.resolve({ service, ...extra }) }) : createElement(component)); }
 const escape = value => value.replaceAll("&", "&amp;").replaceAll("'", "&#x27;");
 const visible = html => html.replace(/<[^>]*>/g, " ").replaceAll("&amp;", "&").replaceAll("&#x27;", "'");
 test("all six supporting routes render one H1, honest copy and safe request paths", async () => {
- for (const route of routes) { const html = await page(route); assert.equal((html.match(/<h1\b/g)||[]).length,1,route); const levels=[...html.matchAll(/<h([1-6])\b/g)].map(m=>Number(m[1])); levels.forEach((level,index)=>{if(index)assert.ok(level<=levels[index-1]+1,route+" heading hierarchy");}); assert.doesNotMatch(visible(html), /Signature|Private Stewardship|Book consultation|founder-led|\bPKR\b|guaranteed|5.star|\[YOUR|\[BUSINESS/); assert.doesNotMatch(html,/href="(?:tel:|mailto:)/); for(const href of html.matchAll(/href="([^" ]+)"/g)){ if(href[1].startsWith('/contact')) assert.match(href[1], /^\/contact(?:(?:\?service=[a-z-]+)?#request-service|\?plan=(?:essential|signature|bespoke))$/); if(href[1].startsWith('https://wa.me/')) assert.match(href[1], /^https:\/\/wa\.me\/\d+\?text=/); } }
+ for (const route of routes) { const html = await page(route); assert.equal((html.match(/<h1\b/g)||[]).length,1,route); const levels=[...html.matchAll(/<h([1-6])\b/g)].map(m=>Number(m[1])); levels.forEach((level,index)=>{if(index)assert.ok(level<=levels[index-1]+1,route+" heading hierarchy");}); assert.doesNotMatch(visible(html), /Signature|Private Stewardship|Book consultation|founder-led|\bPKR\b|guaranteed|5.star|\[YOUR|\[BUSINESS/); assert.doesNotMatch(html,/href="(?:tel:|mailto:)/); for(const href of html.matchAll(/href="([^" ]+)"/g)){ if(href[1].startsWith('/contact')) assert.match(href[1], /^\/contact(?:(?:\?service=[a-z-]+)?#request-options|\?method=form(?:&amp;(?:service|plan)=[a-z-]+)*#request-service|\?plan=(?:essential|signature|bespoke))$/); if(href[1].startsWith('https://wa.me/')) assert.match(href[1], /^https:\/\/wa\.me\/\d+\?text=/); } }
 });
 test("Services renders all catalog cards with server-readable details and service-specific requests", async () => {
- const html = await page("services"); assert.equal((html.match(/class="sp-section sp-category"/g)||[]).length,4); for(const category of serviceCategories) assert.ok(html.includes(`id="${category.id}-heading"`)); for(const service of services){assert.ok(html.includes(`<h3>${escape(service.name)}</h3>`)); assert.ok(html.includes(`<p>${escape(service.description)}</p>`));} assert.equal((html.match(/class="sp-category-request" href="\/contact#request-service"/g)||[]).length,4); assert.equal((html.match(/<ul class="sd-track"/g)||[]).length,4); assert.match(html,/Explore Property Care/); assert.match(visible(html),/If you don't see what you need, ask us/);
+ const html = await page("services"); assert.equal((html.match(/class="sp-section sp-category"/g)||[]).length,4); for(const category of serviceCategories) assert.ok(html.includes(`id="${category.id}-heading"`)); for(const service of services){assert.ok(html.includes(`<h3>${escape(service.name)}</h3>`)); assert.ok(html.includes(`<p>${escape(service.description)}</p>`));} assert.equal((html.match(/class="sp-category-request" href="\/contact#request-options"/g)||[]).length,4); assert.equal((html.match(/<ul class="sd-track"/g)||[]).length,4); assert.match(html,/Explore Property Care/); assert.match(visible(html),/If you don't see what you need, ask us/);
 });
 test("service details preserve catalog scope and flag unspecified inclusions for review", () => {
  const { serviceDetails, businessSupportOverviewPhoto } = load("../content/service-details.ts");
@@ -63,7 +63,6 @@ test("service details preserve catalog scope and flag unspecified inclusions for
  }
 });
 test("all service cards have native details fallbacks and share one accessible enhanced dialog", async () => {
- const { whatsappHref } = load("../lib/contact-links.ts");
  const html=await page("services");
  assert.equal((html.match(/<dialog\b/g)||[]).length,1);
  assert.match(html,/aria-label="Close service details"/);
@@ -71,12 +70,12 @@ test("all service cards have native details fallbacks and share one accessible e
  for(const service of services){
   assert.ok(html.includes(`data-service-trigger="${service.id}"`));
   assert.ok(html.includes(`id="service-${service.id}"`));
-  const destination = whatsappHref(undefined,service.name) ?? `/contact?service=${service.id}#request-service`;
+  const destination = `/contact?service=${service.id}#request-options`;
   assert.ok(html.includes(`href="${escape(destination)}"`));
  }
 });
 test("Property Care covers travel, vacant and multiple homes and preserves the disclosed centralized scenario", async () => {
- const html=await page("services/property-care"),text=visible(html); for(const phrase of ["travelers","overseas owners","multiple properties","vacant-house checks","periodic support"]) assert.ok(text.includes(phrase)); assert.ok(html.includes(escape(comingHomeScenario.title))); assert.ok(html.includes(scenarioDisclosure)); assert.ok(html.includes(comingHomeScenario.scopeNote)); assert.match(html,/id="coming-home"/); assert.match(html,/Take Care of My Property/); assert.match(html,/href="\/contact\?service=property-maintenance#request-service"/);
+ const html=await page("services/property-care"),text=visible(html); for(const phrase of ["travelers","overseas owners","multiple properties","vacant-house checks","periodic support"]) assert.ok(text.includes(phrase)); assert.ok(html.includes(escape(comingHomeScenario.title))); assert.ok(html.includes(scenarioDisclosure)); assert.ok(html.includes(comingHomeScenario.scopeNote)); assert.match(html,/id="coming-home"/); assert.match(html,/Take Care of My Property/); assert.match(html,/href="\/contact\?service=property-maintenance#request-options"/);
 });
 test("Membership renders only approved plans and inclusions without prices or numerical allowances", async () => {
  const html=await page("membership"); for(const plan of membershipPlans){assert.ok(html.includes(`id="plan-${plan.id}"`));assert.ok(html.includes(`href="/contact?plan=${({essential:"essential",premium:"signature",private:"bespoke"})[plan.id]}"`));for(const inclusion of plan.inclusions)assert.ok(html.includes(inclusion));} assert.ok(html.includes(membershipScope));assert.match(html,/plans-comparison/);assert.doesNotMatch(visible(html),/\bPKR\b|Rs\.|\d+\s*(?:visits|requests)|unlimited|complimentary|guarantee/i);assert.equal((html.match(/>Request Info<\/a>/g)||[]).length,3);
@@ -92,4 +91,30 @@ test("Contact keeps the one shared form, safe panel and editable service prefill
 });
 test("nested Property Care activates Services without changing the five-link navigation", () => {
  const html=renderToStaticMarkup(createElement("ul",null,createElement(NavigationItems)));assert.match(html, /<a\b(?=[^>]*href="\/services")(?=[^>]*aria-current="page")[^>]*>/);assert.equal((html.match(/aria-current="page"/g)||[]).length,1);assert.equal((html.match(/<li/g)||[]).length,5);currentPath="/membership";const membership=renderToStaticMarkup(createElement("ul",null,createElement(NavigationItems)));assert.doesNotMatch(membership,/aria-current/);
+});
+
+test("request methods offer the exact general WhatsApp draft and one preserved form", async () => {
+ const html=await page('contact','documents');
+ assert.match(html,/How would you like to get started/);assert.match(html,/Submit a Form/);assert.match(html,/Chat on WhatsApp/);
+ assert.equal((html.match(/<form\b/g)||[]).length,1);
+ assert.doesNotMatch(html,/class="request-form-panel" hidden/);
+ assert.match(html,/method=form&amp;service=documents#request-service/);
+ assert.match(html,/name="serviceId" value="documents"/);
+ const general=new URL(load('../lib/contact-links.ts').whatsappHref());
+ assert.equal(general.pathname,'/923284631311');assert.equal(general.searchParams.get('text'),"Hi Puraitmaad, I'd like help with a service.");
+ assert.ok(html.includes(escape(load('../lib/contact-links.ts').whatsappHref())));
+ assert.match(html,/No membership required for one-time requests/);
+});
+test("explicit form URLs open the existing form and retain membership context", async () => {
+ const html=await page('contact',undefined,{method:'form',plan:'signature'});
+ assert.match(html,/class="request-methods"[^>]*hidden=""/);
+ assert.doesNotMatch(html,/class="request-form-panel" hidden/);
+ assert.match(html,/name="planId" value="premium"/);assert.equal((html.match(/<form\b/g)||[]).length,1);
+});
+test("invalid or absent WhatsApp skips choices without blocking the existing form", async () => {
+ const {siteConfig}=load('../content/site.ts');const before=siteConfig.WHATSAPP;
+ try{for(const value of ['', '[WHATSAPP_NUMBER]', 'javascript:alert(1)', '03001234567']){
+  siteConfig.WHATSAPP=value;const html=await page('contact');assert.doesNotMatch(html,/Start Chat|Chat on WhatsApp|wa\.me/);
+  assert.doesNotMatch(html,/class="request-form-panel" hidden/);assert.equal((html.match(/<form\b/g)||[]).length,1);
+ }}finally{siteConfig.WHATSAPP=before;}
 });

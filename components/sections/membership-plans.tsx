@@ -30,7 +30,7 @@ export function MembershipPlans({ id = "membership-heading", className = "", rev
       <p className="plans-scope">{membershipScope}</p>
       <div className="plans-one-time">
         <div><h3>Need help with something once?</h3><p>Tell us what needs to be handled. No membership required.</p><p className="plans-ongoing-note">Membership is for customers who need ongoing support.</p></div>
-        <div className="plans-one-time-actions"><ButtonLink href="/contact#request-service" prefetch={false}>Request a Service</ButtonLink>{whatsapp && <ButtonLink href={whatsapp} variant="secondary"><WhatsAppIcon />WhatsApp Us</ButtonLink>}</div>
+        <div className="plans-one-time-actions"><ButtonLink href="/contact#request-options" prefetch={false}>Request a Service</ButtonLink>{whatsapp && <ButtonLink href={whatsapp} variant="secondary"><WhatsAppIcon />WhatsApp Us</ButtonLink>}</div>
       </div>
     </Container>
   </section>;

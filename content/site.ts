@@ -40,4 +40,4 @@ export const navigation = [
   { label: "Contact", href: "/contact", available: true },
 ] as const;
 
-export const primaryCta = { label: "Request a Service", href: "/contact#request-service" } as const;
+export const primaryCta = { label: "Request a Service", href: "/contact#request-options" } as const;
