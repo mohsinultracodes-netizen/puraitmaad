@@ -1,0 +1,24 @@
+.at-introduction { padding-block: clamp(2rem, 5vw, 4.5rem) clamp(3rem, 6vw, 5rem); }
+.at-panels { display: grid; gap: 1.25rem; }
+.at-story, .at-overview { min-width: 0; border: 1px solid var(--border); border-radius: 1.5rem; background: var(--surface-elevated); }
+.at-story { display: flex; flex-direction: column; padding: clamp(1.5rem, 3.5vw, 3rem); }
+.at-eyebrow { color: #80643b; font-size: .6875rem; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; }
+.sp-about .at-story h1 { margin-top: 1.5rem; font-size: clamp(2.25rem, 4.4vw, 4.25rem); line-height: 1.12; letter-spacing: -.045em; }
+.at-story-copy { display: grid; gap: 1rem; margin-top: 2.5rem; max-width: 44ch; color: var(--muted); font-size: .9375rem; line-height: 1.8; }
+.at-overview { display: grid; gap: 1.25rem; padding: 1rem; }
+.at-photograph { position: relative; min-width: 0; aspect-ratio: 3 / 2; overflow: hidden; border-radius: 1rem; background: var(--surface); }
+.at-highlights { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .75rem; }
+.at-highlight { min-width: 0; padding: clamp(1rem, 2vw, 1.5rem); border: 1px solid var(--border); border-radius: .875rem; background: var(--background); }
+.at-highlight-rule { display: block; width: 1.75rem; height: 2px; margin-bottom: 1rem; background: var(--logo-gold); }
+.sp-about .at-highlight h2 { font-size: clamp(1.0625rem, 1.55vw, 1.375rem); line-height: 1.25; letter-spacing: -.025em; }
+.at-highlight p { margin-top: .625rem; font-size: .8125rem; line-height: 1.65; color: var(--muted); }
+@media (min-width: 48rem) {
+  .at-panels { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .at-story { min-height: 36rem; }
+  .at-story-copy { margin-top: auto; padding-top: 3rem; font-size: clamp(.875rem, 1.15vw, 1rem); }
+  .at-overview { grid-template-rows: minmax(0, 1fr) auto; }
+  .at-photograph { aspect-ratio: auto; min-height: 14rem; }
+  .at-highlight { min-height: 8rem; }
+}
+@media (min-width: 64rem) { .at-panels { gap: 1.5rem; } .at-story { min-height: 39rem; } .at-overview { padding: 1.25rem; } }
+@media (max-width: 22rem) { .at-highlights { grid-template-columns: minmax(0, 1fr); } }
