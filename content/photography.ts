@@ -9,7 +9,7 @@ import careClearScopeImage from "@/public/images/property/care-clear-scope.png";
 import vendorCoordinationImage from "@/public/images/property/vendor-coordination.png";
 import vehicleReadinessImage from "@/public/images/property/vehicle-readiness.png";
 import aboutImage from "@/public/images/property/about.png";
-import heroPuraitmaadImage from "@/public/images/property/hero-puraitmaad.webp";
+import heroPuraitmaadImage from "@/public/images/hero/puraitmaad-hero-concierge.webp";
 
 type ApprovedPhotography = {
   src: StaticImageData;
@@ -168,10 +168,10 @@ type HomepagePhoto = {
 
 export const homepagePhotography = {
   hero: {
-    asset: { src: heroPuraitmaadImage, alt: "Conceptual home-service interface on a smartphone beside keys in a warm modern living room." },
-    sizes: "(min-width: 1024px) max(50vw, 1010px), (min-width: 768px) 100vw, 590px",
-    objectPosition: "var(--hp-hero-image-position, 50% 75%)",
-    replacement: "Approved conceptual home-service image; preserve the smartphone as the primary focal point.",
+    asset: { src: heroPuraitmaadImage, alt: "Illustrative concierge scene: two women beside a tray and a conceptual service interface on a smartphone in a sunset-lit living room." },
+    sizes: "(min-width: 1024px) max(55vw, 1220px), 100vw",
+    objectPosition: "var(--hp-hero-image-position, 100% 0%)",
+    replacement: "Supplied concierge image; preserve both women and the tray at the right, with the full composition on mobile.",
   },
   difference: {
     asset: photography.about.asset,

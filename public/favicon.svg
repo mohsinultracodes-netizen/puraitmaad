@@ -1,22 +1,20 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="255 95 720 720"><title>Pur Aitmaad</title><g id="mark" fill="none" stroke="#C9A66B" stroke-width="34" stroke-linejoin="miter" stroke-linecap="square">
-    <!-- Left outer building -->
-    <path d="M350 650 V430 L470 315 V600" />
-    <!-- Left inner tower -->
-    <path d="M470 600 V360 L545 285 V650" />
-
-    <!-- Central tower -->
-    <path d="M585 650 V245 L615 215 L645 245 V650" />
-
-    <!-- Right inner tower -->
-    <path d="M685 650 V285 L760 360 V600" />
-    <!-- Right outer building -->
-    <path d="M760 315 L880 430 V650" />
-
-    <!-- House / stewardship roof -->
-    <path d="M430 655 L615 515 L800 655" />
-  </g><g fill="#C9A66B">
-    <rect x="583" y="585" width="28" height="28"/>
-    <rect x="619" y="585" width="28" height="28"/>
-    <rect x="583" y="621" width="28" height="28"/>
-    <rect x="619" y="621" width="28" height="28"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="300 150 650 650"><title>Pur Aitmaad</title><defs>
+    <linearGradient id="pur-aitmaad-gold" x1="0" y1="0" x2="0" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#C9A446"/>
+      <stop offset="0.52" stop-color="#BF9434"/>
+      <stop offset="1" stop-color="#AF8429"/>
+    </linearGradient>
+  </defs><rect x="300" y="150" width="650" height="650" fill="#F8F6F0"/><g id="emblem" fill="url(#pur-aitmaad-gold)">
+    <!-- Upper left quarter -->
+    <path d="M 596,201 C 466,212 354,321 343,454 L 403,454 C 421,359 500,277 596,264 Z"/>
+    <!-- Upper right quarter -->
+    <path d="M 650,201 C 780,212 889,321 900,454 L 840,454 C 823,359 745,277 650,264 Z"/>
+    <!-- Lower left quarter -->
+    <path d="M 343,500 L 403,500 C 420,595 498,670 594,679 L 594,751 C 464,741 354,635 343,500 Z"/>
+    <!-- Lower right quarter -->
+    <path d="M 840,500 L 900,500 C 889,633 780,740 649,751 L 649,679 C 746,671 823,595 840,500 Z"/>
+    <!-- Stylized roof and home walls -->
+    <path d="M 623,306 L 783,415 L 783,534 C 779,562 757,590 726,609 L 726,446 L 623,374 L 519,446 L 519,609 C 488,590 467,562 463,534 L 463,415 Z"/>
+    <!-- Rounded doorway -->
+    <path d="M 570,616 L 570,505 C 570,475 593,451 623,451 C 653,451 675,475 675,505 L 675,616 Z"/>
   </g></svg>

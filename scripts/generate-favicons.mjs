@@ -2,13 +2,13 @@ import fs from "node:fs/promises";
 import sharp from "sharp";
 import { fileURLToPath } from "node:url";
 
-// Preserve the existing mark and windows verbatim; exclude the wordmark/tagline.
+// Preserve the official emblem and gradient verbatim; exclude text at icon sizes.
 const logo = await fs.readFile(new URL("../public/images/pur-aitmaad-logo.svg", import.meta.url), "utf8");
-const mark = logo.match(/<g id="mark"[\s\S]*?<\/g>/)?.[0];
-const windows = logo.match(/<g fill="#C9A66B">[\s\S]*?<\/g>/)?.[0];
-if (!mark || !windows) throw new Error("Original logo symbol not found");
-// Square viewBox, centered on the painted bounds with at least 10% padding.
-const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="255 95 720 720"><title>Pur Aitmaad</title>${mark}${windows}</svg>\n`;
+const emblem = logo.match(/<g id="emblem"[\s\S]*?<\/g>/)?.[0];
+const definitions = logo.match(/<defs>[\s\S]*?<\/defs>/)?.[0];
+if (!emblem || !definitions) throw new Error("Official logo emblem not found");
+// Square viewBox, centered on the painted bounds with clear padding.
+const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="300 150 650 650"><title>Pur Aitmaad</title>${definitions}<rect x="300" y="150" width="650" height="650" fill="#F8F6F0"/>${emblem}</svg>\n`;
 await fs.writeFile(new URL("../public/favicon.svg", import.meta.url), svg);
 for (const [size, filename] of [[96, "favicon-96x96.png"], [512, "favicon-512x512.png"], [180, "apple-touch-icon.png"]]) {
   await sharp(Buffer.from(svg)).resize(size, size).png().toFile(fileURLToPath(new URL(`../public/${filename}`, import.meta.url)));

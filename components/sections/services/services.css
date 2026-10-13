@@ -1,0 +1,54 @@
+/* Services-only composition; the established shell and detailed catalog are retained. */
+.sp-services .sv-hero { padding-block: clamp(2.75rem, 5vw, 5rem) clamp(3.5rem, 6vw, 6rem); overflow: clip; }
+.sv-hero-grid { display: grid; gap: 3rem; align-items: center; }
+.sv-hero-copy { min-width: 0; }
+.sv-hero-copy > .eyebrow { color: var(--forest); letter-spacing: .14em; }
+.sp-services .sv-hero h1 { margin-top: 1.5rem; max-width: 14ch; font-size: clamp(2.75rem, 5.1vw, 4.75rem); line-height: 1.07; font-weight: 500; letter-spacing: -.055em; }
+.sv-hero h1 span { color: #718477; }
+.sv-hero-support { margin-top: 1.75rem; max-width: 48ch; color: var(--muted); }
+.sv-hero-support p:first-child { font-size: 1.0625rem; }
+.sv-hero-support p + p { margin-top: .875rem; font-size: .9375rem; }
+.sv-hero-actions { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 2rem; }
+.sv-hero-actions .button { min-height: 3.25rem; padding-inline: 1.25rem; gap: .875rem; }
+.sv-hero-art { position: relative; min-width: 0; padding: 1.25rem .75rem 0; }
+.sv-hero-art::before { content: ""; position: absolute; inset: -1rem -1rem 2.25rem; border-radius: 47% 53% 39% 61% / 40% 51% 49% 60%; background: #e3e5d9; transform: rotate(-7deg); }
+.sv-hero-art::after { content: ""; position: absolute; inset: -.5rem -1.25rem 2.75rem .75rem; border: 1px solid #c9a66b80; border-radius: 49% 51% 62% 38% / 51% 37% 63% 49%; pointer-events: none; }
+.sv-hero-photo { position: relative; aspect-ratio: 1.12; overflow: hidden; border-radius: 38% 38% .625rem .625rem / 22% 22% .625rem .625rem; background: var(--surface); }
+.sv-hero-photo::after { content: ""; position: absolute; inset: 75% 0 0; background: linear-gradient(transparent, rgb(32 58 50 / .12)); pointer-events: none; }
+.sv-photo-caption { position: relative; display: flex; align-items: center; gap: .75rem; margin-top: 1.5rem; color: var(--muted); font-size: .6875rem; letter-spacing: .08em; }
+.sv-photo-caption > span { width: 2.5rem; height: 1px; background: var(--logo-gold); }
+.sv-showcase { background: var(--surface); padding-block: clamp(3.5rem, 5vw, 5rem) 2.75rem; border-top: 1px solid var(--border); scroll-margin-top: 6.5rem; overflow: clip; }
+.sv-showcase-intro { text-align: center; max-width: 42rem; margin-inline: auto; }
+.sv-showcase-intro .eyebrow { color: var(--muted); }
+.sp-services .sv-showcase-intro h2 { margin-top: 1rem; font-size: clamp(2.25rem, 3.5vw, 3.25rem); letter-spacing: -.04em; }
+.sv-showcase-intro > p:last-child { margin-top: 1rem; color: var(--muted); }
+.sv-carousel { --slide-width: min(74vw, 390px); position: relative; max-width: 1200px; margin: 2.25rem auto 0; }
+.sv-carousel-track { position: relative; display: flex; gap: .75rem; list-style: none; margin: 0; padding: 1.25rem max(1.25rem, calc((100% - var(--slide-width)) / 2)) 1.75rem; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scrollbar-width: none; }
+.sv-carousel-track::-webkit-scrollbar { display: none; }
+.sv-slide { flex: 0 0 var(--slide-width); min-width: 0; scroll-snap-align: center; }
+.sv-category-card { display: block; height: 100%; overflow: hidden; border: 1px solid var(--border); border-radius: var(--radius-card); background: var(--surface-elevated); transform: scale(.94); transform-origin: center; transition: transform 400ms cubic-bezier(.25,.75,.25,1), border-color 250ms, box-shadow 400ms; }
+.sv-carousel[data-active="0"] .sv-slide:nth-child(1) .sv-category-card,
+.sv-carousel[data-active="1"] .sv-slide:nth-child(2) .sv-category-card,
+.sv-carousel[data-active="2"] .sv-slide:nth-child(3) .sv-category-card,
+.sv-carousel[data-active="3"] .sv-slide:nth-child(4) .sv-category-card { transform: scale(1); border-color: #c9a66b99; box-shadow: 0 10px 30px rgb(32 58 50 / .07); }
+.sv-card-photo { position: relative; aspect-ratio: 3 / 2; overflow: hidden; background: var(--surface); }
+.sv-card-photo img { display: block; width: 100%; height: 100%; }
+.sv-card-number { position: absolute; top: 1rem; left: 1rem; display: grid; place-items: center; width: 2rem; height: 2rem; color: var(--foreground); background: rgb(248 246 240 / .95); border: 1px solid #ffffff80; border-radius: 50%; font-size: .625rem; }
+.sv-card-copy { padding: 1.5rem; }
+.sp-services .sv-card-copy h3 { font-size: clamp(1.5rem, 2.2vw, 1.875rem); letter-spacing: -.035em; font-weight: 500; }
+.sv-card-copy > p { margin-top: .75rem; min-height: 3.3em; color: var(--muted); font-size: .9375rem; line-height: 1.65; }
+.sv-card-link { display: flex; align-items: center; justify-content: space-between; gap: .75rem; margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border); font-size: .75rem; color: var(--forest); }
+.sv-category-card:focus-visible { outline-offset: 3px; }
+.sv-category-card:hover .sv-card-link { text-decoration: underline; text-underline-offset: .25em; }
+.sv-carousel-controls { display: flex; justify-content: center; align-items: center; gap: 1.5rem; min-height: 3rem; margin-top: .75rem; }
+.sv-carousel-controls[hidden] { display: flex; visibility: hidden; }
+.sv-carousel-arrow { display: grid; place-items: center; width: 48px; height: 48px; border: 1px solid var(--border); border-radius: 50%; background: transparent; color: var(--forest); cursor: pointer; font-size: 1.25rem; }
+.sv-carousel-arrow:hover:not(:disabled) { background: var(--surface-elevated); border-color: var(--accent); }
+.sv-carousel-arrow:disabled { opacity: .35; cursor: default; }
+.sv-carousel-position { color: var(--muted); font-size: .75rem; letter-spacing: .1em; }
+.sv-carousel-position > span:first-child { color: var(--foreground); }
+.sp-services .sp-category { scroll-margin-top: 6.5rem; }
+@media (min-width: 48rem) { .sv-hero-grid { grid-template-columns: 1.05fr 1fr; gap: clamp(2rem, 4vw, 4rem); } .sv-hero-art { padding-top: 2rem; } .sv-carousel { --slide-width: 390px; } }
+@media (min-width: 64rem) { .sv-carousel { --slide-width: min(36vw, 430px); margin-top: 3rem; } .sv-carousel-track { gap: 1.25rem; } .sv-category-card { transform: scale(.90); } .sv-card-copy { padding: 1.75rem 2rem; } }
+@media (max-width: 47.999rem) { .sv-desktop-break { display: none; } .sv-hero-actions .button { font-size: .75rem; } .sv-photo-caption { margin-top: 1rem; } }
+@media (prefers-reduced-motion: reduce) { .sv-category-card { transition: none; } .sv-carousel-track { scroll-behavior: auto; } }
